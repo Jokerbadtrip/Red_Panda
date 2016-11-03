@@ -73,11 +73,24 @@ public class Memory {
 		if (pointer <= 0) throw new OutOfMemoryException();
 		pointer--;
 	}
-	
+
+	/**
+	 *  Print each memory cells to the screen only if it value is different 0
+	 */
 	public void printMemory(){
 		for (int i =  0; i <= maxArray; i++){
 			System.out.println("C" + i + ": " + mArray[i] + "\n");
 		}
+	}
+
+
+	/**
+	 * Change the value of pointed memory cell
+	 * @param value the new value of the memory cell
+	 */
+	public void updateMemory(short value) {
+		if(value > 255) throw new ValueOutOfBoundException();
+		mArray[pointer] = value;
 	}
 	
 	public short[] getmArray() {
