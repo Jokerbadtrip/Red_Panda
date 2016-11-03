@@ -1,5 +1,7 @@
 package brainfuck.language;
 
+import brainfuck.language.Exceptions.IsNotACommandException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -10,13 +12,13 @@ import java.util.Collections;
 public class LecteurTextuel {
 
     protected String[] words = {"RIGHT", "LEFT", "INCR", "DECR", "JUMP", "BACK", "OUT", "IN"};
-    protected String[] shortcuts = {"+", "-", "<", ">", ".", ",", "[", "]"};
+    protected char[] shortcuts = {'+', '-', '<', '>', '.', ',', '[', ']'};
 
-    private String texteALire;
-    private int indexCaractereActuellementLu;
+    private String texteAAnalyser;
+    private int index;
 
     public LecteurTextuel() {
-        this.indexCaractereActuellementLu = 0;
+        this.index = 0;
     }
 
     /**
@@ -27,10 +29,10 @@ public class LecteurTextuel {
      * @return true si c'est un shortcut SINON false
      */
 
-    public boolean estShortcut(String premierCaractere) {
+    public boolean estShortcut(char premierCaractere) {
 
-        for(String shortcut : shortcuts) {
-            if(shortcut.equals(premierCaractere)) return true;
+        for(char shortcut : shortcuts) {
+            if(shortcut == premierCaractere) return true;
         }
         return false;
     }
@@ -89,44 +91,40 @@ public class LecteurTextuel {
      */
 
     public ArrayList<String> creeTableauCommande() {
-        String premierCaractere; // peut être utiliser un char?
-        ArrayList<String> listeCommande = new ArrayList<String>();
+        char premierCaractere;
+        int longueurProgramme = texteAAnalyser.length();
+        ArrayList<String> listeCommandeTrouvee = new ArrayList<String>();
 
-        while(texteALire.length() - indexCaractereActuellementLu  > 0) {
-            premierCaractere = Character.toString(this.texteALire.charAt(indexCaractereActuellementLu));
+        while(texteAAnalyser.length() - index  > 0) {
+            premierCaractere = this.texteAAnalyser.charAt(index);
 
             if(estShortcut(premierCaractere)) {
-                listeCommande.add(premierCaractere);
-                indexCaractereActuellementLu += 1;
+                listeCommandeTrouvee.add(Character.toString(premierCaractere));
+                index += 1;
             }
             else {
                     String[] texteDecoupe;
 
                     // il se peut que le programme fasse moins de 5 caractères. Il faut donc faire en sorte qu'on ne sélectionne pas tjs 5 carctère.
-                    int tailletexte = texteALire.length();
-                    int cbAjouter;
-
-                    if(tailletexte - indexCaractereActuellementLu >= 5) {
-                        cbAjouter = 5;
-                    }
-                    else {
-                        cbAjouter = tailletexte - indexCaractereActuellementLu;
-                    }
+                    int cbAjouter = (longueurProgramme - index >= 5) ? 5 : longueurProgramme - index;
 
                     // selectionne un morceau du texte
-                    String texteALireMorceau = texteALire.substring(indexCaractereActuellementLu, indexCaractereActuellementLu + cbAjouter);
-                    texteDecoupe = couperChaineCaractere(texteALireMorceau);
+                    String morceauTexteAAnalyser = texteAAnalyser.substring(index, index + cbAjouter);
+                    // coupe ce morceau de texte en morceaux plus petit
+                    texteDecoupe = couperChaineCaractere(morceauTexteAAnalyser);
 
                     String commandeTrouvee = estInstruction(texteDecoupe);
 
-                    if (commandeTrouvee != null) {
-                        indexCaractereActuellementLu += commandeTrouvee.length();
-                        listeCommande.add(commandeTrouvee);
-                    }
+                if (commandeTrouvee == null) {
+                    throw new IsNotACommandException();
+                } else {
+                    index += commandeTrouvee.length();
+                    listeCommandeTrouvee.add(commandeTrouvee);
+                }
             }
         }
 
-        return listeCommande;
+        return listeCommandeTrouvee;
     }
 
 
@@ -136,7 +134,7 @@ public class LecteurTextuel {
      * Recoit de la classe Moteur le nom d'un fichier à lire
      * @param texte nom du fichier à lire
      */
-    public void setTexteALire(String texte) { texteALire = texte; }
+    public void setTexteAAnalyser(String texte) { texteAAnalyser = texte; }
 
     public void toString(ArrayList<String> liste) { // permet d'afficher une liste
         for(String comm : liste) {
