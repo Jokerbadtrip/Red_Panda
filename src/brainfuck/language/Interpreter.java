@@ -27,8 +27,7 @@ public class Interpreter {
      *
      * @return true si l'action a été réalisée avec succès
      */
-    public void keywordsExecution(ArrayList<String> tableauCommande) throws OutOfMemoryException,
-            ValueOutOfBoundException{
+    public void keywordsExecution(ArrayList<String> tableauCommande) throws OutOfMemoryException, ValueOutOfBoundException{
 
         for(String commande : tableauCommande) {
                 switch (commande) {

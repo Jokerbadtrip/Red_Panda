@@ -1,7 +1,8 @@
 package brainfuck.language.Exceptions;
 
 /**
- * Created by jamatofu on 01/11/16.
+ * Exception pour lacommande IN. Si on rentre une entrée
+ * @author jamatofu on 01/11/16.
  */
 public class WrongInput extends RuntimeException {
     public WrongInput() {
