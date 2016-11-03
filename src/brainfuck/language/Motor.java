@@ -92,7 +92,7 @@ public class Motor {
             if (extensionFichier.equals("bf")) {
                 try {
                     LecteurFichiers reader = new LecteurFichiers();
-                    texteALire = reader.decodeur(fichierALire);
+                    texteALire = reader.reader(fichierALire);
                 } catch (FileNotFoundException e) {
                     System.out.println(e.toString());
                     return false;

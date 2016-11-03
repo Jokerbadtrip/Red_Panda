@@ -12,6 +12,8 @@ import brainfuck.language.Exceptions.IsNotACommandException;
  */
 public class KernelReader {
 
+    static String filepathForWriting, filepathForReading;
+
     /**
      *
      * On lit chaque commande reçues par la console et on regarde si elle est contenue dans la variable commande
@@ -49,6 +51,26 @@ public class KernelReader {
                     else {
                         System.out.println("You need to specify a file path");
                     }
+                    break;
+                case "-i": // on va lire un fichier
+                    if (args.length>=2) {
+                        filepathForReading = args[i + 1];
+                        i++;
+                    }
+                    else {
+                        System.out.println("You need to specify a file path");
+                    }
+
+                    break;
+                case "-o": // on va écrire dans un fichier
+                    if (args.length>=2) {
+                        filepathForWriting = args[i + 1];
+                        i++;
+                    }
+                    else {
+                        System.out.println("You need to specify a file path");
+                    }
+
                     break;
 
                 default:

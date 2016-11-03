@@ -3,8 +3,11 @@ package brainfuck.language;
 
 import brainfuck.language.Exceptions.OutOfMemoryException;
 import brainfuck.language.Exceptions.ValueOutOfBoundException;
+import brainfuck.language.Exceptions.WrongInput;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * @author BEAL Clément, SERRANO Simon on 28/09/16.
@@ -45,19 +48,83 @@ public class Interpreter {
                     case ">":
                         memory.right();
                         break;
+                    case "." :
+                        outMethod();
+                        break;
 
-                   /* case "." :
-                        break;
                     case "," :
+                        try {
+                            inMethod();
+                        }
+                        catch (WrongInput e) {
+                            e.printStackTrace();
+                        }
                         break;
-                    case "[" :
+                    case "[":
                         break;
                     case "]" :
-                        break;*/
+                        break;
                     default:
                 }
         }
+
         memory.printMemory();
 
     }
+
+    /**
+     * Gère la commande IN
+     * On gère le ca où on a rentré le -i et le cas par défaut (console)
+     */
+    public void inMethod() {
+        String entree;
+
+        if(KernelReader.filepathForReading == null) { // dans le cas où on n'a pas fait -i
+            Scanner scanner = new Scanner(System.in);
+            entree = scanner.nextLine();
+
+            if (entree.length() != 1) throw new WrongInput();
+            else {
+                char character = entree.charAt(0);
+
+                try {
+                    memory.updateMemory((short) character);
+                } catch (ValueOutOfBoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        else { // dans le cas où on a fait i
+            LecteurFichiers lecteurFichiers = new LecteurFichiers();
+
+            try {
+                short modifyMemory = Short.parseShort(lecteurFichiers.reader(KernelReader.filepathForReading));
+                memory.updateMemory(modifyMemory);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Gère la méthode OUT
+     * On gère le cas où on a la commande -o et le cas par défaut (console)
+     */
+
+    public void outMethod() {
+        if(KernelReader.filepathForWriting == null) {
+            char numb = (char) memory.getValueCell();
+            System.out.println(numb);
+        } else{
+            LecteurFichiers lecteurFichiers = new LecteurFichiers();
+
+            try {
+                lecteurFichiers.write(KernelReader.filepathForWriting, Integer.toString(memory.getValueCell()));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void appellerMemoire() { memory.printMemory();}
 }

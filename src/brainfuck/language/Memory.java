@@ -96,4 +96,7 @@ public class Memory {
 	public short[] getmArray() {
 		return mArray;
 	}
+	public int getValueCell() {
+		return (int) mArray[pointer];
+	}
 }
