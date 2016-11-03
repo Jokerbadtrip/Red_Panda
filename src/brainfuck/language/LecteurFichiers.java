@@ -11,34 +11,39 @@ package brainfuck.language;
 
 import java.io.FileNotFoundException;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class LecteurFichiers {
-
-    private File file;
-    private Scanner input;
 
     /**
      * Scans the file given to the scanner
      * @return an array list of each characters read
      */
     public String decodeur(String filepath) throws FileNotFoundException{
-    	
-    	file=new File(filepath);
-    	input= new Scanner(file);
-    	String chaine ="";
-        while (input.hasNext()){
-            chaine += input.next();
+
+        File file = new File(filepath);
+        Scanner input = new Scanner(file);
+        String chaine = null;
+
+        while (input.hasNextLine()){
+            chaine += input.nextLine();
         }
         return (chaine);
     }
 
-    /**
-     * Checks if the file is empty
-     * @param scanner the current scanner
-     * @return true if the file is empty
-     */
-    public boolean isEmpty(){
-    	return (input.equals(null));
+    public void write(String filepath, String textToWrite) throws FileNotFoundException {
+        File file = new File(filepath);
+
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(textToWrite);
+            fileWriter.close();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
