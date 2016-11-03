@@ -1,5 +1,7 @@
 package brainfuck.language;
 
+import brainfuck.language.Exceptions.IsNotACommandException;
+
 /**
  * @author  BEAL Clément on 05/10/16.
  *
@@ -24,7 +26,7 @@ public class KernelReader {
      * @param args toutes les commandes reçues par la console
      * @return le nom du fichier a lire à la classe Moteur
      */
-    public String interpreterCommande(String[] args) {
+    public String interpreterCommande(String[] args){
         String fichierALire = null;
 
         for(int i = 0; i < args.length; i++) {

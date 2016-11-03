@@ -1,5 +1,9 @@
 package brainfuck.language;
 
+
+import brainfuck.language.Exceptions.OutOfMemoryException;
+import brainfuck.language.Exceptions.ValueOutOfBoundException;
+
 import java.util.ArrayList;
 
 /**
@@ -20,27 +24,27 @@ public class Interpreter {
 
     /**
      * Compare le mot avec la liste des mots exécutables et agit en conséquence
-     * @param keyword mot clé rentré par l'utilisateur
+     *
      * @return true si l'action a été réalisée avec succès
      */
-    public boolean keywordsExecution(ArrayList<String> tableauCommande){
-        boolean isOk = true;
+    public void keywordsExecution(ArrayList<String> tableauCommande) throws OutOfMemoryException,
+            ValueOutOfBoundException{
+
         for(String commande : tableauCommande) {
-            if (isOk) {
                 switch (commande) {
                     case "+":
-                        isOk = memory.incr();
+                        memory.incr();
                         break;
                     case "-":
-                        isOk = memory.decr();
+                        memory.decr();
                         break;
 
                     case "<":
-                        isOk = memory.left();
+                        memory.left();
                         break;
 
                     case ">":
-                        isOk = memory.right();
+                        memory.right();
                         break;
 
                    /* case "." :
@@ -52,11 +56,9 @@ public class Interpreter {
                     case "]" :
                         break;*/
                     default:
-                        return false;
                 }
-            }
         }
-        if (isOk) memory.printMemory();
-        return isOk;
+        memory.printMemory();
+
     }
 }

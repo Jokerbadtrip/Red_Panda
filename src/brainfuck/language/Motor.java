@@ -65,7 +65,7 @@ public class Motor {
                 if(kernel.commandeCheck(texteALire)) System.out.println("Tout est ok");
                 else System.out.println("Rien n'est ok");
             }
-            else if(callInterpreter(listeDeCommande)) {
+            else {
                 System.out.println("Fin du programme");
             }
         }
@@ -116,9 +116,9 @@ public class Motor {
      * @param commandeAExecuter une liste de toutes les instructions contenues dans le fichier programme
      * @return true si tout à bien été exécuté SINON false si une instruction a posée problème
      */
-    public boolean callInterpreter(ArrayList<String> commandeAExecuter) {
+    public void callInterpreter(ArrayList<String> commandeAExecuter) {
         interpreter = new Interpreter();
-        return interpreter.keywordsExecution(commandeAExecuter);
+        interpreter.keywordsExecution(commandeAExecuter);
     }
 
     /**
