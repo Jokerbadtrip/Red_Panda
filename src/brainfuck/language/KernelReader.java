@@ -1,6 +1,12 @@
 package brainfuck.language;
 
-import brainfuck.language.Exceptions.IsNotACommandException;
+import brainfuck.language.Exceptions.FilePathNotFoundException;
+
+
+import static brainfuck.language.Flags.isFlag;
+import static brainfuck.language.Flags.showFlags;
+import static brainfuck.language.Flags.toFlag;
+
 
 /**
  * @author  BEAL Clément on 05/10/16.
@@ -32,50 +38,49 @@ public class KernelReader {
         String fichierALire = null;
 
         for(int i = 0; i < args.length; i++) {
-            switch (args[i]) {
-                case "-p":
-                    if (args.length>=2) {
-                        fichierALire = args[i + 1].replace("./", "");
-                        i++;
-                    }
-                    else {
-                        System.out.println("You need to specify a file path");
-                    }
-                    break;
+            if (isFlag(args[i])) {
+                switch (toFlag(args[i])) {
+                    case FileToRead:
+                        try {
+                            fichierALire = args[i + 1].replace("./", "");
+                            i++;
+                        } catch (FilePathNotFoundException e) {
+                            e.toString();
+                        }
+                        break;
 
-                case "--rewrite":
-                    if (args.length>=2){
-                        fichierALire = args[i + 1].replace("./", "");
-                        i++;
-                    }
-                    else {
-                        System.out.println("You need to specify a file path");
-                    }
-                    break;
-                case "-i": // on va lire un fichier
-                    if (args.length>=2) {
-                        filepathForReading = args[i + 1];
-                        i++;
-                    }
-                    else {
-                        System.out.println("You need to specify a file path");
-                    }
+                    case Rewrite:
+                        try {
+                            fichierALire = args[i + 1].replace("./", "");
+                            i++;
+                        } catch (FilePathNotFoundException e) {
+                            e.toString();
+                        }
+                        break;
 
-                    break;
-                case "-o": // on va écrire dans un fichier
-                    if (args.length>=2) {
-                        filepathForWriting = args[i + 1];
-                        i++;
-                    }
-                    else {
-                        System.out.println("You need to specify a file path");
-                    }
+                    case In: // on va lire un fichier
+                        try {
+                            filepathForReading = args[i + 1];
+                            i++;
+                        } catch (FilePathNotFoundException e) {
+                            e.toString();
+                        }
+                        break;
 
-                    break;
+                    case Out: // on va écrire dans un fichier
+                        try {
+                            filepathForWriting = args[i + 1];
+                            i++;
+                        } catch (FilePathNotFoundException e) {
+                            e.toString();
+                        }
 
-                default:
-                    System.out.println(args[i] + " is not a command.");
-                    System.out.println("Available commands are -p (with file path), --check, --rewrite (with file path)");
+                        break;
+
+                    default:
+                        System.out.println(args[i] + " is not a command.");
+                        showFlags();
+                }
             }
         }
 

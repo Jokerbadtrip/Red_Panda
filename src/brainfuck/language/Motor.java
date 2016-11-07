@@ -65,7 +65,7 @@ public class Motor {
                 if(kernel.commandeCheck(texteALire)) System.out.println("Tout est ok");
                 else System.out.println("Rien n'est ok");
             }
-            else {
+            else if(callInterpreter(listeDeCommande)){
                 System.out.println("Fin du programme");
             }
         }
