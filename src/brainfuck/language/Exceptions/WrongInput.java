@@ -1,7 +1,7 @@
 package brainfuck.language.Exceptions;
 
 /**
- * Exception pour lacommande IN. Si on rentre une entrée
+ * Exception pour la commande IN. Si on rentre une entrée
  * @author jamatofu on 01/11/16.
  */
 public class WrongInput extends RuntimeException {
@@ -10,6 +10,6 @@ public class WrongInput extends RuntimeException {
     }
 
     public WrongInput(String message) {
-        super("Donné rentrée incorrecte.");
+        super("Donnée rentrée incorrecte.");
     }
 }

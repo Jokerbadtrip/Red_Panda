@@ -31,8 +31,8 @@ public enum Flags {
 
     public static void showFlags(){
         System.out.println("Available commands are :");
-        for (Flags command: Flags.values()) {
-            System.out.println(command);
+        for (Map.Entry<String, Flags> flag: STRING_FLAGS_MAP.entrySet()) {
+            System.out.println(flag.getKey());
         }
     }
 
