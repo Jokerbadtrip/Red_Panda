@@ -74,7 +74,7 @@ public class Interpreter {
 
     /**
      * Gère la commande IN
-     * On gère le ca où on a rentré le -i et le cas par défaut (console)
+     * On gère le cas où on a rentré le -i et le cas par défaut (console)
      */
     public void inMethod() {
         String entree;

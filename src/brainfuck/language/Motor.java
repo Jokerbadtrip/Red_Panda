@@ -65,7 +65,8 @@ public class Motor {
                 if(kernel.commandeCheck(texteALire)) System.out.println("Tout est ok");
                 else System.out.println("Rien n'est ok");
             }
-            else if(callInterpreter(listeDeCommande)){
+            else{
+                callInterpreter(listeDeCommande);
                 System.out.println("Fin du programme");
             }
         }
@@ -129,7 +130,7 @@ public class Motor {
 
     public ArrayList<String> callLecteurTextuel(String texteALire){
         lecteur = new LecteurTextuel();
-        lecteur.setTexteALire(texteALire);
+        lecteur.setTexteAAnalyser(texteALire);
         //lecteur.setTexteALire(texteALire);
         ArrayList<String> instruction = lecteur.creeTableauCommande();
 
