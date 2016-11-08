@@ -32,7 +32,11 @@ public class Interpreter {
      */
     public void keywordsExecution(ArrayList<String> tableauCommande) throws OutOfMemoryException, ValueOutOfBoundException{
 
+        int i = 0;
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // A VOIR AVEC LES AUTRES, REVOIR LA STRUCTURE POUR AVOIR LE I ET POUVOIR SAUTER LES ETAPES DEJA FAITES
         for(String commande : tableauCommande) {
+            i++;
                 switch (commande) {
                     case "+":
                         memory.incr();
@@ -61,6 +65,12 @@ public class Interpreter {
                         }
                         break;
                     case "[":
+                        if (memory.getValueCell() == 0){
+                            foncWhile(tableauCommande, i);
+                            // ATTENTION NE PAS OUBLIER DE FAIRE LA FONC POUR SAUTER TOUT !!!
+                        }
+                        else
+
                         break;
                     case "]" :
                         break;
@@ -70,6 +80,30 @@ public class Interpreter {
 
         memory.printMemory();
 
+    }
+
+    private int foncWhile(ArrayList<String> commandes, int i){
+        int nbOuvrante = 0;
+        int it = i;
+
+        while (commandes.get(it) != "]" && nbOuvrante != 0){
+            if (commandes.get(it) == "[") {
+                nbOuvrante++;
+            }
+            if (commandes.get(it) == "]"){
+                nbOuvrante--;
+            }
+
+            ArrayList<String> temp = new ArrayList<String>();
+            temp.add(commandes.get(it));
+            keywordsExecution(temp);
+            it++;
+        }
+
+        if (memory.getValueCell() != 0)
+            foncWhile(commandes, i);
+
+        return it;
     }
 
     /**
