@@ -68,6 +68,7 @@ public class Interpreter {
                         if (memory.getValueCell() == 0){
                             foncWhile(tableauCommande, i);
                             // ATTENTION NE PAS OUBLIER DE FAIRE LA FONC POUR SAUTER TOUT !!!
+                            //test
                         }
                         else
 
