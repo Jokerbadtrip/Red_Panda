@@ -118,14 +118,14 @@ public class Interpreter {
             Scanner scanner = new Scanner(System.in);
             entree = scanner.nextLine();
 
-            if (entree.length() != 1) throw new WrongInput();
+            if (entree.length() != 1) {throw  new WrongInput();}
             else {
                 char character = entree.charAt(0);
 
                 try {
                     memory.updateMemory((short) character);
                 } catch (ValueOutOfBoundException e) {
-                    e.printStackTrace();
+                    e.toString();
                 }
             }
         }
@@ -136,7 +136,7 @@ public class Interpreter {
                 short modifyMemory = Short.parseShort(lecteurFichiers.reader(KernelReader.filepathForReading));
                 memory.updateMemory(modifyMemory);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                e.toString();
             }
         }
     }

@@ -5,11 +5,10 @@ package brainfuck.language.Exceptions;
  * @author jamatofu on 01/11/16.
  */
 public class WrongInput extends RuntimeException {
-    public WrongInput() {
-        super();
-    }
 
-    public WrongInput(String message) {
-        super("Donnée rentrée incorrecte.");
-    }
+
+    public WrongInput() { }
+
+    @Override
+    public String toString(){return "Donnée rentrée incorrecte.";}
 }
