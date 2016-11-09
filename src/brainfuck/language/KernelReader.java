@@ -45,7 +45,7 @@ public class KernelReader {
                             fichierALire = args[i + 1].replace("./", "");
                             i++;
                         } catch (FilePathNotFoundException e) {
-                            e.toString();
+                            System.out.println(e.toString());
                         }
                         break;
 
@@ -54,7 +54,7 @@ public class KernelReader {
                             fichierALire = args[i + 1].replace("./", "");
                             i++;
                         } catch (FilePathNotFoundException e) {
-                            e.toString();
+                            System.out.println(e.toString());
                         }
                         break;
 
