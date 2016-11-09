@@ -10,7 +10,8 @@ public enum Flags {
     FileToRead("-p"),
     Rewrite("--rewrite"),
     In("-i"),
-    Out("-o");
+    Out("-o"),
+    Check("--check");
 
 
     //Map to link enums and what the user writes in the console
@@ -21,6 +22,7 @@ public enum Flags {
         STRING_FLAGS_MAP.put("--rewrite",Rewrite);
         STRING_FLAGS_MAP.put("-i",In);
         STRING_FLAGS_MAP.put("-o",Out);
+        STRING_FLAGS_MAP.put("--check",Check);
     }
 
 

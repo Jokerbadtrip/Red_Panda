@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static brainfuck.language.Keywords.toKeyword;
+
 /**
  * @author BEAL Clément, SERRANO Simon on 28/09/16.
  *
@@ -37,26 +39,26 @@ public class Interpreter {
         // A VOIR AVEC LES AUTRES, REVOIR LA STRUCTURE POUR AVOIR LE I ET POUVOIR SAUTER LES ETAPES DEJA FAITES
         for(String commande : tableauCommande) {
             i++;
-                switch (commande) {
-                    case "+":
+                switch (toKeyword(commande)) {
+                    case INCR:
                         memory.incr();
                         break;
-                    case "-":
+                    case DECR:
                         memory.decr();
                         break;
 
-                    case "<":
+                    case LEFT:
                         memory.left();
                         break;
 
-                    case ">":
+                    case RIGHT:
                         memory.right();
                         break;
-                    case "." :
+                    case OUT:
                         outMethod();
                         break;
 
-                    case "," :
+                    case IN:
                         try {
                             inMethod();
                         }
@@ -64,8 +66,8 @@ public class Interpreter {
                             e.printStackTrace();
                         }
                         break;
-                    case "[":
-                        if (memory.getValueCell() == 0){
+                    case JUMP:
+                        if (memory.getCellValue() == 0){
                             foncWhile(tableauCommande, i);
                             // ATTENTION NE PAS OUBLIER DE FAIRE LA FONC POUR SAUTER TOUT !!!
                             //test
@@ -73,7 +75,8 @@ public class Interpreter {
                         else
 
                         break;
-                    case "]" :
+                    case BACK:
+
                         break;
                     default:
                 }
@@ -101,7 +104,7 @@ public class Interpreter {
             it++;
         }
 
-        if (memory.getValueCell() != 0)
+        if (memory.getCellValue() != 0)
             foncWhile(commandes, i);
 
         return it;
@@ -148,13 +151,13 @@ public class Interpreter {
 
     public void outMethod() {
         if(KernelReader.filepathForWriting == null) {
-            char numb = (char) memory.getValueCell();
+            char numb = (char) memory.getCellValue();
             System.out.println(numb);
         } else{
             LecteurFichiers lecteurFichiers = new LecteurFichiers();
 
             try {
-                lecteurFichiers.write(KernelReader.filepathForWriting, Integer.toString(memory.getValueCell()));
+                lecteurFichiers.write(KernelReader.filepathForWriting, Integer.toString(memory.getCellValue()));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

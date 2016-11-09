@@ -3,6 +3,10 @@ package brainfuck.language;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import static brainfuck.language.Flags.Check;
+import static brainfuck.language.Flags.Rewrite;
+import static brainfuck.language.Flags.toFlag;
+
 /**
  * @author BEAL Clément on 05/10/2016.
  *
@@ -48,8 +52,8 @@ public class Motor {
         boolean aCheck = false;
 
         for(String arg: args) {
-            if(arg == "--rewrite") aReWrite = true;
-            if(arg == "--check") aCheck = true;
+            if(toFlag(arg)==Rewrite) aReWrite = true;
+            if(toFlag(arg)==Check) aCheck = true;
         }
 
         if(callKernel(args)) {
@@ -60,7 +64,7 @@ public class Motor {
                 System.out.println("Rewrite");
                 lecteur.toString(lecteur.transformerInstructionEnSymbole(listeDeCommande));
             }
-            else if(aCheck) {
+            if(aCheck) {
                 System.out.println("Check");
                 if(kernel.commandeCheck(texteALire)) System.out.println("Tout est ok");
                 else System.out.println("Rien n'est ok");
