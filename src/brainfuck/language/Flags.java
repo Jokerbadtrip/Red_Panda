@@ -11,7 +11,8 @@ public enum Flags {
     Rewrite("--rewrite"),
     In("-i"),
     Out("-o"),
-    Check("--check");
+    Check("--check"),
+    Translate("--translate");
 
 
     //Map to link enums and what the user writes in the console
@@ -23,6 +24,7 @@ public enum Flags {
         STRING_FLAGS_MAP.put("-i",In);
         STRING_FLAGS_MAP.put("-o",Out);
         STRING_FLAGS_MAP.put("--check",Check);
+        STRING_FLAGS_MAP.put("--translate",Translate);
     }
 
 

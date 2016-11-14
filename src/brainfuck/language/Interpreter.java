@@ -29,16 +29,61 @@ public class Interpreter {
 
     /**
      * Compare le mot avec la liste des mots exécutables et agit en conséquence
-     *
-     * @return true si l'action a été réalisée avec succès
+     * @
+     * @throws ValueOutOfBoundException OutOfMemoryException
      */
     public void keywordsExecution(ArrayList<String> tableauCommande) throws OutOfMemoryException, ValueOutOfBoundException{
 
         int i = 0;
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // A VOIR AVEC LES AUTRES, REVOIR LA STRUCTURE POUR AVOIR LE I ET POUVOIR SAUTER LES ETAPES DEJA FAITES
+
         for(String commande : tableauCommande) {
             i++;
+            switch (commande) {
+                case "+":
+                    memory.incr();
+                    break;
+                case "-":
+                    memory.decr();
+                    break;
+
+                case "<":
+                    memory.left();
+                    break;
+
+                case ">":
+                    memory.right();
+                    break;
+                case ".":
+                    outMethod();
+                    break;
+
+                case ",":
+                    try {
+                        inMethod();
+                    }
+                    catch (WrongInput e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "[":
+                    if (memory.getCellValue() == 0){
+                        foncWhile(tableauCommande, i);
+                        // ATTENTION NE PAS OUBLIER DE FAIRE LA FONC POUR SAUTER TOUT !!!
+                        //test
+                    }
+                    else
+
+                        break;
+                case "]":
+
+                    break;
+                default:
+
+            }
+
+
+
+/*
                 switch (toKeyword(commande)) {
                     case INCR:
                         memory.incr();
@@ -80,6 +125,7 @@ public class Interpreter {
                         break;
                     default:
                 }
+*/
         }
 
         memory.printMemory();
@@ -128,7 +174,7 @@ public class Interpreter {
                 try {
                     memory.updateMemory((short) character);
                 } catch (ValueOutOfBoundException e) {
-                    e.toString();
+                    System.out.println(e.toString());
                 }
             }
         }

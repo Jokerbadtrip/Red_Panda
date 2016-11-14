@@ -3,7 +3,6 @@ package brainfuck.language;
 import brainfuck.language.Exceptions.IsNotACommandException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * @author BEAL Clément on 28/09/16.
@@ -56,7 +55,7 @@ public class LecteurTextuel {
 
             for (String motDecoupe : texteDecoupe) { // on parcourt chacun des éléments du morceau de texte découpé
                 for (String sousTab : words) { // là, on parcourt chacun des éléments de la liste word
-                         if(motDecoupe.equals(sousTab)) {
+                         if(sousTab.equals(motDecoupe)) {
                              aEnvoyer = sousTab;
                              finBoucle = true;
                              break;
@@ -101,8 +100,7 @@ public class LecteurTextuel {
             if(estShortcut(premierCaractere)) {
                 listeCommandeTrouvee.add(Character.toString(premierCaractere));
                 index += 1;
-            }
-            else {
+            } else {
                     String[] texteDecoupe;
 
                     // il se peut que le programme fasse moins de 5 caractères. Il faut donc faire en sorte qu'on ne sélectionne pas tjs 5 carctère.
@@ -127,32 +125,24 @@ public class LecteurTextuel {
         return listeCommandeTrouvee;
     }
 
-
-
+    /**
+     * Supprime tout les commentaires compris entre #
+     */
+    public void removeCommentary() {
+        if(OperationTexte.isCorrectlyComment(texteAAnalyser)) {
+            String regex = "\\#(.*?)\\#";
+            texteAAnalyser = texteAAnalyser.replaceAll(regex, "");
+        }
+    }
 
     /**
      * Recoit de la classe Moteur le nom d'un fichier à lire
      * @param texte nom du fichier à lire
      */
-    public void setTexteAAnalyser(String texte) { texteAAnalyser = texte; }
-
-    public void toString(ArrayList<String> liste) { // permet d'afficher une liste
-        for(String comm : liste) {
-            System.out.print(comm);
-        }
+    public void setTexteAAnalyser(String texte) {
+        texteAAnalyser = OperationTexte.transformerInstructionEnSymbole(texte);
     }
 
-    public ArrayList<String> transformerInstructionEnSymbole(ArrayList<String> listeATransformer){
-        Collections.replaceAll(listeATransformer, "RIGHT", ">");
-        Collections.replaceAll(listeATransformer, "LEFT", "<");
-        Collections.replaceAll(listeATransformer, "INCR", "+");
-        Collections.replaceAll(listeATransformer, "DECR", "-");
-        Collections.replaceAll(listeATransformer, "JUMP", "[");
-        Collections.replaceAll(listeATransformer, "BACK", "]");
-        Collections.replaceAll(listeATransformer, "OUT", ".");
-        Collections.replaceAll(listeATransformer, "IN", ",");
-
-        return listeATransformer;
-    }
+    public String getTexteAAnalyser() { return texteAAnalyser;}
 }
 

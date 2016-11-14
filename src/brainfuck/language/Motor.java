@@ -1,11 +1,10 @@
 package brainfuck.language;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
-import static brainfuck.language.Flags.Check;
-import static brainfuck.language.Flags.Rewrite;
-import static brainfuck.language.Flags.toFlag;
+import static brainfuck.language.Flags.*;
 
 /**
  * @author BEAL Clément on 05/10/2016.
@@ -28,6 +27,7 @@ public class Motor {
     private LecteurTextuel lecteur;
     private Interpreter interpreter;
     private String texteALire;
+    private String fichierALire;
 
 
     /**
@@ -50,30 +50,39 @@ public class Motor {
     public void lancerProgramme() {
         boolean aReWrite = false;
         boolean aCheck = false;
+        boolean aTranslate = false;
 
-        for(String arg: args) {
-            if(toFlag(arg)==Rewrite) aReWrite = true;
-            if(toFlag(arg)==Check) aCheck = true;
+//        for(String arg: args) {
+//            if(toFlag(arg)==Rewrite) aReWrite = true;
+//            if(toFlag(arg)==Check) aCheck = true;
+//            if(toFlag(arg)==Translate) aTranslate = true;
+//        }
+
+        for(String  arg : args) {
+            if(arg == "--rewrite") aReWrite = true;
+            if(arg == "--check") aCheck = true;
+            if(arg == "--translate") aTranslate = true;
         }
 
-        if(callKernel(args)) {
-            ArrayList<String> listeDeCommande = callLecteurTextuel(this.texteALire);
-            //lecteur.transformerInstructionEnSymbole(listeDeCommande);
+        callKernel(args);
+        ArrayList<String> listeDeCommande = callLecteurTextuel(this.texteALire);
 
-            if(aReWrite) {
-                System.out.println("Rewrite");
-                lecteur.toString(lecteur.transformerInstructionEnSymbole(listeDeCommande));
-            }
-            if(aCheck) {
-                System.out.println("Check");
-                if(kernel.commandeCheck(texteALire)) System.out.println("Tout est ok");
-                else System.out.println("Rien n'est ok");
-            }
-            else{
-                callInterpreter(listeDeCommande);
-                System.out.println("Fin du programme");
-            }
+        if(aReWrite) {
+            OperationTexte.toString(listeDeCommande);
         }
+        if(aCheck) {
+            if(kernel.commandeCheck(texteALire)) System.out.println("Tout est ok");
+            else System.out.println("Rien n'est ok");
+        }
+        else{
+            if(aTranslate) {
+                LecteurImage lecteurImage = new LecteurImage();
+                String nomFichier = fichierALire.substring(0, fichierALire.indexOf("."));
+                lecteurImage.translateFromShortcutToImage(listeDeCommande, nomFichier);
+            }
+            callInterpreter(listeDeCommande);
+        }
+
     }
 
     /**
@@ -81,37 +90,34 @@ public class Motor {
      * @param args la liste des arguments rentrées dans la console
      * @return ???
      */
-    public boolean callKernel(String[] args) {
+    public void callKernel(String[] args) {
 
-        String fichierALire = kernel.interpreterCommande(args);
+        fichierALire = kernel.interpreterCommande(args);
 
-
-
-
-        if (fichierALire!=null) { //Si le fichier est existant alors ...
+        if (fichierALire != null) {
 
             String extensionFichier = this.extensionFichier(fichierALire);
 
-            //Dans le cas où on gère un texte, on va récupérer toutes les données du texte
-
-            if (extensionFichier.equals("bf")) {
+            if ("bf".equals(extensionFichier)) {
                 try {
                     LecteurFichiers reader = new LecteurFichiers();
                     texteALire = reader.reader(fichierALire);
                 } catch (FileNotFoundException e) {
                     System.out.println(e.toString());
-                    return false;
                 }
 
-                return (kernel.interpreterCommande(args) != null);
+            }
+            else if (extensionFichier.equals("bmp")) {
+                LecteurImage lecteurImage = new LecteurImage();
+
+                try {
+                    lecteurImage.read(fichierALire);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
-
-
-
-
-        return false;
     }
 
 
@@ -134,8 +140,8 @@ public class Motor {
 
     public ArrayList<String> callLecteurTextuel(String texteALire){
         lecteur = new LecteurTextuel();
+        System.out.println(texteALire);
         lecteur.setTexteAAnalyser(texteALire);
-        //lecteur.setTexteALire(texteALire);
         ArrayList<String> instruction = lecteur.creeTableauCommande();
 
         return instruction;

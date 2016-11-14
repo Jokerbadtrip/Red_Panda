@@ -38,6 +38,40 @@ public class KernelReader {
         String fichierALire = null;
 
         for(int i = 0; i < args.length; i++) {
+                switch (args[i]) {
+                    case "-p":
+                        try {
+                            fichierALire = args[i + 1].replace("./", "");
+                            i++;
+                        } catch (FilePathNotFoundException e) {
+                            System.out.println(e.toString());
+                        }
+                        break;
+
+                    case "-i": // on va lire un fichier
+                        try {
+                            filepathForReading = args[i + 1];
+                            i++;
+                        } catch (FilePathNotFoundException e) {
+                            e.toString();
+                        }
+                        break;
+
+                    case "-o": // on va écrire dans un fichier
+                        try {
+                            filepathForWriting = args[i + 1];
+                            i++;
+                        } catch (FilePathNotFoundException e) {
+                            e.toString();
+                        }
+
+                        break;
+                }
+            }
+
+
+/*
+        for(int i = 0; i < args.length; i++) {
             if (isFlag(args[i])) {
                 switch (toFlag(args[i])) {
                     case FileToRead:
@@ -83,6 +117,7 @@ public class KernelReader {
                 }
             }
         }
+*/
 
         return fichierALire;
     }
