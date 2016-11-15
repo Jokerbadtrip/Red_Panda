@@ -19,7 +19,12 @@ import static brainfuck.language.Flags.toFlag;
 public class KernelReader {
 
     static String filepathForWriting, filepathForReading;
+    private String nomFichier = null;
 
+
+    public String getNomFichier(){
+        return nomFichier;
+    }
     /**
      *
      * On lit chaque commande reçues par la console et on regarde si elle est contenue dans la variable commande
@@ -43,6 +48,8 @@ public class KernelReader {
                         try {
                             fichierALire = args[i + 1].replace("./", "");
                             i++;
+                            nomFichier = fichierALire.replace(".bf", "");
+
                         } catch (FilePathNotFoundException e) {
                             System.out.println(e.toString());
                         }
