@@ -177,7 +177,7 @@ public class Interpreter {
             if (commandes.get(it) == "]") {
                 nbOuvrante--;
             }
-            
+
             it++;
         }
         return (it - i);
