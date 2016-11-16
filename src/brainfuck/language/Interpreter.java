@@ -6,8 +6,11 @@ import brainfuck.language.Exceptions.ValueOutOfBoundException;
 import brainfuck.language.Exceptions.WrongInput;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
 
 import static brainfuck.language.Keywords.toKeyword;
 
@@ -26,6 +29,31 @@ import static brainfuck.language.Keywords.toKeyword;
 public class Interpreter {
     
     private Memory memory = new Memory();
+    private File backLog;
+    private boolean aTracer = false;
+    FileWriter fw;
+
+    public void iniATracer(String nomFichier){
+        aTracer = true;
+        backLog = new File(nomFichier + ".log");
+        try {
+            fw = new FileWriter(backLog);
+        } catch (IOException e){
+
+        }
+    }
+
+    private void tracerUpdate(int i){
+        if (aTracer) {
+            try {
+                fw.write("Execution step number = " + (i+1) + ", execution pointer position : " + "" + ", data pointer position : " + memory.getmArray() + ", Snapshot : " + memory.toString());
+                fw.write("\r\n");
+            }
+            catch (IOException e){
+
+            }
+        }
+    }
 
     /**
      * Compare le mot avec la liste des mots exécutables et agit en conséquence
@@ -33,55 +61,61 @@ public class Interpreter {
      * @throws ValueOutOfBoundException OutOfMemoryException
      */
     public void keywordsExecution(ArrayList<String> tableauCommande) throws OutOfMemoryException, ValueOutOfBoundException{
-
+        String commande;
         int i = 0;
 
-        for(String commande : tableauCommande) {
-            i++;
+        while (i < tableauCommande.size()){
+            commande = tableauCommande.get(i);
             switch (commande) {
                 case "+":
                     memory.incr();
+                    tracerUpdate(i);
                     break;
                 case "-":
                     memory.decr();
+                    tracerUpdate(i);
                     break;
 
                 case "<":
                     memory.left();
+                    tracerUpdate(i);
                     break;
 
                 case ">":
                     memory.right();
+                    tracerUpdate(i);
                     break;
                 case ".":
                     outMethod();
+                    tracerUpdate(i);
                     break;
 
                 case ",":
                     try {
                         inMethod();
+                        tracerUpdate(i);
                     }
                     catch (WrongInput e) {
                         e.printStackTrace();
                     }
                     break;
                 case "[":
+                    int nbInstruInLoop = countInstru(tableauCommande, i);
                     if (memory.getCellValue() == 0){
-                        foncWhile(tableauCommande, i);
-                        // ATTENTION NE PAS OUBLIER DE FAIRE LA FONC POUR SAUTER TOUT !!!
-                        //test
+                        foncWhile(tableauCommande, i, nbInstruInLoop);
                     }
-                    else
-
-                        break;
-                case "]":
-
+                    else {
+                        i+= nbInstruInLoop;
+                    }
+                    tracerUpdate(i);
                     break;
+                case "]":
+                tracerUpdate(i);
+                break;
                 default:
 
             }
-
-
+            i++;
 
 /*
                 switch (toKeyword(commande)) {
@@ -132,28 +166,36 @@ public class Interpreter {
 
     }
 
-    private int foncWhile(ArrayList<String> commandes, int i){
-        int nbOuvrante = 0;
-        int it = i;
+    private int countInstru(ArrayList<String> commandes, int i){
+        int nbOuvrante = 1;
+        int it = i + 1;
 
-        while (commandes.get(it) != "]" && nbOuvrante != 0){
+        while (commandes.get(it) != "]" || nbOuvrante != 1) {
             if (commandes.get(it) == "[") {
                 nbOuvrante++;
             }
-            if (commandes.get(it) == "]"){
+            if (commandes.get(it) == "]") {
                 nbOuvrante--;
             }
+            
+            it++;
+        }
+        return (it - i);
+    }
 
+    private void foncWhile(ArrayList<String> commandes, int i, int it){
+        int maxIT = i + it;
+
+        while (i < maxIT){
             ArrayList<String> temp = new ArrayList<String>();
             temp.add(commandes.get(it));
             keywordsExecution(temp);
-            it++;
+            i++;
         }
 
-        if (memory.getCellValue() != 0)
-            foncWhile(commandes, i);
-
-        return it;
+        if (memory.getCellValue() != 0){
+            foncWhile(commandes,i,it);
+        }
     }
 
     /**
