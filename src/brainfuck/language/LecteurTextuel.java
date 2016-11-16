@@ -3,6 +3,8 @@ package brainfuck.language;
 import brainfuck.language.Exceptions.IsNotACommandException;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author BEAL Clément on 28/09/16.
@@ -75,7 +77,7 @@ public class LecteurTextuel {
      */
 
     public String[] couperChaineCaractere(String texteADecouper) {
-        String texteDecoupe[] = new String[texteADecouper.length()];
+        String texteDecoupe[] = new String[texteADecouper.length() - 1];
 
         int longueur = texteADecouper.length();
 
@@ -119,6 +121,14 @@ public class LecteurTextuel {
                     index += commandeTrouvee.length();
                     listeCommandeTrouvee.add(commandeTrouvee);
                 }
+
+/*                while(texteAAnalyser.length() > 0) {
+                    switch (Keywords.valueOf())
+                }*/
+
+
+
+
             }
         }
 
@@ -130,8 +140,8 @@ public class LecteurTextuel {
      */
     public void removeCommentary() {
         if(OperationTexte.isCorrectlyComment(texteAAnalyser)) {
-            String regex = "\\#(.*?)\\#";
-            texteAAnalyser = texteAAnalyser.replaceAll(regex, "");
+            String regex = "#(.*?)\\n";
+                texteAAnalyser = texteAAnalyser.replaceAll(regex, "");
         }
     }
 

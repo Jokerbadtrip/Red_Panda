@@ -52,17 +52,12 @@ public class Motor {
         boolean aCheck = false;
         boolean aTranslate = false;
 
-//        for(String arg: args) {
-//            if(toFlag(arg)==Rewrite) aReWrite = true;
-//            if(toFlag(arg)==Check) aCheck = true;
-//            if(toFlag(arg)==Translate) aTranslate = true;
-//        }
-
-        for(String  arg : args) {
-            if(arg == "--rewrite") aReWrite = true;
-            if(arg == "--check") aCheck = true;
-            if(arg == "--translate") aTranslate = true;
+        for(String arg: args) {
+            if(toFlag(arg)==Rewrite) aReWrite = true;
+            if(toFlag(arg)==Check) aCheck = true;
+            if(toFlag(arg)==Translate) aTranslate = true;
         }
+
 
         callKernel(args);
         ArrayList<String> listeDeCommande = callLecteurTextuel(this.texteALire);
