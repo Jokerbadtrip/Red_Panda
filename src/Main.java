@@ -14,14 +14,18 @@ public class Main {
         macro.remplacerMacroParCode();
         System.out.print(macro.toutEnOrdre());
 */
-        LecteurFichiers lecteurFichiers = new LecteurFichiers();
+       /* LecteurFichiers lecteurFichiers = new LecteurFichiers();
         String p = "";
         for(int i = 0; i < 1000; i++) p += "+";
         try {
             lecteurFichiers.write("/home/jamatofu/Bureau/Cour/Red_Panda/prog/OUTcourt", p);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
+
+       String[] argu = {} ;
+       KernelReader kernel = new KernelReader();
+        kernel.interpreterCommande(argu);
 
 
     }

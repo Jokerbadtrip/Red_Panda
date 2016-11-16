@@ -43,79 +43,39 @@ public class KernelReader {
         String fichierALire = null;
 
         for(int i = 0; i < args.length; i++) {
-                switch (args[i]) {
-                    case "-p":
-                        try {
-                            fichierALire = args[i + 1].replace("./", "");
-                            i++;
-                            nomFichier = fichierALire.replace(".bf", "");
-
-                        } catch (FilePathNotFoundException e) {
-                            System.out.println(e.toString());
-                        }
-                        break;
-
-                    case "-i": // on va lire un fichier
-                        try {
-                            filepathForReading = args[i + 1];
-                            i++;
-                        } catch (FilePathNotFoundException e) {
-                            e.toString();
-                        }
-                        break;
-
-                    case "-o": // on va écrire dans un fichier
-                        try {
-                            filepathForWriting = args[i + 1];
-                            i++;
-                        } catch (FilePathNotFoundException e) {
-                            e.toString();
-                        }
-
-                        break;
-                }
-            }
-
-
-/*
-        for(int i = 0; i < args.length; i++) {
             if (isFlag(args[i])) {
                 switch (toFlag(args[i])) {
                     case FileToRead:
-                        try {
+                        if (args.length>=2) {
                             fichierALire = args[i + 1].replace("./", "");
                             i++;
-                        } catch (FilePathNotFoundException e) {
-                            System.out.println(e.toString());
                         }
+                        else throw new FilePathNotFoundException();
                         break;
 
+
                     case Rewrite:
-                        try {
+                        if (args.length>=2) {
                             fichierALire = args[i + 1].replace("./", "");
                             i++;
-                        } catch (FilePathNotFoundException e) {
-                            System.out.println(e.toString());
                         }
+                        else throw new FilePathNotFoundException();
                         break;
 
                     case In: // on va lire un fichier
-                        try {
-                            filepathForReading = args[i + 1];
-                            i++;
-                        } catch (FilePathNotFoundException e) {
-                            e.toString();
-                        }
-                        break;
+                       if (args.length>=2) {
+                           filepathForReading = args[i + 1];
+                           i++;
+                       }
+                       else throw new FilePathNotFoundException();
+                       break;
 
                     case Out: // on va écrire dans un fichier
-                        try {
+                        if (args.length>=2) {
                             filepathForWriting = args[i + 1];
                             i++;
-                        } catch (FilePathNotFoundException e) {
-                            e.toString();
                         }
-
+                        else throw new FilePathNotFoundException();
                         break;
 
                     default:
@@ -124,7 +84,6 @@ public class KernelReader {
                 }
             }
         }
-*/
 
         return fichierALire;
     }
