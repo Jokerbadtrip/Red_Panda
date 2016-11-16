@@ -15,6 +15,7 @@ public enum Flags {
     Translate("--translate");
 
 
+
     //Map to link enums and what the user writes in the console
     static final Map<String, Flags> STRING_FLAGS_MAP;
     static {
@@ -25,6 +26,7 @@ public enum Flags {
         STRING_FLAGS_MAP.put("-o",Out);
         STRING_FLAGS_MAP.put("--check",Check);
         STRING_FLAGS_MAP.put("--translate",Translate);
+
     }
 
 

@@ -77,11 +77,11 @@ public class KernelReader {
                         }
                         else throw new FilePathNotFoundException();
                         break;
-
-                    default:
-                        System.out.println(args[i] + " is not a command.");
-                        showFlags();
                 }
+            }
+            else {
+                System.out.println(args[i] + " is not a command.");
+                showFlags();
             }
         }
 

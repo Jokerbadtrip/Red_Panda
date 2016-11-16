@@ -23,9 +23,10 @@ public class Main {
             e.printStackTrace();
         }*/
 
-       String[] argu = {} ;
-       KernelReader kernel = new KernelReader();
-        kernel.interpreterCommande(argu);
+       String[] argu = {"-k"};
+       Motor motor = new Motor(argu);
+       motor.lancerProgramme();
+
 
 
     }
