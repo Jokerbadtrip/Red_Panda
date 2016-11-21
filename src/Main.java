@@ -23,9 +23,13 @@ public class Main {
             e.printStackTrace();
         }*/
 
-       String[] argu = {"-k"};
+       /*String[] argu = {"-k"};
        Motor motor = new Motor(argu);
-       motor.lancerProgramme();
+       motor.lancerProgramme();*/
+        /*LecteurTextuel lec = new LecteurTextuel();
+        ArrayList tab = lec.creeTableauCommande();
+        System.out.print(tab);*/
+
 
 
 
