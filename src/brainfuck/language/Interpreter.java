@@ -4,6 +4,8 @@ package brainfuck.language;
 import brainfuck.language.Exceptions.OutOfMemoryException;
 import brainfuck.language.Exceptions.ValueOutOfBoundException;
 import brainfuck.language.Exceptions.WrongInput;
+import brainfuck.language.Readers.KernelReader;
+import brainfuck.language.Readers.LecteurFichiers;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,7 +14,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
 
-import static brainfuck.language.Keywords.toKeyword;
+import static brainfuck.language.Enumerations.Keywords.toKeyword;
 
 /**
  * @author BEAL Clément, SERRANO Simon on 28/09/16.
@@ -60,117 +62,64 @@ public class Interpreter {
      * @
      * @throws ValueOutOfBoundException OutOfMemoryException
      */
-    public void keywordsExecution(ArrayList<String> tableauCommande) throws OutOfMemoryException, ValueOutOfBoundException{
+    public void keywordsExecution(ArrayList<String> tableauCommande) throws OutOfMemoryException, ValueOutOfBoundException {
         String commande;
         int i = 0;
 
-<<<<<<< Updated upstream
-        while (i < tableauCommande.size()){
+        while (i < tableauCommande.size()) {
             commande = tableauCommande.get(i);
-            switch (commande) {
-                case "+":
+            switch (toKeyword(commande)) {
+                case INCR:
                     memory.incr();
                     tracerUpdate(i);
                     break;
-                case "-":
+                case DECR:
                     memory.decr();
                     tracerUpdate(i);
                     break;
 
-                case "<":
+                case LEFT:
                     memory.left();
                     tracerUpdate(i);
                     break;
 
-                case ">":
+                case RIGHT:
                     memory.right();
                     tracerUpdate(i);
                     break;
-                case ".":
+                case OUT:
                     outMethod();
                     tracerUpdate(i);
                     break;
 
-                case ",":
+                case IN:
                     try {
                         inMethod();
                         tracerUpdate(i);
-                    }
-                    catch (WrongInput e) {
+                    } catch (WrongInput e) {
                         e.printStackTrace();
                     }
                     break;
-                case "[":
+                case JUMP:
                     int nbInstruInLoop = countInstru(tableauCommande, i);
-                    if (memory.getCellValue() == 0){
+                    if (memory.getCellValue() == 0) {
                         foncWhile(tableauCommande, i, nbInstruInLoop);
-                    }
-                    else {
-                        i+= nbInstruInLoop;
+                    } else {
+                        i += nbInstruInLoop;
                     }
                     tracerUpdate(i);
                     break;
-                case "]":
-                tracerUpdate(i);
-                break;
+                case BACK:
+                    tracerUpdate(i);
+                    break;
                 default:
 
             }
             i++;
-
-/*
-=======
-        for(String commande : tableauCommande) {
-            i++;
-
->>>>>>> Stashed changes
-                switch (toKeyword(commande)) {
-                    case INCR:
-                        memory.incr();
-                        break;
-                    case DECR:
-                        memory.decr();
-                        break;
-
-                    case LEFT:
-                        memory.left();
-                        break;
-
-                    case RIGHT:
-                        memory.right();
-                        break;
-                    case OUT:
-                        outMethod();
-                        break;
-
-                    case IN:
-                        try {
-                            inMethod();
-                        }
-                        catch (WrongInput e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    case JUMP:
-                        if (memory.getCellValue() == 0){
-                            foncWhile(tableauCommande, i);
-                            // ATTENTION NE PAS OUBLIER DE FAIRE LA FONC POUR SAUTER TOUT !!!
-                            //test
-                        }
-                        else
-
-                        break;
-                    case BACK:
-
-                        break;
-                    default:
-                }
-
         }
-
-        memory.printMemory();
-
     }
+
+
 
     private int countInstru(ArrayList<String> commandes, int i){
         int nbOuvrante = 1;

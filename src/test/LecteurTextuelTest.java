@@ -1,13 +1,9 @@
 package test;
 
-import brainfuck.language.LecteurTextuel;
+import brainfuck.language.Readers.LecteurTextuel;
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
-
-import java.lang.reflect.Array;
-import java.util.Arrays;
 
 /**
  * @author jamatofu on 13/11/16.

@@ -1,11 +1,11 @@
-package brainfuck.language;
+package brainfuck.language.Readers;
 
 
 
 import brainfuck.language.Exceptions.FilePathNotFoundException;
 import brainfuck.language.Exceptions.MainFlagNotFoundException;
 
-import static brainfuck.language.Flags.*;
+import static brainfuck.language.Enumerations.Flags.*;
 
 
 /**
@@ -18,9 +18,8 @@ import static brainfuck.language.Flags.*;
  */
 public class KernelReader {
 
-    static String filepathForWriting, filepathForReading;
+    public static String filepathForWriting, filepathForReading;
     private String nomFichier = null;
-    private int indexOfFilepath=-1;
 
 
 
@@ -52,7 +51,7 @@ public class KernelReader {
                         case FileToRead:
                             if (containsFilePath(args[i+1])) {
                                 fichierALire = args[i + 1].replace("./", "");
-                                i++;// We increment i here to go directly to the next flag and ignore the file path
+                                i++;// We increment i here to skip the file path and go to the next flag
                             }
                             else throw new FilePathNotFoundException();
 
@@ -128,6 +127,11 @@ public class KernelReader {
         return nbrBack == nbrJump;
     }
 
+    /**
+     * Checks whether the -p has been given in the arguments
+     * @param args arguments given when calling the program
+     * @return true if the -p is present
+     */
     public boolean containsMainFlag(String[] args){
         for (String arg : args){
             if (FileToRead.equals(toFlag(arg))) return true;

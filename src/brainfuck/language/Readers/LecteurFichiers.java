@@ -1,4 +1,4 @@
-package brainfuck.language;
+package brainfuck.language.Readers;
 
 
 /**

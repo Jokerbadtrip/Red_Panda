@@ -77,7 +77,7 @@ public class Memory {
 	}
 
 	/**
-	 *  Print each memory cells to the screen only if it value is different 0
+	 *  Print each memory cells to the screen only if its value is different from 0
 	 */
 	public void printMemory(){
 		for (int i =  0; i <= maxArray; i++){

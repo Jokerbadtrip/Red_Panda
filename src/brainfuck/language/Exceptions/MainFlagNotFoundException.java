@@ -9,6 +9,6 @@ public class MainFlagNotFoundException extends RuntimeException {
 
     @Override
     public String toString() {
-        return "You need to specify the main flag exception : -p \n exemple : ./bfck -p myfilepath";
+        return "You need to specify the main flag : -p \n exemple : ./bfck -p myfilepath";
     }
 }

@@ -1,6 +1,7 @@
-package brainfuck.language;
+package brainfuck.language.Readers;
 
 import brainfuck.language.Exceptions.IsNotACommandException;
+import brainfuck.language.OperationTexte;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
