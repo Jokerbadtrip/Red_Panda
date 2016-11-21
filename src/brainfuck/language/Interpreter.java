@@ -64,6 +64,7 @@ public class Interpreter {
         String commande;
         int i = 0;
 
+<<<<<<< Updated upstream
         while (i < tableauCommande.size()){
             commande = tableauCommande.get(i);
             switch (commande) {
@@ -118,6 +119,11 @@ public class Interpreter {
             i++;
 
 /*
+=======
+        for(String commande : tableauCommande) {
+            i++;
+
+>>>>>>> Stashed changes
                 switch (toKeyword(commande)) {
                     case INCR:
                         memory.incr();
@@ -159,7 +165,7 @@ public class Interpreter {
                         break;
                     default:
                 }
-*/
+
         }
 
         memory.printMemory();

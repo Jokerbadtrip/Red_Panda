@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) {
+<<<<<<< Updated upstream
 /*
         Macro macro = new Macro();
         macro.findMacro("@DIGIT +++\n@COOL ---\nDIGITDIGITCOOLCOOLINCR\n");
@@ -24,6 +25,10 @@ public class Main {
         }*/
 
        /*String[] argu = {"-k"};
+=======
+
+       String[] argu ={"-p", "D:\\SOPHIA ANTIPOLIS CYCLE INGENIEUR\\SI3\\Projet Red_Panda\\bfck.bf", "D:\\SOPHIA ANTIPOLIS CYCLE INGENIEUR\\SI3\\Projet Red_Panda\\bfck.bf", "-k"};
+>>>>>>> Stashed changes
        Motor motor = new Motor(argu);
        motor.lancerProgramme();*/
         /*LecteurTextuel lec = new LecteurTextuel();

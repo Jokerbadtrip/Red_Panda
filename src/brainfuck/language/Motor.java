@@ -53,9 +53,9 @@ public class Motor {
         boolean aTranslate = false;
 
         for(String arg: args) {
-            if(toFlag(arg)==Rewrite) aReWrite = true;
-            if(toFlag(arg)==Check) aCheck = true;
-            if(toFlag(arg)==Translate) aTranslate = true;
+            if(Rewrite.equals(toFlag(arg))) aReWrite = true;
+            if(Check.equals(toFlag(arg))) aCheck = true;
+            if(Translate.equals(toFlag(arg))) aTranslate = true;
         }
 
 

@@ -1,7 +1,7 @@
 package brainfuck.language;
 
 
-import brainfuck.language.Exceptions.IsNotACommandException;
+
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,11 +1,11 @@
 package brainfuck.language;
 
+
+
 import brainfuck.language.Exceptions.FilePathNotFoundException;
+import brainfuck.language.Exceptions.MainFlagNotFoundException;
 
-
-import static brainfuck.language.Flags.isFlag;
-import static brainfuck.language.Flags.showFlags;
-import static brainfuck.language.Flags.toFlag;
+import static brainfuck.language.Flags.*;
 
 
 /**
@@ -20,6 +20,8 @@ public class KernelReader {
 
     static String filepathForWriting, filepathForReading;
     private String nomFichier = null;
+    private int indexOfFilepath=-1;
+
 
 
     public String getNomFichier(){
@@ -39,54 +41,72 @@ public class KernelReader {
      * @param args toutes les commandes reçues par la console
      * @return le nom du fichier a lire à la classe Moteur
      */
-    public String interpreterCommande(String[] args){
+    public String interpreterCommande(String[] args) throws FilePathNotFoundException, MainFlagNotFoundException {
         String fichierALire = null;
 
-        for(int i = 0; i < args.length; i++) {
-            if (isFlag(args[i])) {
-                switch (toFlag(args[i])) {
-                    case FileToRead:
-                        if (args.length>=2) {
-                            fichierALire = args[i + 1].replace("./", "");
-                            i++;
-                        }
-                        else throw new FilePathNotFoundException();
-                        break;
+        if (containsMainFlag(args)) {
+            for (int i = 0; i < args.length; i++) {
+                if (isFlag(args[i])) {
+
+                    switch (toFlag(args[i])) {
+                        case FileToRead:
+                            if (containsFilePath(args[i+1])) {
+                                fichierALire = args[i + 1].replace("./", "");
+                                i++;// We increment i here to go directly to the next flag and ignore the file path
+                            }
+                            else throw new FilePathNotFoundException();
+
+                            break;
 
 
-                    case Rewrite:
-                        if (args.length>=2) {
-                            fichierALire = args[i + 1].replace("./", "");
-                            i++;
-                        }
-                        else throw new FilePathNotFoundException();
-                        break;
+                        case Rewrite:
 
-                    case In: // on va lire un fichier
-                       if (args.length>=2) {
-                           filepathForReading = args[i + 1];
-                           i++;
-                       }
-                       else throw new FilePathNotFoundException();
-                       break;
+                            if(containsFilePath(args[i+1])){
+                                fichierALire = args[i+1].replace("./", "");
+                                i++;
+                            }
+                            else throw new FilePathNotFoundException();
 
-                    case Out: // on va écrire dans un fichier
-                        if (args.length>=2) {
-                            filepathForWriting = args[i + 1];
-                            i++;
-                        }
-                        else throw new FilePathNotFoundException();
-                        break;
+
+                            break;
+
+                        case In: // on va lire un fichier
+
+                            if (containsFilePath(args[i+1])) {
+                                filepathForReading = args[i+1];
+                                i++;
+                            }
+                            else throw new FilePathNotFoundException();
+
+                            break;
+
+                        case Out: // on va écrire dans un fichier
+
+                            if (containsFilePath(args[i+1])){
+                                filepathForWriting = args[i+1];
+                                i++;
+                            }
+                            else throw new FilePathNotFoundException();
+
+                            break;
+                    }
+                    if (!isFlag(args[i]) && !containsFilePath(args[i])) {
+                        System.out.println(args[i] + " is not a command.");
+                        showFlags();
+                    }
+
                 }
-            }
-            else {
-                System.out.println(args[i] + " is not a command.");
-                showFlags();
+
             }
         }
+        else throw new MainFlagNotFoundException();
 
         return fichierALire;
     }
+
+
+
+
 
     /**
      * Execute la commande --check
@@ -106,6 +126,23 @@ public class KernelReader {
         nbrBack = texteALire.length() - texteALire.replace("]", "").length();
 
         return nbrBack == nbrJump;
+    }
+
+    public boolean containsMainFlag(String[] args){
+        for (String arg : args){
+            if (FileToRead.equals(toFlag(arg))) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks whether or not a file path is contained in the argument
+     * @param arg the entry argument
+     * @return true is there is a file path
+     */
+    public boolean containsFilePath(String arg){
+        //if the argument contains a file with .bf or .bmp extension then there is a file path
+        return arg.indexOf(".bf")!=-1 || arg.indexOf(".bmp")!=-1 ? true : false;
     }
 
 }
