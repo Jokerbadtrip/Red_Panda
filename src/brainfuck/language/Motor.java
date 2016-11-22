@@ -1,15 +1,15 @@
 package brainfuck.language;
 
-import brainfuck.language.Readers.KernelReader;
-import brainfuck.language.Readers.LecteurFichiers;
-import brainfuck.language.Readers.LecteurImage;
-import brainfuck.language.Readers.LecteurTextuel;
+import brainfuck.language.readers.KernelReader;
+import brainfuck.language.readers.LecteurFichiers;
+import brainfuck.language.readers.LecteurImage;
+import brainfuck.language.readers.LecteurTextuel;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static brainfuck.language.Enumerations.Flags.*;
+import static brainfuck.language.enumerations.Flags.*;
 
 /**
  * @author BEAL Clément on 05/10/2016.

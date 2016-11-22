@@ -1,4 +1,4 @@
-package brainfuck.language.Readers;
+package brainfuck.language.readers;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

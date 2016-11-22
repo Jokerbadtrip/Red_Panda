@@ -1,4 +1,4 @@
-package brainfuck.language.Exceptions;
+package brainfuck.language.exceptions;
 
 /**
  * Created by Serrano Simon on 07/11/2016.

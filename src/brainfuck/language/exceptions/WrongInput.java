@@ -1,4 +1,4 @@
-package brainfuck.language.Exceptions;
+package brainfuck.language.exceptions;
 
 /**
  * Exception pour la commande IN. Si on rentre une entrée

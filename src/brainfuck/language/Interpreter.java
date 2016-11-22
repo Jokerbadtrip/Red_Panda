@@ -1,11 +1,11 @@
 package brainfuck.language;
 
 
-import brainfuck.language.Exceptions.OutOfMemoryException;
-import brainfuck.language.Exceptions.ValueOutOfBoundException;
-import brainfuck.language.Exceptions.WrongInput;
-import brainfuck.language.Readers.KernelReader;
-import brainfuck.language.Readers.LecteurFichiers;
+import brainfuck.language.exceptions.OutOfMemoryException;
+import brainfuck.language.exceptions.ValueOutOfBoundException;
+import brainfuck.language.exceptions.WrongInput;
+import brainfuck.language.readers.KernelReader;
+import brainfuck.language.readers.LecteurFichiers;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
 
-import static brainfuck.language.Enumerations.Keywords.toKeyword;
+import static brainfuck.language.enumerations.Keywords.toKeyword;
 
 /**
  * @author BEAL Clément, SERRANO Simon on 28/09/16.

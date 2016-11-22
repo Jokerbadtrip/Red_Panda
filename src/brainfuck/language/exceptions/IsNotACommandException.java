@@ -1,4 +1,4 @@
-package brainfuck.language.Exceptions;
+package brainfuck.language.exceptions;
 
 /**
  * Created by MSI on 03/11/2016.

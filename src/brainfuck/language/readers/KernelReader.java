@@ -1,11 +1,11 @@
-package brainfuck.language.Readers;
+package brainfuck.language.readers;
 
 
 
-import brainfuck.language.Exceptions.FilePathNotFoundException;
-import brainfuck.language.Exceptions.MainFlagNotFoundException;
+import brainfuck.language.exceptions.FilePathNotFoundException;
+import brainfuck.language.exceptions.MainFlagNotFoundException;
 
-import static brainfuck.language.Enumerations.Flags.*;
+import static brainfuck.language.enumerations.Flags.*;
 
 
 /**

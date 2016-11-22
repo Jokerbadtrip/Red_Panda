@@ -1,4 +1,4 @@
-package brainfuck.language.Enumerations;
+package brainfuck.language.enumerations;
 
 import java.util.HashMap;
 import java.util.Map;

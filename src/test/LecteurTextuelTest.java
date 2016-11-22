@@ -1,6 +1,6 @@
 package test;
 
-import brainfuck.language.Readers.LecteurTextuel;
+import brainfuck.language.readers.LecteurTextuel;
 import static org.junit.Assert.*;
 
 import org.junit.Test;

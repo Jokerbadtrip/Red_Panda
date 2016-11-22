@@ -1,4 +1,4 @@
-package brainfuck.language.Exceptions;
+package brainfuck.language.exceptions;
 
 /**
  * This exception describes the fact that the pointer of the memory is out of the memory

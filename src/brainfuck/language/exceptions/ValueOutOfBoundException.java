@@ -1,4 +1,4 @@
-package brainfuck.language.Exceptions;
+package brainfuck.language.exceptions;
 
 /**
  * This exception describes the fact that a cell in the memory cannot be incremented or decremented because the min/max

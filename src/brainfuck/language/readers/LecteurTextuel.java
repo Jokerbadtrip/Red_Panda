@@ -1,11 +1,9 @@
-package brainfuck.language.Readers;
+package brainfuck.language.readers;
 
-import brainfuck.language.Exceptions.IsNotACommandException;
+import brainfuck.language.exceptions.IsNotACommandException;
 import brainfuck.language.OperationTexte;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author BEAL Clément on 28/09/16.

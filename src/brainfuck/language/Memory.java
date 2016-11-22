@@ -1,7 +1,7 @@
 package brainfuck.language;
 
-import brainfuck.language.Exceptions.OutOfMemoryException;
-import brainfuck.language.Exceptions.ValueOutOfBoundException;
+import brainfuck.language.exceptions.OutOfMemoryException;
+import brainfuck.language.exceptions.ValueOutOfBoundException;
 
 /**
  * This class is where the memory of our file will be stocked. It contains
