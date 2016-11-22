@@ -138,18 +138,21 @@ public class Interpreter {
         return (it - i);
     }
 
-    private void foncWhile(ArrayList<String> commandes, int i, int it){
-        int maxIT = i + it;
+    public void foncWhile(ArrayList<String> commandes, int i){
+        int itemp = i;
+        int maxIT = itemp + countInstru(commandes, i);
+        itemp++;
 
-        while (i < maxIT){
+        while (itemp < maxIT)
+        {
             ArrayList<String> temp = new ArrayList<String>();
-            temp.add(commandes.get(it));
+            temp.add(commandes.get(itemp));
             keywordsExecution(temp);
-            i++;
+            itemp++;
         }
 
         if (memory.getCellValue() != 0){
-            foncWhile(commandes,i,it);
+            foncWhile(commandes,i);
         }
     }
 

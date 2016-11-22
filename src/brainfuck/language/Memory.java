@@ -85,6 +85,14 @@ public class Memory {
 		}
 	}
 
+	public String toString(){
+		String résumé = "";
+		for (int i =  0; i <= maxArray; i++){
+			résumé += ("C" + i + ": " + mArray[i] + " ");
+		}
+		return résumé;
+	}
+
 
 	/**
 	 * Change the value of pointed memory cell
@@ -95,10 +103,12 @@ public class Memory {
 		mArray[pointer] = value;
 		Metrics.DATA_WRITE++;
 	}
+
 	
-	public short[] getmArray() {
+	public short[] getmArray(){
 		return mArray;
 	}
+
 	public int getCellValue() {
 		return (int) mArray[pointer];
 	}
