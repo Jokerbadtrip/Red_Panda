@@ -16,7 +16,7 @@ public class LecteurTextuel {
 
     private String texteAAnalyser;
     private int index;
-    private ArrayList chiffre = new ArrayList(){{
+    /*private ArrayList chiffre = new ArrayList(){{
         add('0');
         add('1');
         add('2');
@@ -27,7 +27,7 @@ public class LecteurTextuel {
         add('7');
         add('8');
         add('9');
-    }};
+    }};*/
 
     public LecteurTextuel() {
         this.index = 0;
@@ -120,7 +120,7 @@ public class LecteurTextuel {
 
 
                 // selectionne un morceau du texte
-                if (texteAAnalyser.length() - index  > 7){
+                /*if (texteAAnalyser.length() - index  > 7){
                     String morceau7 = texteAAnalyser.substring(index,index+8);
                     if (morceau7.equals("TO_DIGIT")){
                         for (int j=0; j<48;j++){
@@ -168,7 +168,7 @@ public class LecteurTextuel {
                 }
 
 
-                if (texteAAnalyser.length() - index  > 0 && !(estShortcut(texteAAnalyser.charAt(index)))){
+                if (texteAAnalyser.length() - index  > 0 && !(estShortcut(texteAAnalyser.charAt(index)))){*/
                     int cbAjouter = (longueurProgramme - index >= 5) ? 5 : longueurProgramme - index;
                     String morceauTexteAAnalyser = texteAAnalyser.substring(index, index + cbAjouter);
                     // coupe ce morceau de texte en morceaux plus petit
@@ -182,7 +182,7 @@ public class LecteurTextuel {
                         index += commandeTrouvee.length();
                         listeCommandeTrouvee.add(commandeTrouvee);
                     }
-                }
+                //}
 
             }
         }
