@@ -34,6 +34,7 @@ public class OperationTexte {
         for (String comm : liste) {
             System.out.print(comm);
         }
+        System.out.println();
     }
         /**
          * Vérifie que les commentaires sont bien refermés par des dièses

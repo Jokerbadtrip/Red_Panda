@@ -66,7 +66,6 @@ public class LecteurTextuelTest {
 
         lecteurTextuel.setTexteAAnalyser("+++#hello\nazerza#poizua\n985");
         lecteurTextuel.removeCommentary();
-        System.out.println(lecteurTextuel.getTexteAAnalyser());
     }
 
 }

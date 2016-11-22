@@ -48,24 +48,17 @@ public class KernelReader {
                 if (isFlag(args[i])) {
                     switch (toFlag(args[i])) {
                         case FileToRead:
-                            if (containsFilePath(args[i+1])) {
-                                fichierALire = args[i + 1].replace("./", "");
-                                i++;// We increment i here to skip the file path and go to the next flag
-                            }
-                            else throw new FilePathNotFoundException();
-
+                            try {
+                                if (containsFilePath(args[i + 1])) {
+                                    fichierALire = args[i + 1].replace("./", "");
+                                    i++;// We increment i here to skip the file path and go to the next flag
+                                } else throw new FilePathNotFoundException();
+                            }catch (ArrayIndexOutOfBoundsException e){throw new FilePathNotFoundException();}
                             break;
 
 
                         case Rewrite:
-
-                            if(containsFilePath(args[i+1])){
-                                fichierALire = args[i+1].replace("./", "");
-                                i++;
-                            }
-                            else throw new FilePathNotFoundException();
-
-
+                            //Do nothing
                             break;
 
                         case In: // on va lire un fichier
@@ -145,7 +138,8 @@ public class KernelReader {
      */
     public boolean containsFilePath(String arg){
         //if the argument contains a file with .bf or .bmp extension then there is a file path
-        return arg.indexOf(".bf")!=-1 || arg.indexOf(".bmp")!=-1 ? true : false;
+        if (arg.indexOf(".bf") != -1 || arg.indexOf(".bmp") != -1) return true;
+        return false;
     }
 
 
