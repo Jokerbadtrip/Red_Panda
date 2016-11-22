@@ -56,32 +56,31 @@ public class Motor {
         boolean aReWrite = false;
         boolean aCheck = false;
         boolean aTranslate = false;
-
-        for(String arg: args) {
-            if(Rewrite.equals(toFlag(arg))) aReWrite = true;
-            if(Check.equals(toFlag(arg))) aCheck = true;
-            if(Translate.equals(toFlag(arg))) aTranslate = true;
+        for (String arg : args) {
+            if (Rewrite.equals(toFlag(arg))) aReWrite = true;
+            if (Check.equals(toFlag(arg))) aCheck = true;
+            if (Translate.equals(toFlag(arg))) aTranslate = true;
         }
 
 
         callKernel(args);
         ArrayList<String> listeDeCommande = callLecteurTextuel(this.texteALire);
 
-        if(aReWrite) {
+        if (aReWrite) {
             OperationTexte.toString(listeDeCommande);
         }
-        if(aCheck) {
-            if(kernel.commandeCheck(texteALire)) System.out.println("Tout est ok");
+        if (aCheck) {
+            if (kernel.commandeCheck(texteALire)) System.out.println("Tout est ok");
             else System.out.println("Rien n'est ok");
         }
-        else{
-            if(aTranslate) {
-                LecteurImage lecteurImage = new LecteurImage();
-                String nomFichier = fichierALire.substring(0, fichierALire.indexOf("."));
-                lecteurImage.translateFromShortcutToImage(listeDeCommande, nomFichier);
-            }
-            callInterpreter(listeDeCommande);
+
+        if (aTranslate) {
+            LecteurImage lecteurImage = new LecteurImage();
+            String nomFichier = fichierALire.substring(0, fichierALire.indexOf("."));
+            lecteurImage.translateFromShortcutToImage(listeDeCommande, nomFichier);
         }
+        callInterpreter(listeDeCommande);
+
 
     }
 
@@ -91,11 +90,8 @@ public class Motor {
      * @return ???
      */
     public void callKernel(String[] args) {
-
         fichierALire = kernel.interpreterCommande(args);
-
         if (fichierALire != null) {
-
             String extensionFichier = this.extensionFichier(fichierALire);
 
             if ("bf".equals(extensionFichier)) {
@@ -140,7 +136,6 @@ public class Motor {
 
     public ArrayList<String> callLecteurTextuel(String texteALire){
         lecteur = new LecteurTextuel();
-        System.out.println(texteALire);
         lecteur.setTexteAAnalyser(texteALire);
         ArrayList<String> instruction = lecteur.creeTableauCommande();
 
@@ -158,6 +153,8 @@ public class Motor {
         return (fichier.substring(fichier.indexOf(".") + 1));
     }
 
-
+    public String getTexteALire() {
+        return texteALire;
+    }
 }
 

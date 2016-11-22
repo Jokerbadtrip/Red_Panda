@@ -20,6 +20,7 @@ public class KernelReader {
 
     public static String filepathForWriting, filepathForReading;
     private String nomFichier = null;
+    private String fichierALire = null;
 
 
 
@@ -41,12 +42,10 @@ public class KernelReader {
      * @return le nom du fichier a lire à la classe Moteur
      */
     public String interpreterCommande(String[] args) throws FilePathNotFoundException, MainFlagNotFoundException {
-        String fichierALire = null;
 
         if (containsMainFlag(args)) {
             for (int i = 0; i < args.length; i++) {
                 if (isFlag(args[i])) {
-
                     switch (toFlag(args[i])) {
                         case FileToRead:
                             if (containsFilePath(args[i+1])) {
@@ -99,8 +98,8 @@ public class KernelReader {
             }
         }
         else throw new MainFlagNotFoundException();
-
         return fichierALire;
+
     }
 
 
@@ -148,5 +147,6 @@ public class KernelReader {
         //if the argument contains a file with .bf or .bmp extension then there is a file path
         return arg.indexOf(".bf")!=-1 || arg.indexOf(".bmp")!=-1 ? true : false;
     }
+
 
 }

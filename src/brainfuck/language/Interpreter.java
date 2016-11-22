@@ -65,7 +65,6 @@ public class Interpreter {
     public void keywordsExecution(ArrayList<String> tableauCommande) throws OutOfMemoryException, ValueOutOfBoundException {
         String commande;
         int i = 0;
-
         while (i < tableauCommande.size()) {
             commande = tableauCommande.get(i);
             switch (toKeyword(commande)) {
@@ -117,6 +116,7 @@ public class Interpreter {
             }
             i++;
         }
+        memory.printMemory(); //NE PAS SUPPRIMER !!!!!!!!
     }
 
 

@@ -14,7 +14,7 @@ public class LecteurTextuel {
     protected String[] words = {"RIGHT", "LEFT", "INCR", "DECR", "JUMP", "BACK", "OUT", "IN"};
     protected char[] shortcuts = {'+', '-', '<', '>', '.', ',', '[', ']'};
 
-    private String texteAAnalyser = "MULTI_DECR 15+";
+    private String texteAAnalyser;
     private int index;
     private ArrayList chiffre = new ArrayList(){{
         add('0');
@@ -184,15 +184,6 @@ public class LecteurTextuel {
                     }
                 }
 
-
-/*                while(texteAAnalyser.length() > 0) {
-                    switch (Keywords.valueOf())
-                }*/
-
-
-
-
-
             }
         }
 
@@ -219,4 +210,5 @@ public class LecteurTextuel {
 
     public String getTexteAAnalyser() { return texteAAnalyser;}
 }
+
 
