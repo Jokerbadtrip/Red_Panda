@@ -41,18 +41,18 @@ public class Interpreter {
         try {
             fw = new FileWriter(backLog);
         } catch (IOException e) {
-
+            System.out.println("Not implemented yet");
         }
     }
 
-    private void tracerUpdate(int i) {
+    private void tracerUpdate(int i, int itot) {
         if (aTracer) {
             try {
-                fw.write("Execution step number = " + (i + 1) + ", execution pointer position : " + ""
+                fw.write("Execution step number = " + (itot + 1) + ", execution pointer position : " + (i+1)
                         + ", data pointer position : " + memory.getmArray() + ", Snapshot : " + memory.toString());
                 fw.write("\r\n");
             } catch (IOException e) {
-
+                System.out.println("Not implemented yet");
             }
         }
     }
@@ -66,7 +66,7 @@ public class Interpreter {
             throws OutOfMemoryException, ValueOutOfBoundException {
         Metrics.PROC_SIZE = tableauCommande.size();
         String commande;
-        int i = 0;
+        int i = 0, itot = 0;
         recenseCrochet(tableauCommande);
 
         while (i < tableauCommande.size()) {
@@ -74,33 +74,33 @@ public class Interpreter {
             switch (toKeyword(commande)) {
                 case INCR:
                     memory.incr();
-                    tracerUpdate(i);
+                    tracerUpdate(i,itot);
                     Metrics.DATA_WRITE++;
                     break;
                 case DECR:
                     memory.decr();
-                    tracerUpdate(i);
+                    tracerUpdate(i,itot);
                     Metrics.DATA_WRITE++;
                     break;
 
                 case LEFT:
                     memory.left();
-                    tracerUpdate(i);
+                    tracerUpdate(i, itot);
                     break;
 
                 case RIGHT:
                     memory.right();
-                    tracerUpdate(i);
+                    tracerUpdate(i,itot);
                     break;
                 case OUT:
                     outMethod();
-                    tracerUpdate(i);
+                    tracerUpdate(i,itot);
                     break;
 
                 case IN:
                     try {
                         inMethod();
-                        tracerUpdate(i);
+                        tracerUpdate(i,itot);
                     } catch (WrongInput e) {
                         e.printStackTrace();
                     }
@@ -110,17 +110,18 @@ public class Interpreter {
                     if (memory.getCellValue() == 0)
                         i+=countInstru(tableauCommande, i);
 
-                    tracerUpdate(i);
+                    tracerUpdate(i,itot);
                     break;
                 case BACK:
                     Metrics.DATA_READ++;
-                    tracerUpdate(i);
+                    tracerUpdate(i,itot);
                     break;
 
                 default:
 
             }
             i++;
+            itot++;
         }
         memory.printMemory();
     }
