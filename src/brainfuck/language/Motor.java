@@ -56,10 +56,12 @@ public class Motor {
         boolean aReWrite = false;
         boolean aCheck = false;
         boolean aTranslate = false;
+        boolean aTracer =false;
         for (String arg : args) {
             if (Rewrite.equals(toFlag(arg))) aReWrite = true;
             if (Check.equals(toFlag(arg))) aCheck = true;
             if (Translate.equals(toFlag(arg))) aTranslate = true;
+            if (Trace.equals(toFlag(arg))) aTracer=true;
         }
 
 
@@ -78,6 +80,9 @@ public class Motor {
             LecteurImage lecteurImage = new LecteurImage();
             String nomFichier = fichierALire.substring(0, fichierALire.indexOf("."));
             lecteurImage.translateFromShortcutToImage(listeDeCommande, nomFichier);
+        }
+        if (aTracer){
+            interpreter.iniATracer(fichierALire.replace("."+extensionFichier(fichierALire),""));
         }
         callInterpreter(listeDeCommande);
 

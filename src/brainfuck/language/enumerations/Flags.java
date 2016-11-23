@@ -12,7 +12,8 @@ public enum Flags {
     In("-i"),
     Out("-o"),
     Check("--check"),
-    Translate("--translate");
+    Translate("--translate"),
+    Trace("--trace");
 
 
 
@@ -26,6 +27,7 @@ public enum Flags {
         STRING_FLAGS_MAP.put("-o",Out);
         STRING_FLAGS_MAP.put("--check",Check);
         STRING_FLAGS_MAP.put("--translate",Translate);
+        STRING_FLAGS_MAP.put("--trace",Trace);
 
     }
 
