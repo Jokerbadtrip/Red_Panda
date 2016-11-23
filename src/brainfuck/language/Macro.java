@@ -18,20 +18,33 @@ public class Macro {
     private TreeMap<String, String> macro = new TreeMap<String, String>();
     private String programme;
 
+    public Macro(String programme) {
+        this.programme = programme;
+    }
+
+    /**
+     * Permet de globalement lire une macro et de la remplacer par son code
+     * @return le programme avec les macro remplacées par le code
+     */
+    public String readMacro() {
+        findMacro();
+        remplacerMacroParCode();
+
+        return programme;
+    }
+
     /**
      * Permet de détecter les lignes qui correspondent à une macro
      * Les renvoie ensuite au découpeur de macro
-     * @param texte le programme en entier
      */
-    public void findMacro(String texte) {
+    public void findMacro() {
         ArrayList<String> toutesLesMacros = new ArrayList<String>();
-        int i = 0;
-        while(texte.charAt(0) == '@') {
-            toutesLesMacros.add(texte.substring(0, texte.indexOf("\n")));
-            texte = supprimerLigneDeTexte(toutesLesMacros.get(toutesLesMacros.size() -1), texte);
+
+        while(programme.charAt(0) == '@') {
+            toutesLesMacros.add(programme.substring(0, programme.indexOf("\n")));
+            programme = supprimerLigneDeTexte(toutesLesMacros.get(toutesLesMacros.size() -1), programme);
         }
 
-        programme = texte;
 
         //for(String a : toutesLesMacros) System.out.println(a);
         decomposerMacro(toutesLesMacros);
@@ -60,8 +73,6 @@ public class Macro {
         for(Entry<String, String> entry : macro.entrySet()) {
             programme = programme.replaceAll(entry.getKey(), entry.getValue());
         }
-
-        programme = OperationTexte.transformerInstructionEnSymbole(programme);
     }
 
     /**

@@ -27,8 +27,10 @@ public class LecteurFichiers {
         Scanner input = new Scanner(file);
         String chaine = "";
 
+
         while (input.hasNextLine()){
             chaine += input.nextLine();
+            chaine += "\n";
         }
         return (chaine);
     }

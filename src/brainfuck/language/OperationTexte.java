@@ -36,13 +36,4 @@ public class OperationTexte {
         }
         System.out.println();
     }
-        /**
-         * Vérifie que les commentaires sont bien refermés par des dièses
-         * @return vrai si le nombre de # est pair SINON faux
-         */
-    public static boolean isCorrectlyComment(String programme) {
-            int nbHashTag = programme.length() - programme.replaceAll("#", "").length();
-
-            return (nbHashTag % 2 == 0);
-        }
 }

@@ -81,8 +81,9 @@ public class Memory {
 	 */
 	public void printMemory(){
 		for (int i =  0; i <= maxArray; i++){
-			System.out.println("C" + i + ": " + mArray[i] + "\n");
+			System.out.println("C" + i + ": " + mArray[i]);
 		}
+		System.out.println();
 	}
 
 	public String toString(){
