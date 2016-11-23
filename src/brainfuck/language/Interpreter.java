@@ -111,7 +111,6 @@ public class Interpreter {
                     tracerUpdate(i);
                     break;
                 case BACK:
-                    System.out.println(retournePlace(tableauCommande,i));
                     if (memory.getCellValue() != 0)
                         i = placeCrochet.get(retournePlace(tableauCommande,i));
 
