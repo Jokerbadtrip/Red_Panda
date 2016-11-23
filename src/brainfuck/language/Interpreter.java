@@ -1,18 +1,21 @@
-package language;
+package brainfuck.language;
 
-import language.Exceptions.OutOfMemoryException;
-import language.Exceptions.ValueOutOfBoundException;
-import language.Exceptions.WrongInput;
+import brainfuck.language.exceptions.OutOfMemoryException;
+import brainfuck.language.exceptions.ValueOutOfBoundException;
+import brainfuck.language.exceptions.WrongInput;
+import brainfuck.language.readers.KernelReader;
+import brainfuck.language.readers.LecteurFichiers;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.io.File;
-import java.io.FileWriter;
 
-import static language.Keywords.toKeyword;
+import static brainfuck.language.enumerations.Keywords.toKeyword;
+
 
 /**
  * @author BEAL ClÃ©ment, SERRANO Simon on 28/09/16.
@@ -61,6 +64,7 @@ public class Interpreter {
      */
     public void keywordsExecution(ArrayList<String> tableauCommande)
             throws OutOfMemoryException, ValueOutOfBoundException {
+        Metrics.PROC_SIZE = tableauCommande.size();
         String commande;
         int i = 0;
         recenseCrochet(tableauCommande);
@@ -88,7 +92,7 @@ public class Interpreter {
                     memory.right();
                     tracerUpdate(i);
                     break;
-                case ".":
+                case OUT:
                     outMethod();
                     tracerUpdate(i);
                     break;
