@@ -1,127 +1,128 @@
-package language;
+package brainfuck.language;
 
-import language.Exceptions.OutOfMemoryException;
-import language.Exceptions.ValueOutOfBoundException;
-import language.Exceptions.WrongInput;
 
+import brainfuck.language.exceptions.OutOfMemoryException;
+import brainfuck.language.exceptions.ValueOutOfBoundException;
+import brainfuck.language.exceptions.WrongInput;
+import brainfuck.language.readers.KernelReader;
+import brainfuck.language.readers.LecteurFichiers;
+
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.io.File;
-import java.io.FileWriter;
 
-import static language.Keywords.toKeyword;
+import static brainfuck.language.enumerations.Keywords.toKeyword;
 
 /**
- * @author BEAL ClÃ©ment, SERRANO Simon on 28/09/16.
+ * @author BEAL Clément, SERRANO Simon on 28/09/16.
  *
- *         Cette classe interprÃ¨te les mot clÃ©s d'un texte/image En fonction
- *         de l'instruction, une action sur la classe Memoire sera effectuÃ©e
+ * Cette classe interprète les mot clés d'un texte/image
+ * En fonction de l'instruction, une action sur la classe Memoire sera effectuée
  *
  * @version 1.0
  */
 
-public class Interpreter {
 
+
+
+public class Interpreter {
+    
     private Memory memory = new Memory();
     private File backLog;
     private boolean aTracer = false;
     private List<Integer> placeCrochet = new ArrayList<Integer>();
     FileWriter fw;
 
-
-    public void iniATracer(String nomFichier) {
+    public void iniATracer(String nomFichier){
         aTracer = true;
         backLog = new File(nomFichier + ".log");
         try {
             fw = new FileWriter(backLog);
-        } catch (IOException e) {
+        } catch (IOException e){
 
         }
     }
 
-    private void tracerUpdate(int i) {
+    private void tracerUpdate(int i){
         if (aTracer) {
             try {
-                fw.write("Execution step number = " + (i + 1) + ", execution pointer position : " + ""
-                        + ", data pointer position : " + memory.getmArray() + ", Snapshot : " + memory.toString());
+                fw.write("Execution step number = " + (i+1) + ", execution pointer position : " + "" + ", data pointer position : " + memory.getmArray() + ", Snapshot : " + memory.toString());
                 fw.write("\r\n");
-            } catch (IOException e) {
+            }
+            catch (IOException e){
 
             }
         }
     }
 
     /**
-     * Compare le mot avec la liste des mots exÃ©cutables et agit en
-     * consÃ©quence
-     *
-     * @ @throws
-     *       ValueOutOfBoundException OutOfMemoryException
+     * Compare le mot avec la liste des mots exécutables et agit en conséquence
+     * @param tableauCommande la liste de commande extrait du programme
+     * @throws ValueOutOfBoundException OutOfMemoryException
      */
-    public void keywordsExecution(ArrayList<String> tableauCommande)
-            throws OutOfMemoryException, ValueOutOfBoundException {
+    public void keywordsExecution(ArrayList<String> tableauCommande) throws OutOfMemoryException, ValueOutOfBoundException {
+        Metrics.PROC_SIZE = tableauCommande.size();
+
         String commande;
         int i = 0;
-        recenseCrochet(tableauCommande);
-
         while (i < tableauCommande.size()) {
             commande = tableauCommande.get(i);
-            switch (commande) {
-                case "+":
+            switch (toKeyword(commande)) {
+                case INCR:
                     memory.incr();
                     tracerUpdate(i);
+                    Metrics.DATA_WRITE++;
                     break;
-                case "-":
+                case DECR:
                     memory.decr();
                     tracerUpdate(i);
+                    Metrics.DATA_WRITE++;
                     break;
 
-                case "<":
+                case LEFT:
                     memory.left();
                     tracerUpdate(i);
                     break;
 
-                case ">":
+                case RIGHT:
                     memory.right();
                     tracerUpdate(i);
                     break;
-                case ".":
+                case OUT:
+                    Metrics.DATA_READ++;
                     outMethod();
                     tracerUpdate(i);
                     break;
 
-                case ",":
+                case IN:
                     try {
                         inMethod();
                         tracerUpdate(i);
+                        Metrics.DATA_WRITE++;
                     } catch (WrongInput e) {
                         e.printStackTrace();
                     }
                     break;
-                case "[":
-
+                case JUMP:
+                    Metrics.DATA_READ++;
                     if (memory.getCellValue() == 0)
                         i+=countInstru(tableauCommande, i);
-
                     tracerUpdate(i);
                     break;
-                case "]":
-                    System.out.println(retournePlace(tableauCommande,i));
-                    if (memory.getCellValue() != 0)
-                        i = placeCrochet.get(retournePlace(tableauCommande,i));
-
+                case BACK:
+                    Metrics.DATA_READ++;
                     tracerUpdate(i);
                     break;
-
                 default:
 
             }
             i++;
         }
-        memory.printMemory();
+        memory.printMemory(); //NE PAS SUPPRIMER !!!!!!!!
     }
 
     public void recenseCrochet(ArrayList<String> tableauCommande) {
@@ -151,11 +152,11 @@ public class Interpreter {
         return (placeCrochet.size() - placeCrochetActu - 1);
     }
 
-    public int countInstru(ArrayList<String> commandes, int i) {
+    private int countInstru(ArrayList<String> commandes, int i){
         int nbOuvrante = 1;
         int it = i + 1;
 
-        while (nbOuvrante != 0) {
+        while (commandes.get(it) != "]" || nbOuvrante != 1) {
             if (commandes.get(it) == "[") {
                 nbOuvrante++;
             }
@@ -169,20 +170,18 @@ public class Interpreter {
     }
 
     /**
-     * GÃ¨re la commande IN On gÃ¨re le cas oÃ¹ on a rentrÃ© le -i et le cas par
-     * dÃ©faut (console)
+     * Gère la commande IN
+     * On gère le cas où on a rentré le -i et le cas par défaut (console)
      */
     public void inMethod() {
         String entree;
 
-        if (KernelReader.filepathForReading == null) { // dans le cas oÃ¹ on n'a
-            // pas fait -i
+        if(KernelReader.filepathForReading == null) { // dans le cas où on n'a pas fait -i
             Scanner scanner = new Scanner(System.in);
             entree = scanner.nextLine();
 
-            if (entree.length() != 1) {
-                throw new WrongInput();
-            } else {
+            if (entree.length() != 1) {throw  new WrongInput();}
+            else {
                 char character = entree.charAt(0);
 
                 try {
@@ -191,7 +190,8 @@ public class Interpreter {
                     System.out.println(e.toString());
                 }
             }
-        } else { // dans le cas oÃ¹ on a fait i
+        }
+        else { // dans le cas où on a fait i
             LecteurFichiers lecteurFichiers = new LecteurFichiers();
 
             try {
@@ -204,15 +204,15 @@ public class Interpreter {
     }
 
     /**
-     * GÃ¨re la mÃ©thode OUT On gÃ¨re le cas oÃ¹ on a la commande -o et le cas
-     * par dÃ©faut (console)
+     * Gère la méthode OUT
+     * On gère le cas où on a la commande -o et le cas par défaut (console)
      */
 
     public void outMethod() {
-        if (KernelReader.filepathForWriting == null) {
+        if(KernelReader.filepathForWriting == null) {
             char numb = (char) memory.getCellValue();
             System.out.println(numb);
-        } else {
+        } else{
             LecteurFichiers lecteurFichiers = new LecteurFichiers();
 
             try {
@@ -223,7 +223,5 @@ public class Interpreter {
         }
     }
 
-    public void appellerMemoire() {
-        memory.printMemory();
-    }
+    public void appellerMemoire() { memory.printMemory();}
 }

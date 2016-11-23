@@ -1,7 +1,8 @@
 package brainfuck.language.readers;
 
-import brainfuck.language.exceptions.IsNotACommandException;
+import brainfuck.language.Macro;
 import brainfuck.language.OperationTexte;
+import brainfuck.language.exceptions.IsNotACommandException;
 
 import java.util.ArrayList;
 
@@ -16,18 +17,6 @@ public class LecteurTextuel {
 
     private String texteAAnalyser;
     private int index;
-    /*private ArrayList chiffre = new ArrayList(){{
-        add('0');
-        add('1');
-        add('2');
-        add('3');
-        add('4');
-        add('5');
-        add('6');
-        add('7');
-        add('8');
-        add('9');
-    }};*/
 
     public LecteurTextuel() {
         this.index = 0;
@@ -116,59 +105,6 @@ public class LecteurTextuel {
             } else {
                 String[] texteDecoupe;
 
-                // il se peut que le programme fasse moins de 5 caractères. Il faut donc faire en sorte qu'on ne sélectionne pas tjs 5 carctère.
-
-
-                // selectionne un morceau du texte
-                /*if (texteAAnalyser.length() - index  > 7){
-                    String morceau7 = texteAAnalyser.substring(index,index+8);
-                    if (morceau7.equals("TO_DIGIT")){
-                        for (int j=0; j<48;j++){
-                            listeCommandeTrouvee.add("-");
-                        }
-                        index+=8;
-                    }
-                }
-                if (texteAAnalyser.length() - index  > 10){
-                    String morceau10 = texteAAnalyser.substring(index, index +10);
-                    if (morceau10.equals("MULTI_DECR")){
-                        int monInt = 1;
-                        if (texteAAnalyser.length() - index  > 12 && chiffre.contains(texteAAnalyser.charAt(index+12))){
-                            if (texteAAnalyser.length() - index  > 13 && chiffre.contains(texteAAnalyser.charAt(index+13))){
-                                monInt = 3;
-                            }
-                            else{
-                                monInt = 2;
-                            }
-                        }
-
-                        if (monInt == 2){
-                            int i = Integer.parseInt(texteAAnalyser.substring(index+11, index+13));
-                            for (int j=0; j<i;j++){
-                                listeCommandeTrouvee.add("-");
-                            }
-                            index+=13;
-                        }
-                        else if (monInt == 3){
-                            int i = Integer.parseInt(texteAAnalyser.substring(index+11, index+14));
-                            for (int j=0; j<i;j++){
-                                listeCommandeTrouvee.add("-");
-                            }
-                            index+=14;
-                        }
-                        else if (monInt == 1){
-                            int i = Integer.parseInt(texteAAnalyser.substring(index+11, index+12));
-                            for (int j=0; j<i;j++){
-                                listeCommandeTrouvee.add("-");
-                            }
-                            index+=12;
-                        }
-
-                    }
-                }
-
-
-                if (texteAAnalyser.length() - index  > 0 && !(estShortcut(texteAAnalyser.charAt(index)))){*/
                     int cbAjouter = (longueurProgramme - index >= 5) ? 5 : longueurProgramme - index;
                     String morceauTexteAAnalyser = texteAAnalyser.substring(index, index + cbAjouter);
                     // coupe ce morceau de texte en morceaux plus petit
@@ -182,8 +118,6 @@ public class LecteurTextuel {
                         index += commandeTrouvee.length();
                         listeCommandeTrouvee.add(commandeTrouvee);
                     }
-                //}
-
             }
         }
 
@@ -193,11 +127,9 @@ public class LecteurTextuel {
     /**
      * Supprime tout les commentaires compris entre #
      */
-    public void removeCommentary() {
-        if(OperationTexte.isCorrectlyComment(texteAAnalyser)) {
-            String regex = "#(.*?)\\n";
-                texteAAnalyser = texteAAnalyser.replaceAll(regex, "");
-        }
+    public String removeCommentary(String texte) {
+        String regex = "#(.*?)\\n";
+        return texte.replaceAll(regex, "");
     }
 
     /**
@@ -205,7 +137,13 @@ public class LecteurTextuel {
      * @param texte nom du fichier à lire
      */
     public void setTexteAAnalyser(String texte) {
-        texteAAnalyser = OperationTexte.transformerInstructionEnSymbole(texte);
+        Macro macro = new Macro(texte);
+        texte = macro.readMacro();
+        texte = removeCommentary(texte);
+        texte = texte.replaceAll("\\s+", "");
+        texte = OperationTexte.transformerInstructionEnSymbole(texte);
+
+        texteAAnalyser = texte;
     }
 
     public String getTexteAAnalyser() { return texteAAnalyser;}

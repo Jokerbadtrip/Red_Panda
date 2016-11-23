@@ -1,9 +1,9 @@
 package test;
 
 import brainfuck.language.readers.LecteurTextuel;
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * @author jamatofu on 13/11/16.
@@ -56,16 +56,6 @@ public class LecteurTextuelTest {
 
         String[] e = { };
         assertArrayEquals(e, lecteurTextuel.couperChaineCaractere("C"));
-    }
-
-    @org.junit.Test
-    public void removeCommentary() throws Exception {
-        lecteurTextuel.setTexteAAnalyser("+++#Bonjour#\n");
-        lecteurTextuel.removeCommentary();
-        assertEquals("+++", lecteurTextuel.getTexteAAnalyser());
-
-        lecteurTextuel.setTexteAAnalyser("+++#hello\nazerza#poizua\n985");
-        lecteurTextuel.removeCommentary();
     }
 
 }

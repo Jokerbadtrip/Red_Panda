@@ -67,11 +67,12 @@ public class Motor {
         ArrayList<String> listeDeCommande = callLecteurTextuel(this.texteALire);
 
         if (aReWrite) {
+            System.out.println("La traduction de votre programme en syntaxe courte est : ");
             OperationTexte.toString(listeDeCommande);
+            System.out.println();
         }
         if (aCheck) {
-            if (kernel.commandeCheck(texteALire)) System.out.println("Tout est ok");
-            else System.out.println("Rien n'est ok");
+            if (!kernel.commandeCheck(texteALire)) System.out.println("4");
         }
 
         if (aTranslate) {
@@ -80,14 +81,11 @@ public class Motor {
             lecteurImage.translateFromShortcutToImage(listeDeCommande, nomFichier);
         }
         callInterpreter(listeDeCommande);
-
-
     }
 
     /**
-     *  Votre fonction doit retourner quoi? Un boolean ok, mais pourquoi? Si c'est faux, on arrete le programme?
+     *  Appelle un objet KernelReadear afin de lire les commandes
      * @param args la liste des arguments rentrées dans la console
-     * @return ???
      */
     public void callKernel(String[] args) {
         fichierALire = kernel.interpreterCommande(args);
