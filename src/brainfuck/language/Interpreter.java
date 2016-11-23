@@ -1,9 +1,11 @@
-package language;
+package brainfuck.language;
 
-import language.Exceptions.OutOfMemoryException;
-import language.Exceptions.ValueOutOfBoundException;
-import language.Exceptions.WrongInput;
 
+import brainfuck.language.readers.KernelReader;
+import brainfuck.language.readers.LecteurFichiers;
+import brainfuck.language.exceptions.OutOfMemoryException;
+import brainfuck.language.exceptions.ValueOutOfBoundException;
+import brainfuck.language.exceptions.WrongInput;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
 
-import static language.Keywords.toKeyword;
+import static brainfuck.language.enumerations.Keywords.toKeyword;
 
 /**
  * @author BEAL ClÃ©ment, SERRANO Simon on 28/09/16.
@@ -69,31 +71,31 @@ public class Interpreter {
 
         while (i < tableauCommande.size()) {
             commande = tableauCommande.get(i);
-            switch (commande) {
-                case "+":
+            switch (toKeyword(commande)) {
+                case INCR:
                     memory.incr();
                     tracerUpdate(i);
                     break;
-                case "-":
+                case DECR:
                     memory.decr();
                     tracerUpdate(i);
                     break;
 
-                case "<":
+                case LEFT:
                     memory.left();
                     tracerUpdate(i);
                     break;
 
-                case ">":
+                case RIGHT:
                     memory.right();
                     tracerUpdate(i);
                     break;
-                case ".":
+                case OUT:
                     outMethod();
                     tracerUpdate(i);
                     break;
 
-                case ",":
+                case IN:
                     try {
                         inMethod();
                         tracerUpdate(i);
@@ -101,14 +103,14 @@ public class Interpreter {
                         e.printStackTrace();
                     }
                     break;
-                case "[":
+                case JUMP:
 
                     if (memory.getCellValue() == 0)
                         i+=countInstru(tableauCommande, i);
 
                     tracerUpdate(i);
                     break;
-                case "]":
+                case BACK:
                     System.out.println(retournePlace(tableauCommande,i));
                     if (memory.getCellValue() != 0)
                         i = placeCrochet.get(retournePlace(tableauCommande,i));

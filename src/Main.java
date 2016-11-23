@@ -11,9 +11,6 @@ public class Main {
     public static void main(String[] args) {
 
 
-        String[] arg  ={"-p", "D:\\SOPHIA ANTIPOLIS CYCLE INGENIEUR\\SI3\\Projet Red_Panda\\bfck.bf", "--rewrite"};
-        Motor motor = new Motor(arg);
-        motor.lancerProgramme();
 
 
 
