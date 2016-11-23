@@ -49,7 +49,7 @@ public class Interpreter {
         if (aTracer) {
             try {
                 fw.write("Execution step number = " + (itot + 1) + ", execution pointer position : " + (i+1)
-                        + ", data pointer position : " + memory.getmArray() + ", Snapshot : " + memory.toString());
+                        + ", data pointer position : " + memory.getPointer() + ", Snapshot : " + memory.toString());
                 fw.write("\r\n");
             } catch (IOException e) {
                 System.out.println("Not implemented yet");
@@ -64,6 +64,7 @@ public class Interpreter {
      */
     public void keywordsExecution(ArrayList<String> tableauCommande)
             throws OutOfMemoryException, ValueOutOfBoundException {
+
         Metrics.PROC_SIZE = tableauCommande.size();
         String commande;
         int i = 0, itot = 0;
@@ -84,21 +85,25 @@ public class Interpreter {
                     break;
 
                 case LEFT:
+                    Metrics.DATA_MOVE++;
                     memory.left();
                     tracerUpdate(i, itot);
                     break;
 
                 case RIGHT:
+                    Metrics.DATA_MOVE++;
                     memory.right();
                     tracerUpdate(i,itot);
                     break;
                 case OUT:
+                    Metrics.DATA_READ++;
                     outMethod();
                     tracerUpdate(i,itot);
                     break;
 
                 case IN:
                     try {
+                        Metrics.DATA_WRITE++;
                         inMethod();
                         tracerUpdate(i,itot);
                     } catch (WrongInput e) {
@@ -114,6 +119,9 @@ public class Interpreter {
                     break;
                 case BACK:
                     Metrics.DATA_READ++;
+                    if (memory.getCellValue() != 0)
+                        i = placeCrochet.get(retournePlace(tableauCommande,i));
+
                     tracerUpdate(i,itot);
                     break;
 
@@ -122,21 +130,25 @@ public class Interpreter {
             }
             i++;
             itot++;
+            Metrics.EXEC_MOVE++;
         }
         memory.printMemory();
+        try{
+            fw.close();
+        } catch (IOException e) {
+            System.out.println("Not implemented yet");
+        }
     }
 
     public void recenseCrochet(ArrayList<String> tableauCommande) {
-        int i = 0;
-        int countCrochet = 0;
+        int i;
 
-        while (i < tableauCommande.size()) {
-            if (tableauCommande.get(i) == "[")
-            {
+        System.out.println(tableauCommande);
+
+        for (i =0; i < tableauCommande.size();i++)
+        {
+            if (tableauCommande.get(i).equals("["))
                 placeCrochet.add(i);
-                countCrochet++;
-            }
-            i++;
         }
     }
 
@@ -147,7 +159,6 @@ public class Interpreter {
         while (j < i) {
             if (tableauCommande.get(j) == "]")
                 placeCrochetActu++;
-
             j++;
         }
         return (placeCrochet.size() - placeCrochetActu - 1);

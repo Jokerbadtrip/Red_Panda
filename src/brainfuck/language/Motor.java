@@ -17,11 +17,6 @@ import static brainfuck.language.enumerations.Flags.*;
  * Cette classe permet de communiquer avec toutes les autres classes. Elle relie le lecteur de console avec le lecteur de fichier et ce dernier avec l'interpreteur
  * C'est ici qu'on choisie le bon interpréteur et le bon lecteur pour le fichier
  *
- * /!\ /!\ /!\ /!\ /!\ /!\ /!\ v
- * /!\
- * /!\ Il faut faire une classe Lecteur et en faire hériter LecteurImage Et textuel. Comme ça, on peut crée un objet Lecteur et définir plus tard son type
- * /!\
- * /!\ /!\ /!\ /!\ /!\ /!\
  *
  * @version 1.0
  */
@@ -33,6 +28,7 @@ public class Motor {
     private Interpreter interpreter;
     private String texteALire;
     private String fichierALire;
+    private ArrayList<String> listeDeCommande;
 
 
     /**
@@ -43,6 +39,7 @@ public class Motor {
     public Motor(String[] args) {
         this.args = args;
         kernel = new KernelReader();
+        interpreter = new Interpreter();
     }
 
     /**
@@ -66,7 +63,6 @@ public class Motor {
 
 
         callKernel(args);
-        ArrayList<String> listeDeCommande = callLecteurTextuel(this.texteALire);
 
         if (aReWrite) {
             System.out.println("La traduction de votre programme en syntaxe courte est : ");
@@ -83,7 +79,7 @@ public class Motor {
             lecteurImage.translateFromShortcutToImage(listeDeCommande, nomFichier);
         }
         if (aTracer){
-            interpreter.iniATracer(fichierALire.replace("."+extensionFichier(fichierALire),""));
+            interpreter.iniATracer(fichierALire.replace("." + extensionFichier(fichierALire),""));
         }
         callInterpreter(listeDeCommande);
     }
@@ -101,6 +97,8 @@ public class Motor {
                 try {
                     LecteurFichiers reader = new LecteurFichiers();
                     texteALire = reader.reader(fichierALire);
+
+                    listeDeCommande = callLecteurTextuel(this.texteALire);
                 } catch (FileNotFoundException e) {
                     System.out.println(e.toString());
                 }
@@ -108,9 +106,8 @@ public class Motor {
             }
             else if (extensionFichier.equals("bmp")) {
                 LecteurImage lecteurImage = new LecteurImage();
-
                 try {
-                    lecteurImage.read(fichierALire);
+                    listeDeCommande = lecteurImage.read(fichierALire);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -127,7 +124,6 @@ public class Motor {
      * @return true si tout à bien été exécuté SINON false si une instruction a posée problème
      */
     public void callInterpreter(ArrayList<String> commandeAExecuter) {
-        interpreter = new Interpreter();
         interpreter.keywordsExecution(commandeAExecuter);
     }
 

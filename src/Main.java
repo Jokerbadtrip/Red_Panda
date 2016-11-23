@@ -1,22 +1,18 @@
 import brainfuck.language.Metrics;
 import brainfuck.language.Motor;
 
-import java.util.Date;
-
 
 public class Main {
 
     public static void main(String[] args) {
+        long beginTime = System.currentTimeMillis();
 
-        Date date = new Date();
-        String[] arg  ={"-p", "/home/jamatofu/Bureau/PRESENTATION_PROJET/Demonstration/demoLEFT.bf", "--rewrite", "-o", "/home/jamatofu/Bureau/PRESENTATION_PROJET/Demonstration/demoVIDE.bf"};
-        long beginTime = date.getTime();
-
-        Motor motor = new Motor(arg);
+        Motor motor = new Motor(args);
         motor.lancerProgramme();
 
-        long endTime = date.getTime();
+        long endTime = System.currentTimeMillis();
 
+        Metrics.EXEC_TIME = endTime - beginTime;
         Metrics.displayMetrics();
     }
 }

@@ -36,7 +36,6 @@ public class Memory {
 	public void incr() throws ValueOutOfBoundException {
 		if (mArray[pointer] == 255) throw new ValueOutOfBoundException();
 		mArray[pointer]++;
-		Metrics.DATA_WRITE++;
 	}
 
 	/**
@@ -48,7 +47,6 @@ public class Memory {
 	public void decr() throws ValueOutOfBoundException {
 		if (mArray[pointer] == 0) throw new ValueOutOfBoundException();
 		mArray[pointer]--;
-		Metrics.DATA_WRITE++;
 	}
 
 	/**
@@ -105,7 +103,8 @@ public class Memory {
 		Metrics.DATA_WRITE++;
 	}
 
-	
+	public int getPointer(){return pointer;}
+
 	public short[] getmArray(){
 		return mArray;
 	}
