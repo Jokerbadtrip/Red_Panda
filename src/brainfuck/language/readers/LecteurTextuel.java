@@ -2,18 +2,18 @@ package brainfuck.language.readers;
 
 import brainfuck.language.Macro;
 import brainfuck.language.OperationTexte;
+import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.IsNotACommandException;
 
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * @author BEAL Clément on 28/09/16.
  */
 
 public class LecteurTextuel {
-
-    protected String[] words = {"RIGHT", "LEFT", "INCR", "DECR", "JUMP", "BACK", "OUT", "IN"};
-    protected char[] shortcuts = {'+', '-', '<', '>', '.', ',', '[', ']'};
 
     private String texteAAnalyser;
     private int index;
@@ -30,10 +30,13 @@ public class LecteurTextuel {
      * @return true si c'est un shortcut SINON false
      */
 
-    public boolean estShortcut(char premierCaractere) {
+    public boolean estShortcut(String premierCaractere) {
 
-        for(char shortcut : shortcuts) {
-            if(shortcut == premierCaractere) return true;
+        for(Keywords keywords : Keywords.values()) {
+            if(Objects.equals(keywords.getShortcut(), premierCaractere)) {
+
+                return true;
+            }
         }
         return false;
     }
@@ -47,43 +50,23 @@ public class LecteurTextuel {
      * SI la chaine est contenue, on rajoute à l'INDEX le nombre de lettre de l'instruction trouvé
      *
      *
-     * @param texteDecoupe un morceau du texte source.
      * @return true si INSTRUCTION trouvée sinon false
      */
 
-    public String estInstruction(String[] texteDecoupe) {
-        String aEnvoyer = null;
-        boolean finBoucle = false;
-
-            for (String motDecoupe : texteDecoupe) { // on parcourt chacun des éléments du morceau de texte découpé
-                for (String sousTab : words) { // là, on parcourt chacun des éléments de la liste word
-                         if(sousTab.equals(motDecoupe)) {
-                             aEnvoyer = sousTab;
-                             finBoucle = true;
-                             break;
-                         }
-                }
-
-                if(finBoucle) break;
+    public Keywords estInstruction() {
+        String regex;
+        for(Keywords word : Keywords.values()) {
+            regex = "^" + word.getWord() + "(.*)";
+            if(Pattern.matches(regex, texteAAnalyser)) {
+                supprimerMorceauProgramme(word.getWord().length());
+                return word;
             }
-        return aEnvoyer;
+        }
+        return null;
     }
-    /**
-     *
-     * LA méthode va retourner un tableau de string de 4 String. Le premier aura 5 carac, le deuxieme 4 ... le quatrième 2
-     *
-     * @param texteADecouper un String de 5 caractère au maximum. Dépend du nombre de caractère restant dans le fichier
-     * @return un tableau de String contenu le texte découpé
-     */
 
-    public String[] couperChaineCaractere(String texteADecouper) {
-        String texteDecoupe[] = new String[texteADecouper.length() - 1];
-
-        int longueur = texteADecouper.length();
-
-        for (int i = longueur; i > 1; i--) texteDecoupe[longueur - i] = texteADecouper.substring(0, i);
-
-        return texteDecoupe;
+    private void supprimerMorceauProgramme(int nbCaracASupprimer) {
+        texteAAnalyser = texteAAnalyser.substring(nbCaracASupprimer);
     }
 
     /**
@@ -91,33 +74,25 @@ public class LecteurTextuel {
      * @return une liste contenant toutes les commandes trouvees dans le programme. Une case = une instruction
      */
 
-    public ArrayList<String> creeTableauCommande() {
-        char premierCaractere;
+    public ArrayList<Keywords> creeTableauCommande() {
+        String premierCaractere;
+        Keywords commandeTrouvee;
         int longueurProgramme = texteAAnalyser.length();
-        ArrayList<String> listeCommandeTrouvee = new ArrayList<String>();
+        ArrayList<Keywords> listeCommandeTrouvee = new ArrayList<>();
 
-        while(texteAAnalyser.length() - index  > 0) {
-            premierCaractere = this.texteAAnalyser.charAt(index);
+        while(texteAAnalyser.length() != 0) {
+            premierCaractere = Character.toString(texteAAnalyser.charAt(index));
 
             if(estShortcut(premierCaractere)) {
-                listeCommandeTrouvee.add(Character.toString(premierCaractere));
-                index += 1;
+                listeCommandeTrouvee.add(Keywords.toKeyword(premierCaractere));
+                supprimerMorceauProgramme(1);
             } else {
-                String[] texteDecoupe;
-
-                    int cbAjouter = (longueurProgramme - index >= 5) ? 5 : longueurProgramme - index;
-                    String morceauTexteAAnalyser = texteAAnalyser.substring(index, index + cbAjouter);
-                    // coupe ce morceau de texte en morceaux plus petit
-                    texteDecoupe = couperChaineCaractere(morceauTexteAAnalyser);
-
-                    String commandeTrouvee = estInstruction(texteDecoupe);
-
-                    if (commandeTrouvee == null) {
-                        throw new IsNotACommandException();
-                    } else {
-                        index += commandeTrouvee.length();
-                        listeCommandeTrouvee.add(commandeTrouvee);
-                    }
+                commandeTrouvee = estInstruction();
+                if (commandeTrouvee == null) {
+                    throw new IsNotACommandException();
+                } else {
+                    listeCommandeTrouvee.add(commandeTrouvee);
+                }
             }
         }
 

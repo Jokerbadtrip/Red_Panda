@@ -1,12 +1,12 @@
 package brainfuck.language;
 
+import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.readers.KernelReader;
 import brainfuck.language.readers.LecteurFichiers;
 import brainfuck.language.readers.LecteurImage;
 import brainfuck.language.readers.LecteurTextuel;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static brainfuck.language.enumerations.Flags.*;
@@ -28,7 +28,7 @@ public class Motor {
     private Interpreter interpreter;
     private String texteALire;
     private String fichierALire;
-    private ArrayList<String> listeDeCommande;
+    private ArrayList<Keywords> listeDeCommande;
 
 
     /**
@@ -108,7 +108,7 @@ public class Motor {
                 LecteurImage lecteurImage = new LecteurImage();
                 try {
                     listeDeCommande = lecteurImage.read(fichierALire);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -123,7 +123,7 @@ public class Motor {
      * @param commandeAExecuter une liste de toutes les instructions contenues dans le fichier programme
      * @return true si tout à bien été exécuté SINON false si une instruction a posée problème
      */
-    public void callInterpreter(ArrayList<String> commandeAExecuter) {
+    public void callInterpreter(ArrayList<Keywords> commandeAExecuter) {
         interpreter.keywordsExecution(commandeAExecuter);
     }
 
@@ -133,10 +133,10 @@ public class Motor {
      * @return commande une liste contenye toutes les instructions
      */
 
-    public ArrayList<String> callLecteurTextuel(String texteALire){
+    public ArrayList<Keywords> callLecteurTextuel(String texteALire){
         lecteur = new LecteurTextuel();
         lecteur.setTexteAAnalyser(texteALire);
-        ArrayList<String> instruction = lecteur.creeTableauCommande();
+        ArrayList<Keywords> instruction = lecteur.creeTableauCommande();
 
         return instruction;
     }

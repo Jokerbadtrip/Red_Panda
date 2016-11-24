@@ -1,5 +1,7 @@
 package brainfuck.language;
 
+import brainfuck.language.enumerations.Keywords;
+
 import java.util.ArrayList;
 
 /**
@@ -30,9 +32,9 @@ public class OperationTexte {
      * Permet d'afficher une liste
      * @param liste une liste
      */
-    public static void toString(ArrayList<String> liste) { // permet d'afficher une liste
-        for (String comm : liste) {
-            System.out.print(comm);
+    public static void toString(ArrayList<Keywords> liste) { // permet d'afficher une liste
+        for (Keywords comm : liste) {
+            System.out.print(comm.getShortcut());
         }
         System.out.println();
     }

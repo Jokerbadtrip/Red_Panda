@@ -1,5 +1,6 @@
 package brainfuck.language;
 
+import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.OutOfMemoryException;
 import brainfuck.language.exceptions.ValueOutOfBoundException;
 import brainfuck.language.exceptions.WrongInput;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static brainfuck.language.enumerations.Keywords.toKeyword;
 
 
 /**
@@ -62,7 +62,7 @@ public class Interpreter {
      * @param tableauCommande la liste de commande extrait du programme
      * @throws ValueOutOfBoundException OutOfMemoryException
      */
-    public void keywordsExecution(ArrayList<String> tableauCommande)
+    public void keywordsExecution(ArrayList<Keywords> tableauCommande)
             throws OutOfMemoryException, ValueOutOfBoundException {
 
         Metrics.PROC_SIZE = tableauCommande.size();
@@ -71,8 +71,7 @@ public class Interpreter {
         recenseCrochet(tableauCommande);
 
         while (i < tableauCommande.size()) {
-            commande = tableauCommande.get(i);
-            switch (toKeyword(commande)) {
+            switch (tableauCommande.get(i)) {
                 case INCR:
                     memory.incr();
                     tracerUpdate(i,itot);
@@ -132,47 +131,48 @@ public class Interpreter {
             itot++;
             Metrics.EXEC_MOVE++;
         }
+
         memory.printMemory();
-        try{
-            fw.close();
-        } catch (IOException e) {
-            System.out.println("Not implemented yet");
+        if(fw != null) {
+            try {
+                fw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public void recenseCrochet(ArrayList<String> tableauCommande) {
+    public void recenseCrochet(ArrayList<Keywords> tableauCommande) {
         int i;
-
-        System.out.println(tableauCommande);
 
         for (i =0; i < tableauCommande.size();i++)
         {
-            if (tableauCommande.get(i).equals("["))
+            if (tableauCommande.get(i).equals(Keywords.JUMP))
                 placeCrochet.add(i);
         }
     }
 
-    public int retournePlace(ArrayList<String> tableauCommande, int i){
+    public int retournePlace(ArrayList<Keywords> tableauCommande, int i){
         int placeCrochetActu = 0;
         int j = 0;
 
         while (j < i) {
-            if (tableauCommande.get(j) == "]")
+            if (tableauCommande.get(j) == Keywords.BACK)
                 placeCrochetActu++;
             j++;
         }
         return (placeCrochet.size() - placeCrochetActu - 1);
     }
 
-    public int countInstru(ArrayList<String> commandes, int i) {
+    public int countInstru(ArrayList<Keywords> commandes, int i) {
         int nbOuvrante = 1;
         int it = i + 1;
 
         while (nbOuvrante != 0) {
-            if (commandes.get(it) == "[") {
+            if (commandes.get(it) == Keywords.JUMP) {
                 nbOuvrante++;
             }
-            if (commandes.get(it) == "]") {
+            if (commandes.get(it) == Keywords.BACK) {
                 nbOuvrante--;
             }
 

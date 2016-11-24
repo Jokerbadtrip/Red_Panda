@@ -1,41 +1,29 @@
 package brainfuck.language.enumerations;
 
 
-
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by Serrano Simon on 03/11/2016.
  */
 public enum Keywords {
-    INCR("+"),
-    DECR("-"),
-    LEFT("<"),
-    RIGHT(">"),
-    OUT("."),
-    IN(","),
-    JUMP("["),
-    BACK("]");
+    INCR("INCR", "+", "#ffffff"),
+    DECR("DECR", "-", "#4b0082"),
+    LEFT("LEFT", "<", "#9400d3"),
+    RIGHT("RIGHT", ">", "#0000ff"),
+    OUT("OUT", ".", "#00ff00"),
+    IN("IN", ",", "#ffff00"),
+    JUMP("JUMP", "[", "#ff7f00"),
+    BACK("BACK", "]", "#ff0000");
 
+    private String word;
+    private String shortcut;
+    private String color;
 
-    Keywords(String shortcut) { }
-
-
-    //Map to link the keywords and the code written in the .bf file
-    static final Map<String, Keywords> STRING_KEYWORDS_MAP;
-    static {
-        STRING_KEYWORDS_MAP = new HashMap<>();
-        STRING_KEYWORDS_MAP.put("+",INCR);
-        STRING_KEYWORDS_MAP.put("-",DECR);
-        STRING_KEYWORDS_MAP.put("<",LEFT);
-        STRING_KEYWORDS_MAP.put(">",RIGHT);
-        STRING_KEYWORDS_MAP.put(".",OUT);
-        STRING_KEYWORDS_MAP.put(",",IN);
-        STRING_KEYWORDS_MAP.put("[",JUMP);
-        STRING_KEYWORDS_MAP.put("]",BACK);
+    Keywords(String word, String shortcut, String color) {
+        this.word = word;
+        this.shortcut = shortcut;
+        this.color = color;
     }
+
 
     /**
      * transforms a String into a keyword
@@ -43,8 +31,18 @@ public enum Keywords {
      * @return the associated keyword
      */
     public static Keywords toKeyword(String keyword){
-        return STRING_KEYWORDS_MAP.get(keyword);
+        for(Keywords value : values()) {
+            if (value.getWord().equals(keyword) || value.getShortcut().equals(keyword) || value.getColor().equals(keyword)) {
+                return valueOf(value.getWord());
+            }
+        }
+
+        return null;
     }
+
+    public String getWord() { return this.word; }
+    public String getShortcut() { return this.shortcut; }
+    public String getColor() { return this.color; }
 
 
 
