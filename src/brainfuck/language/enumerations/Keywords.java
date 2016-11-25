@@ -4,7 +4,9 @@ package brainfuck.language.enumerations;
 import brainfuck.language.exceptions.IsNotACommandException;
 import brainfuck.language.exceptions.IsNotAValidColorException;
 
+import java.security.Key;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Serrano Simon on 03/11/2016.
@@ -131,6 +133,19 @@ public enum Keywords {
      * @return the associated keyword
      */
     public static Keywords colorToKeyword(String color){ return COLOR_TO_KEYWORD_MAP.get(color); }
+
+    /**
+     * Method that links a shortcut to a color
+     * @param shortcut the shortcut to transform into a color
+     * @return the color code associated to the shortcut
+     */
+    public static String shortcutToColor(String shortcut){
+        Keywords keyword = SHORTCUT_TO_KEYWORD_MAP.get(shortcut);
+        for (Map.Entry<String, Keywords> entry : COLOR_TO_KEYWORD_MAP.entrySet()){
+            if (keyword.equals(entry.getValue())) return entry.getKey();
+        }
+        return null;
+    }
 
 
 }
