@@ -24,9 +24,8 @@ public class Motor {
 
     private String[] args;
     private KernelReader kernel;
-    private LecteurTextuel lecteur;
     private Interpreter interpreter;
-    private String texteALire;
+    private String programme;
     private String fichierALire;
     private ArrayList<Keywords> listeDeCommande;
 
@@ -64,20 +63,9 @@ public class Motor {
 
         callKernel(args);
 
-        if (aReWrite) {
-            System.out.println("La traduction de votre programme en syntaxe courte est : ");
-            OperationTexte.toString(listeDeCommande);
-            System.out.println();
-        }
-        if (aCheck) {
-            if (!kernel.commandeCheck(texteALire)) System.out.println("4");
-        }
-
-        if (aTranslate) {
-            LecteurImage lecteurImage = new LecteurImage();
-            String nomFichier = fichierALire.substring(0, fichierALire.indexOf("."));
-            lecteurImage.translateFromShortcutToImage(listeDeCommande, nomFichier);
-        }
+        if (aReWrite) rewrite();
+        if (aCheck) check();
+        if (aTranslate) translate();
         if (aTracer){
             interpreter.iniATracer(fichierALire.replace("." + extensionFichier(fichierALire),""));
         }
@@ -88,7 +76,7 @@ public class Motor {
      *  Appelle un objet KernelReadear afin de lire les commandes
      * @param args la liste des arguments rentrées dans la console
      */
-    public void callKernel(String[] args) {
+    private void callKernel(String[] args) {
         fichierALire = kernel.interpreterCommande(args);
         if (fichierALire != null) {
             String extensionFichier = this.extensionFichier(fichierALire);
@@ -96,9 +84,9 @@ public class Motor {
             if ("bf".equals(extensionFichier)) {
                 try {
                     LecteurFichiers reader = new LecteurFichiers();
-                    texteALire = reader.reader(fichierALire);
+                    programme = reader.reader(fichierALire);
 
-                    listeDeCommande = callLecteurTextuel(this.texteALire);
+                    listeDeCommande = callLecteurTextuel(this.programme);
                 } catch (FileNotFoundException e) {
                     System.out.println(e.toString());
                 }
@@ -123,19 +111,19 @@ public class Motor {
      * @param commandeAExecuter une liste de toutes les instructions contenues dans le fichier programme
      * @return true si tout à bien été exécuté SINON false si une instruction a posée problème
      */
-    public void callInterpreter(ArrayList<Keywords> commandeAExecuter) {
+    private void callInterpreter(ArrayList<Keywords> commandeAExecuter) {
         interpreter.keywordsExecution(commandeAExecuter);
     }
 
     /**
      *  Appelle le lecteur textuel. Il gérera la lecture et la différencation entre toutes les instructions
-     * @param texteALire
+     * @param programme
      * @return commande une liste contenye toutes les instructions
      */
 
-    public ArrayList<Keywords> callLecteurTextuel(String texteALire){
-        lecteur = new LecteurTextuel();
-        lecteur.setTexteAAnalyser(texteALire);
+    private ArrayList<Keywords> callLecteurTextuel(String programme){
+        LecteurTextuel lecteur = new LecteurTextuel();
+        lecteur.setTexteAAnalyser(programme);
         ArrayList<Keywords> instruction = lecteur.creeTableauCommande();
 
         return instruction;
@@ -152,8 +140,24 @@ public class Motor {
         return (fichier.substring(fichier.indexOf(".") + 1));
     }
 
-    public String getTexteALire() {
-        return texteALire;
+    public String getprogramme() {
+        return programme;
+    }
+
+    public void rewrite() {
+        System.out.println("La traduction de votre programme en syntaxe courte est : ");
+        OperationTexte.toString(listeDeCommande);
+        System.out.println();
+    }
+
+    public void check() {
+        if (!kernel.commandeCheck(programme)) System.out.println("4");
+    }
+
+    public void translate() {
+        LecteurImage lecteurImage = new LecteurImage();
+        String nomFichier = fichierALire.substring(0, fichierALire.indexOf("."));
+        lecteurImage.translateFromShortcutToImage(listeDeCommande, nomFichier);
     }
 }
 

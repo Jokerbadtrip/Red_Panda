@@ -77,7 +77,6 @@ public class LecteurTextuel {
     public ArrayList<Keywords> creeTableauCommande() {
         String premierCaractere;
         Keywords commandeTrouvee;
-        int longueurProgramme = texteAAnalyser.length();
         ArrayList<Keywords> listeCommandeTrouvee = new ArrayList<>();
 
         while(texteAAnalyser.length() != 0) {

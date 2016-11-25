@@ -1,9 +1,11 @@
 package brainfuck.language;
 
-import java.util.*;
+import brainfuck.language.enumerations.Keywords;
+import brainfuck.language.exceptions.BadMacro;
+
+import java.util.ArrayList;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.TreeMap;
 
 /**
  * Cette classe gère les macros dans le langage BrainFuck
@@ -47,20 +49,31 @@ public class Macro {
 
 
         //for(String a : toutesLesMacros) System.out.println(a);
-        decomposerMacro(toutesLesMacros);
+        try {
+            decomposerMacro(toutesLesMacros);
+        }
+        catch (BadMacro e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Découpe dans chaque ligne de macro son nom et son code puis l'insère dans le Map macro
      * @param macrosADecouper les lignes contenants les macros
      */
-    public void decomposerMacro(ArrayList<String> macrosADecouper) {
+    public void decomposerMacro(ArrayList<String> macrosADecouper) throws BadMacro {
         for (String mac : macrosADecouper) {
             mac = mac.replaceFirst("@", "");
 
             String name = mac.substring(0, mac.indexOf(" "));
             String code = mac.substring(mac.indexOf(" ") + 1, mac.length());
 
+            for(Keywords keywords : Keywords.values()) {
+                if(keywords.getShortcut().equals(name) || keywords.getWord().equals(name)) {
+                    throw new BadMacro();
+                }
+
+            }
             macro.put(name, code);
         }
     }
@@ -81,13 +94,6 @@ public class Macro {
      */
     public String supprimerLigneDeTexte(String ligneASupprimer, String texte) {
         return texte.replace(ligneASupprimer + "\n", "");
-    }
-
-    public boolean toutEnOrdre() {
-        System.out.print(programme);
-        Pattern pattern = Pattern.compile("(.*)[^+-](.*)");
-        Matcher matcher = pattern.matcher(programme);
-        return matcher.find();
     }
 
     public String getProgramme() { return programme; }
