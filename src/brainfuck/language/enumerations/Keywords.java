@@ -4,7 +4,8 @@ package brainfuck.language.enumerations;
 import brainfuck.language.exceptions.IsNotACommandException;
 import brainfuck.language.exceptions.IsNotAValidColorException;
 
-import java.security.Key;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,6 +78,7 @@ public enum Keywords {
 
 //---------------------------------------------------------------------------------------------------------------------
 
+
     /**
      * Checks whether the word is a valid word
      * @param word the word to be checked
@@ -118,31 +120,78 @@ public enum Keywords {
      * @param word the given word
      * @return the associated keyword
      */
-    public static Keywords wordToKeyword(String word){ return WORD_TO_KEYWORD_MAP.get(word); }
+    public static Keywords wordToKeyword(String word){
+        if (isWord(word)) return WORD_TO_KEYWORD_MAP.get(word);
+        return null;
+    }
 
     /**
      * transforms a shortcut into a keyword
      * @param shortcut the given shortcut
      * @return the associated keyword
      */
-    public static Keywords shortcutToKeyword(String shortcut){ return SHORTCUT_TO_KEYWORD_MAP.get(shortcut); }
+    public static Keywords shortcutToKeyword(String shortcut){
+        if (isShortcut(shortcut)) return SHORTCUT_TO_KEYWORD_MAP.get(shortcut);
+        return null;
+    }
 
     /**
      * transforms a color into a keyword
      * @param color the given color
      * @return the associated keyword
      */
-    public static Keywords colorToKeyword(String color){ return COLOR_TO_KEYWORD_MAP.get(color); }
+    public static Keywords colorToKeyword(String color){
+        if (isColor(color)) return COLOR_TO_KEYWORD_MAP.get(color);
+        return null;
+    }
 
     /**
      * Method that links a shortcut to a color
      * @param shortcut the shortcut to transform into a color
      * @return the color code associated to the shortcut
      */
-    public static String shortcutToColor(String shortcut){
-        Keywords keyword = SHORTCUT_TO_KEYWORD_MAP.get(shortcut);
+    public static int keywordToColor(Keywords shortcut){
         for (Map.Entry<String, Keywords> entry : COLOR_TO_KEYWORD_MAP.entrySet()){
-            if (keyword.equals(entry.getValue())) return entry.getKey();
+            if (shortcut.equals(entry.getValue())) return Integer.parseInt(entry.getKey());
+        }
+        return -1;
+
+    }
+
+
+    /**
+     * Checks if the given string is any type of syntax for the program and returns
+     * cleverly the right keyword depending on the syntax
+     * @param any_type the string to be converted
+     * @return the keyword associated with the string
+     */
+    public static Keywords getKeywords(String any_type){
+        if (isColor(any_type)) return colorToKeyword(any_type);
+        else if(isShortcut(any_type)) return shortcutToKeyword(any_type);
+        else if (isWord(any_type)) return wordToKeyword(any_type);
+        else return null;
+    }
+
+    /**
+     * Displays the words as a list of strings
+     * @return the list of these words
+     */
+    public static ArrayList<String> displayWords(){
+        ArrayList<String> words = new ArrayList<>();
+        for (Map.Entry<String , Keywords> word: WORD_TO_KEYWORD_MAP.entrySet()) {
+            words.add(word.getKey());
+        }
+        return words;
+    }
+
+    /**
+     * Givers the string as a shortcut corresponding to the keyword
+     * @param keyword the keyword to be converted into shortcut
+     * @return the shortcut from the conversion
+     */
+    public static String shortcutToString(Keywords keyword){
+        for (Map.Entry<String , Keywords> shortcut: SHORTCUT_TO_KEYWORD_MAP.entrySet()) {
+            if (shortcut.getValue().equals(keyword)) return shortcut.getKey();
         }
         return null;
     }
