@@ -12,7 +12,7 @@ public class LecteurTextuelTest {
     LecteurTextuel lecteurTextuel = new LecteurTextuel();
 
 
-    String texteAAnalyser = "INCRRIGHT++++>>INCRINCRINCR-->INCRINCRDECRLEFT"
+    String texteAAnalyser = "INCRRIGHT++++>>INCRINCRINCR-->INCRINCRDECRLEFT";
 
     @org.junit.Before
     public void setUp() throws Exception {
