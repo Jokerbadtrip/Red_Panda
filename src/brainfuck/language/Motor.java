@@ -35,6 +35,7 @@ public class Motor {
      * @param args les paramètres écrits dans la console. On les renverra au KernelReader
      */
     public Motor(String[] args) {
+        Metrics.START_TIME = System.currentTimeMillis();
         this.args = args;
         kernel = new KernelReader();
         interpreter = new Interpreter();
@@ -80,6 +81,7 @@ public class Motor {
             interpreter.iniATracer(fichierALire.replace("." + extensionFichier(fichierALire),""));
         }
         callInterpreter(listeDeCommande);
+        Metrics.EXEC_TIME(System.currentTimeMillis());
     }
 
     /**
