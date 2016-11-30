@@ -196,5 +196,9 @@ public enum Keywords {
         return null;
     }
 
+    public String getWord() { return this.word; }
+    public String getShortcut() { return  this.shortcut; }
+    public String getColor() { return this.color; }
+
 
 }

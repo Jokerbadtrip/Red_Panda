@@ -1,7 +1,6 @@
 package brainfuck.language.readers;
 
 
-
 import brainfuck.language.exceptions.FilePathNotFoundException;
 import brainfuck.language.exceptions.MainFlagNotFoundException;
 
@@ -116,7 +115,6 @@ public class KernelReader {
 
         nbrJump = texteALire.length() - texteALire.replace("[", "").length();
         nbrBack = texteALire.length() - texteALire.replace("]", "").length();
-
         return nbrBack == nbrJump;
     }
 
