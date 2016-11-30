@@ -5,8 +5,8 @@ import brainfuck.language.exceptions.IsNotACommandException;
 import brainfuck.language.exceptions.IsNotAValidColorException;
 
 
+import java.security.Key;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -16,69 +16,25 @@ import java.util.Map;
  */
 public enum Keywords {
 
-    INCR("INCR", "+", "#ffffff"),
-    DECR("DECR", "-", "#4b0082"),
-    LEFT("LEFT", "<", "#9400d3"),
-    RIGHT("RIGHT", ">", "#0000ff"),
-    OUT("OUT", ".", "#00ff00"),
-    IN("IN", ",", "#ffff00"),
-    JUMP("JUMP", "[", "#ff7f00"),
-    BACK("BACK", "]", "#ff0000");
+    INCR("+", "#ffffff"),
+    DECR("-", "#4b0082"),
+    LEFT("<", "#9400d3"),
+    RIGHT(">", "#0000ff"),
+    OUT( ".", "#00ff00"),
+    IN(",", "#ffff00"),
+    JUMP( "[", "#ff7f00"),
+    BACK( "]", "#ff0000");
 
-    private String word;
+
     private String shortcut;
     private String color;
 
-    Keywords(String word, String shortcut, String color) {
-        this.word = word;
+    Keywords(String shortcut, String color) {
+
         this.shortcut = shortcut;
         this.color = color;
     }
 
-    //-----------------------------------------------------------------------------------------------------------------
-
-    static final HashMap<String, Keywords> WORD_TO_KEYWORD_MAP; // Map that links words to keywords
-    static{//Adding the links
-        WORD_TO_KEYWORD_MAP = new HashMap<>();
-        WORD_TO_KEYWORD_MAP.put("INCR", INCR);
-        WORD_TO_KEYWORD_MAP.put("DECR", DECR);
-        WORD_TO_KEYWORD_MAP.put("LEFT", LEFT);
-        WORD_TO_KEYWORD_MAP.put("RIGHT", RIGHT);
-        WORD_TO_KEYWORD_MAP.put("OUT", OUT);
-        WORD_TO_KEYWORD_MAP.put("IN", IN);
-        WORD_TO_KEYWORD_MAP.put("JUMP", JUMP);
-        WORD_TO_KEYWORD_MAP.put("BACK", BACK);
-    }
-
-
-    static final HashMap<String, Keywords> SHORTCUT_TO_KEYWORD_MAP; // Map that links shortcuts to keywords
-    static {//Adding the links
-        SHORTCUT_TO_KEYWORD_MAP = new HashMap<>();
-        SHORTCUT_TO_KEYWORD_MAP.put("+", INCR);
-        SHORTCUT_TO_KEYWORD_MAP.put("-", DECR);
-        SHORTCUT_TO_KEYWORD_MAP.put("<", LEFT);
-        SHORTCUT_TO_KEYWORD_MAP.put(">", RIGHT);
-        SHORTCUT_TO_KEYWORD_MAP.put(".", OUT);
-        SHORTCUT_TO_KEYWORD_MAP.put(",", IN);
-        SHORTCUT_TO_KEYWORD_MAP.put("[", JUMP);
-        SHORTCUT_TO_KEYWORD_MAP.put("]", BACK);
-    }
-
-    static final HashMap<String, Keywords> COLOR_TO_KEYWORD_MAP; //Map that links colors to keywords
-    static{//Adding the links
-        COLOR_TO_KEYWORD_MAP = new HashMap<>();
-        COLOR_TO_KEYWORD_MAP.put("#ffffff", INCR);
-        COLOR_TO_KEYWORD_MAP.put("#4b0082", DECR);
-        COLOR_TO_KEYWORD_MAP.put("#9400d3", LEFT);
-        COLOR_TO_KEYWORD_MAP.put("#0000ff", RIGHT);
-        COLOR_TO_KEYWORD_MAP.put("#00ff00", OUT);
-        COLOR_TO_KEYWORD_MAP.put("#ffff00", IN);
-        COLOR_TO_KEYWORD_MAP.put("#ff7f00", JUMP);
-        COLOR_TO_KEYWORD_MAP.put("#ff0000", BACK);
-    }
-
-
-//---------------------------------------------------------------------------------------------------------------------
 
 
     /**
@@ -88,8 +44,10 @@ public enum Keywords {
      * @throws IsNotACommandException
      */
     public static boolean isWord(String word) throws IsNotACommandException{
-        if (WORD_TO_KEYWORD_MAP.containsKey(word)) return true;
-        else throw new IsNotACommandException();
+        for (Keywords keyword: Keywords.values()) {
+            if (keyword.name().equals(word)) return true;
+        }
+        throw new IsNotACommandException();
     }
 
     /**
@@ -99,8 +57,10 @@ public enum Keywords {
      * @throws IsNotACommandException
      */
     public static boolean isShortcut(String shortcut) throws IsNotACommandException{
-        if (SHORTCUT_TO_KEYWORD_MAP.containsKey(shortcut)) return true;
-        else throw new IsNotACommandException();
+        for (Keywords keyword : Keywords.values()){
+            if (keyword.getShortcut().equals(shortcut)) return true;
+        }
+        throw new IsNotACommandException();
     }
 
     /**
@@ -110,8 +70,10 @@ public enum Keywords {
      * @throws IsNotAValidColorException
      */
     public static boolean isColor(String color) throws IsNotAValidColorException{
-        if (COLOR_TO_KEYWORD_MAP.containsKey(color)) return true;
-        else throw new IsNotAValidColorException();
+        for (Keywords keywords : Keywords.values()){
+            if (keywords.getColor().equals(color)) return true;
+        }
+        throw new IsNotAValidColorException();
     }
 
 
@@ -123,7 +85,9 @@ public enum Keywords {
      * @return L'instruction associée a la chaine de caractère entrée
      */
     public static Keywords wordToKeyword(String word){
-        if (isWord(word)) return WORD_TO_KEYWORD_MAP.get(word);
+        if (isWord(word))
+            for (Keywords keywords : Keywords.values())
+                if (keywords.name().equals(word)) return keywords;
         return null;
     }
 
@@ -133,7 +97,9 @@ public enum Keywords {
      * @return L'instruction associée au caractère entré
      */
     public static Keywords shortcutToKeyword(String shortcut){
-        if (isShortcut(shortcut)) return SHORTCUT_TO_KEYWORD_MAP.get(shortcut);
+        if (isShortcut(shortcut))
+            for (Keywords keywords : Keywords.values())
+                if (keywords.getShortcut().equals(shortcut)) return keywords;
         return null;
     }
 
@@ -143,7 +109,9 @@ public enum Keywords {
      * @return L'instruction associée à la couleur entrée
      */
     public static Keywords colorToKeyword(String color){
-        if (isColor(color)) return COLOR_TO_KEYWORD_MAP.get(color);
+        if (isColor(color))
+            for (Keywords keywords : Keywords.values())
+                if (keywords.getColor().equals(color)) return keywords;
         return null;
     }
 
@@ -153,9 +121,8 @@ public enum Keywords {
      * @return le code couleur associé à la couleur entrée
      */
     public static int keywordToColor(Keywords shortcut){
-        for (Map.Entry<String, Keywords> entry : COLOR_TO_KEYWORD_MAP.entrySet()){
-            if (shortcut.equals(entry.getValue())) return Integer.parseInt(entry.getKey());
-        }
+        if (isKeyword(shortcut))
+            return Integer.parseInt(shortcut.getColor());
         return -1;
 
     }
@@ -182,8 +149,8 @@ public enum Keywords {
      */
     public static ArrayList<String> displayWords(){
         ArrayList<String> words = new ArrayList<>();
-        for (Map.Entry<String , Keywords> word: WORD_TO_KEYWORD_MAP.entrySet()) {
-            words.add(word.getKey());
+        for (Keywords keywords: Keywords.values()){
+            words.add(keywords.name());
         }
         return words;
     }
@@ -195,13 +162,20 @@ public enum Keywords {
      * @return Le caractère associé à l'isntruction en entrée
      */
     public static String shortcutToString(Keywords keyword){
-        for (Map.Entry<String , Keywords> shortcut: SHORTCUT_TO_KEYWORD_MAP.entrySet()) {
-            if (shortcut.getValue().equals(keyword)) return shortcut.getKey();
+        if (isKeyword(keyword)){
+            return keyword.getShortcut();
         }
-        return null;
+        else throw new IsNotACommandException();
     }
 
-    public String getWord() { return this.word; }
+    public static boolean isKeyword(Keywords any_keyword){
+        for (Keywords keywords : Keywords.values()){
+            if (keywords.equals(any_keyword)) return true;
+        }
+        return false;
+    }
+
+
     public String getShortcut() { return  this.shortcut; }
     public String getColor() { return this.color; }
 
