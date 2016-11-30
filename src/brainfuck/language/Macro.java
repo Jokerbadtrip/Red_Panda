@@ -79,7 +79,7 @@ public class Macro {
             // vérifie que le nom de la macro ne correspond pas à une macro déjà existante
             if(macro.containsKey(name) || macroRecursive.containsKey(name)) throw new BadMacro();
             for(Keywords keywords : Keywords.values()) {
-                if(keywords.getShortcut().equals(name) || keywords.getWord().equals(name)) {
+                if(keywords.getShortcut().equals(name) || keywords.name().equals(name)) {
                     throw new BadMacro();
                 }
             }
