@@ -5,9 +5,9 @@ import brainfuck.language.exceptions.IsNotACommandException;
 import brainfuck.language.exceptions.IsNotAValidColorException;
 
 
-import java.security.Key;
+
 import java.util.ArrayList;
-import java.util.Map;
+
 
 /**
  * Un énum permettant d'associer n'importe quel type d'écriture (texte/image) à une instruction commune
