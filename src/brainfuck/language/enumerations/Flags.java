@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by SERRANO Simon on 03/11/2016.
+ * Enum permettant d'associer les differents arguments consoles a des instructions compréhensible par notre programme
+ *
+ * @author  Red_Panda
  */
 public enum Flags {
     FileToRead("-p"),
@@ -33,15 +35,16 @@ public enum Flags {
 
 
     /**
-     * Constructor for flags
-     * @param flag the flag the user can write in the console
+     * Constructeur de Flag
+     * @param flag Le flag que l'utilisateur peut entrer dans la console
      */
     Flags(String flag) { }
 
     /**
-     * Checks if the given string is an available flag
-     * @param arg argument given in the console by the user
-     * @return true if the given string is a flag
+     * Verifie si l'argument en entrée est bien un flag ou non
+     *
+     * @param arg L'argument que l'utilisateur a entré dans la console
+     * @return true si l'argument en entrée est un flag
      */
     public static boolean isFlag(String arg){
         if (STRING_FLAGS_MAP.containsKey(arg)) return true;
@@ -49,7 +52,7 @@ public enum Flags {
     }
 
     /**
-     * Prints all the flags in the console
+     * Affiche tous les flags disponibles dans la console
      */
     public static void showFlags(){
         System.out.println("Available commands are :");
@@ -59,14 +62,11 @@ public enum Flags {
     }
 
     /**
-     * Transforms a string into a flag
-     * @param arg the flag given by the user in to console
-     * @return the flag linked with its string
+     * Transforme la chaine de caractère en entrée en flag
+     * @param arg Le flag entré par l'utilisateur dans la console
+     * @return La flag lié a la chaine de caractère
      */
     public static Flags toFlag(String arg){
         return STRING_FLAGS_MAP.get(arg);
     }
-
-
-
 }

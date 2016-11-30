@@ -8,7 +8,7 @@ import static brainfuck.language.enumerations.Keywords.shortcutToString;
 
 /**
  * Contient les méthodes qui manipule du texte
- * @author jamatofu on 04/11/16.
+ * @author  Red_Panda
  */
 public class OperationTexte {
 

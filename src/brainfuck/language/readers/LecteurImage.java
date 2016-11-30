@@ -16,7 +16,9 @@ import static java.lang.Math.*;
 
 
 /**
- * @author jamatofu on 09/11/16.
+ * Classe permettant de lire dans un fichier ".bmp" les instructions qu'il contient, et de les envoyer à l'interpreteur
+ *
+ * @author  Red_Panda
  */
 public class LecteurImage {
 

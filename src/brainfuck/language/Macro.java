@@ -12,11 +12,15 @@ import java.util.regex.Pattern;
  *      #define NOM_MACRO(param1, param2, ...) code (cas avec paramètre)
  * Dans notre cas, ce sera :
  *      \@NOM_MACRO(param1,param2, ...) code
- * @author jamatofu on 04/11/16.
+ * @author  Red_Panda
  */
 public class Macro {
     private TreeMap<String, String> macro = new TreeMap<String, String>();
     private String programme;
+
+    /**
+     * Constructeur de la classe Macro
+     */
 
     public Macro(String programme) {
         this.programme = programme;

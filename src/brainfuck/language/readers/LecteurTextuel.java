@@ -13,7 +13,9 @@ import java.util.regex.Pattern;
 import static brainfuck.language.enumerations.Keywords.*;
 
 /**
- * @author BEAL Clément on 28/09/16.
+ * Classe permettant de lire dans un fichier ".bf" les instructions qu'il contient, et de les envoyer à l'interpreteur
+ *
+ * @author  Red_Panda
  */
 
 public class LecteurTextuel {
@@ -21,34 +23,16 @@ public class LecteurTextuel {
     private String texteAAnalyser;
     private int index;
 
+    /**
+     * Constructeur de la classe LecteurTextuel
+     */
+
     public LecteurTextuel() {
         this.index = 0;
     }
 
-   /* /**
-     *
-     * On cherche à savoir si le caractère actuellement lu est un des shortcuts que l'on connait. Sinon cela peut être un mot
-     *
-     * @param premierCaractere on fournit uniquement le premier caractère en test (shortcut = 1 caractère)
-     * @return true si c'est un shortcut SINON false
-
-
-    public boolean estShortcut(String premierCaractere) {
-        if (isKeyword(premierCaractere)) return true;
-        return false;
-    }*/
-
-
     /**
-     *
-     * On cherche à savoir si une chaine de caractère particulière fait parti des INSTRUCTIONS
-     * Au préalable, on nous aura envoyé un tableau de STRING de 5 caractère MAXIMUM (nbr de lettre le plus grand pour une instruction)
-     * On utilise une fonction pour nous couper la chaine afin de récupérer les 2 premiers caract, puis les 3 etc...
-     * On regarde si cette chaine contient une des INSTRUCTIONS
-     * SI la chaine est contenue, on rajoute à l'INDEX le nombre de lettre de l'instruction trouvé
-     *
-     * Checks if the text to be analyzed is an instruction word or not
-     *
+     * Vérifie si le texte à analyser est une instruction ou non
      *
      * @return the keyword associated
      */
@@ -60,30 +44,21 @@ public class LecteurTextuel {
                 return wordToKeyword(word);
             }
         return null;
-
-       /* String regex;
-        for(Keywords word : Keywords.values()) {
-            regex = "^" + word.getWord() + "(.*)";
-            if(Pattern.matches(regex, texteAAnalyser)) {
-                supprimerMorceauProgramme(word.getWord().length());
-                return word;
-            }
-        }
-        return null;*/
     }
 
     /**
-     * Erases the words in the current program from the beginning to the
-     * parameter
-     * @param nbCaracASupprimer the number of characters to be erased
+     * Effacer les mots du programme actuelle, depuis le début du programme
+     * jusqu'au parametre
+
+     * @param nbCaracASupprimer Le nombre de caractere a effacer
      */
     private void supprimerMorceauProgramme(int nbCaracASupprimer) {
         texteAAnalyser = texteAAnalyser.substring(nbCaracASupprimer);
     }
 
     /**
-     * Creates a list of the keywords inside the program
-     * @return the list of keywords
+     * Crée une liste de commande dans le programme à interpreter
+     * @return la liste de commande
      */
     public ArrayList<Keywords> creeTableauCommande() {
 
@@ -109,33 +84,12 @@ public class LecteurTextuel {
         }
 
         return commandFound_List;
-
-        /*String premierCaractere;
-        Keywords commandeTrouvee;
-        int longueurProgramme = texteAAnalyser.length();
-        ArrayList<Keywords> listeCommandeTrouvee = new ArrayList<>();
-
-        while(texteAAnalyser.length() != 0) {
-            premierCaractere = Character.toString(texteAAnalyser.charAt(index));
-
-            if(estShortcut(premierCaractere)) {
-                listeCommandeTrouvee.add(Keywords.toKeyword(premierCaractere));
-                supprimerMorceauProgramme(1);
-            } else {
-                commandeTrouvee = estInstruction();
-                if (commandeTrouvee == null) {
-                    throw new IsNotACommandException();
-                } else {
-                    listeCommandeTrouvee.add(commandeTrouvee);
-                }
-            }
-        }
-
-        return listeCommandeTrouvee;*/
     }
 
     /**
-     * Supprime tout les commentaires compris entre #
+     * Supprime tous les caractères compris entre # et "\n"
+     * @param texte Le texte où les commentaires doivent être supprimés
+     * @return le texte en entrée, sans les commentaires
      */
     public String removeCommentary(String texte) {
         String regex = "#(.*?)\\n";
@@ -143,7 +97,7 @@ public class LecteurTextuel {
     }
 
     /**
-     * Recoit de la classe Moteur le nom d'un fichier à lire
+     * Reçois de la classe Moteur le nom d'un fichier à lire
      * @param texte nom du fichier à lire
      */
     public void setTexteAAnalyser(String texte) {

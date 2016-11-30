@@ -9,12 +9,9 @@ import static brainfuck.language.enumerations.Flags.*;
 
 
 /**
- * @author  BEAL Clément on 05/10/16.
+ * Classe permettant de lire les instructions reçues dans la console, ainsi que de les interpreter dans notre programme
  *
- * Dans cette classe, on va lire les instructions reçues dans la console. On les lira puis on lancera l'action liée à cette commande
- *
- * Transformer interpreterCOmmande en Bool. On renvoie le bool au Motor. Si vrai, le programme continue et on récupère le
- * @version 1.0
+ * @author  Red_Panda
  */
 public class KernelReader {
 
@@ -28,18 +25,12 @@ public class KernelReader {
         return nomFichier;
     }
     /**
+     * On interprete chaque commande qui ont été dans la console
      *
-     * On lit chaque commande reçues par la console et on regarde si elle est contenue dans la variable commande
-     * Si elle ne l'est pas, on le dit
-     * Va exécuter chacun des paramètres rentrées dans la console sauf la lecture du fichier qui est directement traité
-     * On parcourt le tableau de boolean qui indique quelle commande a été entrée
-     *  /!\ /!\ /!\ /!\ /!\ /!\ /!\
-     * /!\ /!\
-     * /!\ /!\ Il faudrait peut être gérer l'exception au cas où une commmande n'existe pas. Ca ne bloquera pas le programme de rentrer une commande fausse mais il faut y faire attention
-     * /!\ /!\
-     * /!\ /!\ /!\ /!\ /!\ /!\
      * @param args toutes les commandes reçues par la console
      * @return le nom du fichier a lire à la classe Moteur
+     * @throws FilePathNotFoundException
+     * @throws MainFlagNotFoundException
      */
     public String interpreterCommande(String[] args) throws FilePathNotFoundException, MainFlagNotFoundException {
 
@@ -93,7 +84,6 @@ public class KernelReader {
         }
         else throw new MainFlagNotFoundException();
         return fichierALire;
-
     }
 
 
@@ -102,11 +92,8 @@ public class KernelReader {
 
     /**
      * Execute la commande --check
-     *  Regarde qu'il y ai bien autant de crochet ouvert que fermé
+     * Regarde qu'il y ai bien autant de crochet ouvert que fermé
      *
-     *  /!\/!\/!\/!\/!\
-     *  /!\/!\/!\/!\/!\
-     *  Peut être amélioré avec d'autre méthode. Celle là est simple mais est la plus lente
      * @param texteALire le texte entier du fichier
      * @return true si tout est bien refermé SINON false
      */
@@ -121,9 +108,10 @@ public class KernelReader {
     }
 
     /**
-     * Checks whether the -p has been given in the arguments
-     * @param args arguments given when calling the program
-     * @return true if the -p is present
+     * Verifie si l'argument "-p" a bien été entré dans la liste d'arguments
+     *
+     * @param args La liste d'arguments qui ont été entré dans la console
+     * @return True si le "-p" a bien été entré
      */
     public boolean containsMainFlag(String[] args){
         for (String arg : args){
@@ -133,9 +121,11 @@ public class KernelReader {
     }
 
     /**
-     * Checks whether or not a file path is contained in the argument
-     * @param arg the entry argument
-     * @return true is there is a file path
+     * Verifie si le chemin d'accès au fichier que l'on doit analysé
+     * a bien été entré en argument
+
+     * @param arg L'argument que l'on doit verifier
+     * @return true si le chemin d'accès existe bien
      */
     public boolean containsFilePath(String arg){
         //if the argument contains a file with .bf or .bmp extension then there is a file path

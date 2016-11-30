@@ -3,7 +3,7 @@ package brainfuck.language;
 /**
  *
  * Contient toutes les métriques du programme
- * @author jamatofu on 03/11/16.
+ * @author  Red_Panda
  */
 public class Metrics {
     public static int PROC_SIZE;
@@ -12,6 +12,10 @@ public class Metrics {
     public static int DATA_MOVE;
     public static int DATA_WRITE;
     public static int DATA_READ;
+
+    /**
+     * Permet d'afficher dans la console les différents metrics
+     */
 
     public static void displayMetrics() {
         System.out.println("Taille du programme : " + PROC_SIZE);

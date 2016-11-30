@@ -1,17 +1,23 @@
 package brainfuck.language.exceptions;
 
 /**
- * Created by SERRANO Simon on 25/11/2016.
- */
-
-/**
- * This exception describes the fact that a color is a valid color or not, if not, then we throw a new exception
+ * Cette exception est levée lorsque la couleur actuelle n'en est pas une,
+ * et qu'elle n'est donc pas interpretable
+ *
+ * @author  Red_Panda
  */
 
 public class IsNotAValidColorException extends RuntimeException {
-    public IsNotAValidColorException() {
-    }
 
+    /**
+     * Constructeur pour IsNotAValidColorException
+     */
+    public IsNotAValidColorException() {}
+
+    /**
+     * Renvoie le texte correspondant à la description de l'erreur
+     * @return "One of the colors is not a valid color" est toujours renvoié
+     */
     @Override
     public String toString(){ return "One of the colors is not a valid color"; }
 }

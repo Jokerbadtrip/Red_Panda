@@ -12,13 +12,11 @@ import java.util.ArrayList;
 import static brainfuck.language.enumerations.Flags.*;
 
 /**
- * @author BEAL Clément on 05/10/2016.
- *
- * Cette classe permet de communiquer avec toutes les autres classes. Elle relie le lecteur de console avec le lecteur de fichier et ce dernier avec l'interpreteur
+ * Cette classe permet de communiquer avec toutes les autres classes. Elle relie le lecteur de console avec le lecteur de fichier
+ * et ce dernier avec l'interpreteur.
  * C'est ici qu'on choisie le bon interpréteur et le bon lecteur pour le fichier
  *
- *
- * @version 1.0
+ *@author  Red_Panda
  */
 public class Motor {
 
@@ -151,6 +149,11 @@ public class Motor {
 
         return (fichier.substring(fichier.indexOf(".") + 1));
     }
+
+    /**
+     * Permet d'obtenir le texte que l'on veut interpreter
+     * @return le texte à lire
+     */
 
     public String getTexteALire() {
         return texteALire;

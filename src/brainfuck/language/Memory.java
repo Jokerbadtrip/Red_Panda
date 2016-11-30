@@ -4,11 +4,10 @@ import brainfuck.language.exceptions.OutOfMemoryException;
 import brainfuck.language.exceptions.ValueOutOfBoundException;
 
 /**
- * This class is where the memory of our file will be stocked. It contains
- * an array of Short with a defined size (you can change it easily). Multiples methods
- * are available here to move in the memory	or change the value of actual cell.
+ * Cette classe permet de gerer la mémoire de notre interpreteur.
+ * Elle contient de nombreuses méthodes afin de manipuler la mémoire
  * 
- * @author Dalla-Nora Enzo and Derringer Guillaume
+ * @author  Red_Panda
  */
 
 public class Memory {
@@ -19,7 +18,7 @@ public class Memory {
 	private short maxArray;
 
 	/**
-     * Constructor for objects of class Memory.
+     * Le constructeur de la classe mémoire
      */
 	
 	public Memory() {
@@ -28,9 +27,7 @@ public class Memory {
 	}
 
 	/**
-	 * Verify if it's possible to increment or not the cell;
-	 * Then, add 1 to the actual cell if it's possible.
-	 * Print Exit code 1 if it's not.
+	 * Methode permettant d'incrementer la case mémoire actuellement pointée
 	 * @throws ValueOutOfBoundException
 	 */
 	public void incr() throws ValueOutOfBoundException {
@@ -39,9 +36,7 @@ public class Memory {
 	}
 
 	/**
-	 * Verify if it's possible to decrement or not the cell;
-	 * Then, subtract 1 to the actual cell if it's possible.
-	 * Print Exit code 1 if it's not.
+	 * Methode permettant de décrementer la case mémoire actuellement pointée
 	 * @throws ValueOutOfBoundException
 	 */
 	public void decr() throws ValueOutOfBoundException {
@@ -50,9 +45,7 @@ public class Memory {
 	}
 
 	/**
-	 * Verify if it's possible to move the pointer by one on the right or not;
-	 * Then, add 1 to the pointer's position if it's possible.
-	 * Print Exit code 2 if it's not.
+	 * Methode permettant de décaler vers la droite la position du pointeur mémoire
 	 * @throws OutOfMemoryException
 	 */
 
@@ -63,9 +56,7 @@ public class Memory {
 	}
 
 	/**
-	 * Verify if it's possible to move the pointer by one on the left or not;
-	 * Then, subtract 1 to the pointer's position if it's possible.
-	 * Print Exit code 2 if it's not.
+	 * Methode permettant de décaler vers la gauche la position du pointeur mémoire
 	 * @throws OutOfMemoryException
 	 */
 
@@ -75,7 +66,7 @@ public class Memory {
 	}
 
 	/**
-	 *  Print each memory cells to the screen only if its value is different from 0
+	 *  Affiche dans la console l'état de la mémoire actuelle
 	 */
 	public void printMemory(){
 		for (int i =  0; i <= maxArray; i++){
@@ -83,6 +74,11 @@ public class Memory {
 		}
 		System.out.println();
 	}
+
+	/**
+	 * Renvoie l'état de la mémoire actuelle
+	 * @return l'état de la mémoire actuelle
+	 */
 
 	public String toString(){
 		String résumé = "";
@@ -94,8 +90,8 @@ public class Memory {
 
 
 	/**
-	 * Change the value of pointed memory cell
-	 * @param value the new value of the memory cell
+	 * Change la valeur de la case mémoire actuellement pointée
+	 * @param value la nouvelle valeur de la case mémoire
 	 */
 	public void updateMemory(short value) {
 		if(value > 255) throw new ValueOutOfBoundException();
@@ -103,11 +99,26 @@ public class Memory {
 		Metrics.DATA_WRITE++;
 	}
 
+	/**
+	 * Retourne la position du pointeur mémoire
+	 * @return La position du pointeur mémoire
+	 */
+
 	public int getPointer(){return pointer;}
+
+	/**
+	 * Retourne la mémoire entiere
+	 * @return La mémoire entiere
+	 */
 
 	public short[] getmArray(){
 		return mArray;
 	}
+
+	/**
+	 * Retourne la valeur de la case mémoire actuellement pointée
+	 * @return La valeur de la case mémoire actuellement pointée
+	 */
 
 	public int getCellValue() {
 		return (int) mArray[pointer];
