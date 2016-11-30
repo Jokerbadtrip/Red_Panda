@@ -125,7 +125,7 @@ public class Interpreter {
                         break;
 
                     default:
-
+                        break;
                 }
 
             i++;

@@ -1,6 +1,7 @@
 package brainfuck.language;
 
 import brainfuck.language.enumerations.Keywords;
+import brainfuck.language.exceptions.MainFlagNotFoundException;
 import brainfuck.language.readers.KernelReader;
 import brainfuck.language.readers.LecteurFichiers;
 import brainfuck.language.readers.LecteurImage;
@@ -29,6 +30,7 @@ public class Motor {
     private String texteALire;
     private String fichierALire;
     private ArrayList<Keywords> listeDeCommande;
+    private LecteurFichiers reader;
 
 
     /**
@@ -49,56 +51,56 @@ public class Motor {
      * Avec l'interpréteur textue, on effectue l'action appropriée à l'instruction
      */
 
-    public void lancerProgramme() {
+    public void lancerProgramme() throws MainFlagNotFoundException{
         boolean aReWrite = false;
         boolean aCheck = false;
         boolean aTranslate = false;
         boolean aTracer =false;
         for (String arg : args) {
             if (Rewrite.equals(toFlag(arg))) aReWrite = true;
-            if (Check.equals(toFlag(arg))) aCheck = true;
-            if (Translate.equals(toFlag(arg))) aTranslate = true;
-            if (Trace.equals(toFlag(arg))) aTracer=true;
+            else if (Check.equals(toFlag(arg))) aCheck = true;
+            else if (Translate.equals(toFlag(arg))) aTranslate = true;
+            else if (Trace.equals(toFlag(arg))) aTracer=true;
         }
+
 
 
         callKernel(args);
 
-        if (aReWrite) {
-            System.out.println("La traduction de votre programme en syntaxe courte est : ");
-            OperationTexte.toString(listeDeCommande);
-            System.out.println();
+        if(!reader.isEmpty()) {
+            if (aReWrite) {
+                System.out.println("La traduction de votre programme en syntaxe courte est : ");
+                OperationTexte.toString(listeDeCommande);
+                System.out.println();
+            } else if (aCheck) {
+                if (!kernel.commandeCheck(texteALire)) System.out.println("4");
+            } else if (aTranslate) {
+                LecteurImage lecteurImage = new LecteurImage();
+                String nomFichier = fichierALire.substring(0, fichierALire.indexOf("."));
+                lecteurImage.translateFromShortcutToImage(listeDeCommande, nomFichier);
+            } else if (aTracer) {
+                interpreter.iniATracer(fichierALire.replace("." + extensionFichier(fichierALire), ""));
+            }
+            callInterpreter(listeDeCommande);
         }
-        if (aCheck) {
-            if (!kernel.commandeCheck(texteALire)) System.out.println("4");
-        }
-
-        if (aTranslate) {
-            LecteurImage lecteurImage = new LecteurImage();
-            String nomFichier = fichierALire.substring(0, fichierALire.indexOf("."));
-            lecteurImage.translateFromShortcutToImage(listeDeCommande, nomFichier);
-        }
-        if (aTracer){
-            interpreter.iniATracer(fichierALire.replace("." + extensionFichier(fichierALire),""));
-        }
-        callInterpreter(listeDeCommande);
     }
 
     /**
      *  Appelle un objet KernelReadear afin de lire les commandes
      * @param args la liste des arguments rentrées dans la console
      */
-    public void callKernel(String[] args) {
+    public void callKernel(String[] args) throws MainFlagNotFoundException{
         fichierALire = kernel.interpreterCommande(args);
         if (fichierALire != null) {
             String extensionFichier = this.extensionFichier(fichierALire);
 
             if ("bf".equals(extensionFichier)) {
                 try {
-                    LecteurFichiers reader = new LecteurFichiers();
-                    texteALire = reader.reader(fichierALire);
-
-                    listeDeCommande = callLecteurTextuel(this.texteALire);
+                    reader = new LecteurFichiers();
+                    if (!reader.isEmpty()) {
+                        texteALire = reader.reader(fichierALire);
+                        listeDeCommande = callLecteurTextuel(this.texteALire);
+                    }
                 } catch (FileNotFoundException e) {
                     System.out.println(e.toString());
                 }
@@ -124,7 +126,7 @@ public class Motor {
      * @return true si tout à bien été exécuté SINON false si une instruction a posée problème
      */
     public void callInterpreter(ArrayList<Keywords> commandeAExecuter) {
-        interpreter.keywordsExecution(commandeAExecuter);
+        if (!commandeAExecuter.equals(null)) interpreter.keywordsExecution(commandeAExecuter);
     }
 
     /**
@@ -135,8 +137,11 @@ public class Motor {
 
     public ArrayList<Keywords> callLecteurTextuel(String texteALire){
         lecteur = new LecteurTextuel();
-        lecteur.setTexteAAnalyser(texteALire);
-        ArrayList<Keywords> instruction = lecteur.creeTableauCommande();
+        if (!texteALire.equals(null)) return null;
+        else {
+            lecteur.setTexteAAnalyser(texteALire);
+        }
+            ArrayList<Keywords> instruction = lecteur.creeTableauCommande();
 
         return instruction;
     }

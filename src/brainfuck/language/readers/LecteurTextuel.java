@@ -91,6 +91,8 @@ public class LecteurTextuel {
         Keywords commandFound;
         ArrayList<Keywords> commandFound_List = new ArrayList<>();
 
+
+
         while (texteAAnalyser.length()!=0){
             //Store the first character of the current untreated program
             firstCharacter = Character.toString(texteAAnalyser.charAt(index));
@@ -147,13 +149,15 @@ public class LecteurTextuel {
      * @param texte nom du fichier à lire
      */
     public void setTexteAAnalyser(String texte) {
-        Macro macro = new Macro(texte);
-        texte = macro.readMacro();
-        texte = removeCommentary(texte);
-        texte = texte.replaceAll("\\s+", "");
-        texte = OperationTexte.transformerInstructionEnSymbole(texte);
+        if (!texte.equals("")) {
+            Macro macro = new Macro(texte);
+            texte = macro.readMacro();
+            texte = removeCommentary(texte);
+            texte = texte.replaceAll("\\s+", "");
+            texte = OperationTexte.transformerInstructionEnSymbole(texte);
 
-        texteAAnalyser = texte;
+            texteAAnalyser = texte;
+        }
     }
 
     public String getTexteAAnalyser() { return texteAAnalyser;}

@@ -17,15 +17,18 @@ import java.util.Scanner;
 
 public class LecteurFichiers {
 
+    private boolean isEmpty;
     /**
      * Scans the file given to the scanner
      * @return an array list of each characters read
      */
     public String reader(String filepath) throws FileNotFoundException{
-
+        isEmpty = false;
         File file = new File(filepath);
         Scanner input = new Scanner(file);
         String chaine = "";
+
+        if (!input.hasNextLine() && !isEmpty) isEmpty = true;
 
 
         while (input.hasNextLine()){
@@ -54,5 +57,9 @@ public class LecteurFichiers {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isEmpty() {
+        return isEmpty;
     }
 }
