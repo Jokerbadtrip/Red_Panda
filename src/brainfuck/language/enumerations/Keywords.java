@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Serrano Simon on 03/11/2016.
+ * Un énum permettant d'associer n'importe quel type d'écriture (texte/image) à une instruction commune
+ *
+ * @author  Red_Panda
  */
 public enum Keywords {
 
@@ -80,9 +82,9 @@ public enum Keywords {
 
 
     /**
-     * Checks whether the word is a valid word
-     * @param word the word to be checked
-     * @return true if the word is valid
+     * Verifie si la chaine de caractère entrée est valide et interpretable
+     * @param word la chaine de caractère à vérifier
+     * @return true si la chaine de caractère est valide
      * @throws IsNotACommandException
      */
     public static boolean isWord(String word) throws IsNotACommandException{
@@ -91,9 +93,9 @@ public enum Keywords {
     }
 
     /**
-     * Checks whether the shortcut is a valid shortcut
-     * @param shortcut the shortcut to be checked
-     * @return true if the shortcut is valid
+     * Verifie si le caractère entré est valide et interpretable
+     * @param shortcut tLe caractère à vérifier
+     * @return true si le caractère est valide
      * @throws IsNotACommandException
      */
     public static boolean isShortcut(String shortcut) throws IsNotACommandException{
@@ -102,9 +104,9 @@ public enum Keywords {
     }
 
     /**
-     * Checks whether the color is a valid color
-     * @param color the color to be checked
-     * @return true if the shortcut is valid
+     * Verifie si la couleur entrée est valide et interpretable
+     * @param color La couleur à vérifier
+     * @return true si la couleur est valide
      * @throws IsNotAValidColorException
      */
     public static boolean isColor(String color) throws IsNotAValidColorException{
@@ -116,9 +118,9 @@ public enum Keywords {
 
 
     /**
-     * transforms a word into a keyword
-     * @param word the given word
-     * @return the associated keyword
+     * Renvoie l'instruction associée a la chaine de caractère entrée
+     * @param word Le caractère à interpreter
+     * @return L'instruction associée a la chaine de caractère entrée
      */
     public static Keywords wordToKeyword(String word){
         if (isWord(word)) return WORD_TO_KEYWORD_MAP.get(word);
@@ -126,9 +128,9 @@ public enum Keywords {
     }
 
     /**
-     * transforms a shortcut into a keyword
-     * @param shortcut the given shortcut
-     * @return the associated keyword
+     * Transforme un caractère en une instruction
+     * @param shortcut Le caractère à interpreter
+     * @return L'instruction associée au caractère entré
      */
     public static Keywords shortcutToKeyword(String shortcut){
         if (isShortcut(shortcut)) return SHORTCUT_TO_KEYWORD_MAP.get(shortcut);
@@ -136,9 +138,9 @@ public enum Keywords {
     }
 
     /**
-     * transforms a color into a keyword
-     * @param color the given color
-     * @return the associated keyword
+     * Transforme une couleur en une instruction
+     * @param color La couleur à interpreter
+     * @return L'instruction associée à la couleur entrée
      */
     public static Keywords colorToKeyword(String color){
         if (isColor(color)) return COLOR_TO_KEYWORD_MAP.get(color);
@@ -146,9 +148,9 @@ public enum Keywords {
     }
 
     /**
-     * Method that links a shortcut to a color
-     * @param shortcut the shortcut to transform into a color
-     * @return the color code associated to the shortcut
+     * Methode liant une instruction à une couleur
+     * @param shortcut l'instruction à transformer en couleur
+     * @return le code couleur associé à la couleur entrée
      */
     public static int keywordToColor(Keywords shortcut){
         for (Map.Entry<String, Keywords> entry : COLOR_TO_KEYWORD_MAP.entrySet()){
@@ -160,10 +162,11 @@ public enum Keywords {
 
 
     /**
-     * Checks if the given string is any type of syntax for the program and returns
-     * cleverly the right keyword depending on the syntax
-     * @param any_type the string to be converted
-     * @return the keyword associated with the string
+     * Renvoie l'instruction asssociée à la chaine de caractère en entrée,
+     * quelque soit son type (couleur...)
+     *
+     * @param any_type La chaine à convertir
+     * @return l'instruction associée a la chaine en entrée
      */
     public static Keywords getKeywords(String any_type){
         if (isColor(any_type)) return colorToKeyword(any_type);
@@ -173,8 +176,9 @@ public enum Keywords {
     }
 
     /**
-     * Displays the words as a list of strings
-     * @return the list of these words
+     * Affiche toutes les instructions en tant que liste de chaine de caractère
+     *
+     * @return La liste des instructions
      */
     public static ArrayList<String> displayWords(){
         ArrayList<String> words = new ArrayList<>();
@@ -185,9 +189,10 @@ public enum Keywords {
     }
 
     /**
-     * Givers the string as a shortcut corresponding to the keyword
-     * @param keyword the keyword to be converted into shortcut
-     * @return the shortcut from the conversion
+     * Renvoie le caractère associé à l'instruction en entrée
+     *
+     * @param keyword L'instruction à convertir en caractère
+     * @return Le caractère associé à l'isntruction en entrée
      */
     public static String shortcutToString(Keywords keyword){
         for (Map.Entry<String , Keywords> shortcut: SHORTCUT_TO_KEYWORD_MAP.entrySet()) {

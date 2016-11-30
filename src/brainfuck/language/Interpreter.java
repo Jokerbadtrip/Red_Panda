@@ -19,12 +19,10 @@ import static brainfuck.language.enumerations.Keywords.isWord;
 
 
 /**
- * @author BEAL ClÃ©ment, SERRANO Simon on 28/09/16.
+ * Cette classe interprète les mots clés d'un texte/image en fonction de
+ * l'instruction, une action sur la classe Mémoire sera effectuée
  *
- *         Cette classe interprÃ¨te les mot clÃ©s d'un texte/image En fonction
- *         de l'instruction, une action sur la classe Memoire sera effectuÃ©e
- *
- * @version 1.0
+ * @author  Red_Panda
  */
 
 public class Interpreter {
@@ -35,6 +33,12 @@ public class Interpreter {
     private List<Integer> placeCrochet = new ArrayList<Integer>();
     FileWriter fw;
 
+    /**
+     * Initialise la partie "Tracé" de l'interpreteur lorsque
+     * l'argument "--Trace" a été entré dans la console
+     *
+     * @param nomFichier Le nom du fichier dans lequel sera enregistré les logs
+     */
 
     public void iniATracer(String nomFichier) {
         aTracer = true;
@@ -45,6 +49,14 @@ public class Interpreter {
             System.out.println("Not implemented yet");
         }
     }
+
+    /**
+     * Permet d'écrire dans le fichier .log correspondant au fichier d'entrée, si l'option a été écrite
+     * dans la console, différentes données sur l'opération actuelle
+     *
+     * @param i La position du pointeur d'execution
+     * @param itot Le nombre total d'étape qui ont été éxécuté depuis le début de l'interpretation
+     */
 
     private void tracerUpdate(int i, int itot) {
         if (aTracer) {
@@ -60,6 +72,7 @@ public class Interpreter {
 
     /**
      * Compare le mot avec la liste des mots exécutables et agit en conséquence
+     *
      * @param tableauCommande la liste de commande extrait du programme
      * @throws ValueOutOfBoundException OutOfMemoryException
      */
@@ -143,6 +156,13 @@ public class Interpreter {
         }
     }
 
+    /**
+     * Permet d'enregistrer la position de tous les crochets ouvrants présent dans le fichier
+     * actuelle, dans une liste.
+     *
+     * @param tableauCommande La liste de commande que l'on veut analyser
+     */
+
     public void recenseCrochet(ArrayList<Keywords> tableauCommande) {
         int i;
 
@@ -152,6 +172,15 @@ public class Interpreter {
                 placeCrochet.add(i);
         }
     }
+
+    /**
+     * Permet de connaitre rapidement la position du crochet ouvrant associé
+     * au crochet fermant actuel
+     *
+     * @param i La position du crochet fermant que l'on interprete
+     * @param tableauCommande La liste de commande que l'on est en train d'interpreter
+     * @return La position dans la liste de commande du crochet ouvrantassocié au crochet fermant actuel
+     */
 
     public int retournePlace(ArrayList<Keywords> tableauCommande, int i){
         int placeCrochetActu = 0;
@@ -165,26 +194,35 @@ public class Interpreter {
         return (placeCrochet.size() - placeCrochetActu - 1);
     }
 
-    public int countInstru(ArrayList<Keywords> commandes, int i) {
+    /**
+     * Permet de connaitre le nombre d'instruction qui sont compris entre le crochet ouvrant
+     * actuel et le crochet fermant associé
+     *
+     * @param i La position du crochet ouvrant que l'on interprete
+     * @param tableauCommande La liste de commande que l'on est en train d'interpreter
+     * @return Le nombre d'instructions entre le crochet ouvrant actuel et le crochet fermant associé
+     */
+
+    public int countInstru(ArrayList<Keywords> tableauCommande, int i) {
         int nbOuvrante = 1;
         int it = i + 1;
 
         while (nbOuvrante != 0) {
-            if (commandes.get(it) == Keywords.JUMP) {
+            if (tableauCommande.get(it) == Keywords.JUMP) {
                 nbOuvrante++;
             }
-            if (commandes.get(it) == Keywords.BACK) {
+            if (tableauCommande.get(it) == Keywords.BACK) {
                 nbOuvrante--;
             }
-
             it++;
         }
         return (it - i);
     }
 
     /**
-     * GÃ¨re la commande IN On gÃ¨re le cas oÃ¹ on a rentrÃ© le -i et le cas par
-     * dÃ©faut (console)
+     *
+     * Gère la commande IN. On gère le case ou nous rentrons "-i" et le cas
+     * par défaut (console)
      */
     public void inMethod() {
         String entree;
@@ -218,8 +256,8 @@ public class Interpreter {
     }
 
     /**
-     * GÃ¨re la mÃ©thode OUT On gÃ¨re le cas oÃ¹ on a la commande -o et le cas
-     * par dÃ©faut (console)
+     * Gère la commande OUT. On gère le case ou nous rentrons "-o" et le cas
+     * par défaut (console)
      */
 
     public void outMethod() {

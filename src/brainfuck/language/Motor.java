@@ -12,20 +12,19 @@ import java.util.ArrayList;
 import static brainfuck.language.enumerations.Flags.*;
 
 /**
- * @author BEAL Clément on 05/10/2016.
- *
- * Cette classe permet de communiquer avec toutes les autres classes. Elle relie le lecteur de console avec le lecteur de fichier et ce dernier avec l'interpreteur
+ * Cette classe permet de communiquer avec toutes les autres classes. Elle relie le lecteur de console avec le lecteur de fichier
+ * et ce dernier avec l'interpreteur.
  * C'est ici qu'on choisie le bon interpréteur et le bon lecteur pour le fichier
  *
- *
- * @version 1.0
+ *@author  Red_Panda
  */
 public class Motor {
 
     private String[] args;
     private KernelReader kernel;
+    private LecteurTextuel lecteur;
     private Interpreter interpreter;
-    private String programme;
+    private String texteALire;
     private String fichierALire;
     private ArrayList<Keywords> listeDeCommande;
 
@@ -63,9 +62,20 @@ public class Motor {
 
         callKernel(args);
 
-        if (aReWrite) rewrite();
-        if (aCheck) check();
-        if (aTranslate) translate();
+        if (aReWrite) {
+            System.out.println("La traduction de votre programme en syntaxe courte est : ");
+            OperationTexte.toString(listeDeCommande);
+            System.out.println();
+        }
+        if (aCheck) {
+            if (!kernel.commandeCheck(texteALire)) System.out.println("4");
+        }
+
+        if (aTranslate) {
+            LecteurImage lecteurImage = new LecteurImage();
+            String nomFichier = fichierALire.substring(0, fichierALire.indexOf("."));
+            lecteurImage.translateFromShortcutToImage(listeDeCommande, nomFichier);
+        }
         if (aTracer){
             interpreter.iniATracer(fichierALire.replace("." + extensionFichier(fichierALire),""));
         }
@@ -76,7 +86,7 @@ public class Motor {
      *  Appelle un objet KernelReadear afin de lire les commandes
      * @param args la liste des arguments rentrées dans la console
      */
-    private void callKernel(String[] args) {
+    public void callKernel(String[] args) {
         fichierALire = kernel.interpreterCommande(args);
         if (fichierALire != null) {
             String extensionFichier = this.extensionFichier(fichierALire);
@@ -84,9 +94,9 @@ public class Motor {
             if ("bf".equals(extensionFichier)) {
                 try {
                     LecteurFichiers reader = new LecteurFichiers();
-                    programme = reader.reader(fichierALire);
+                    texteALire = reader.reader(fichierALire);
 
-                    listeDeCommande = callLecteurTextuel(this.programme);
+                    listeDeCommande = callLecteurTextuel(this.texteALire);
                 } catch (FileNotFoundException e) {
                     System.out.println(e.toString());
                 }
@@ -111,19 +121,19 @@ public class Motor {
      * @param commandeAExecuter une liste de toutes les instructions contenues dans le fichier programme
      * @return true si tout à bien été exécuté SINON false si une instruction a posée problème
      */
-    private void callInterpreter(ArrayList<Keywords> commandeAExecuter) {
+    public void callInterpreter(ArrayList<Keywords> commandeAExecuter) {
         interpreter.keywordsExecution(commandeAExecuter);
     }
 
     /**
      *  Appelle le lecteur textuel. Il gérera la lecture et la différencation entre toutes les instructions
-     * @param programme
+     * @param texteALire
      * @return commande une liste contenye toutes les instructions
      */
 
-    private ArrayList<Keywords> callLecteurTextuel(String programme){
-        LecteurTextuel lecteur = new LecteurTextuel();
-        lecteur.setTexteAAnalyser(programme);
+    public ArrayList<Keywords> callLecteurTextuel(String texteALire){
+        lecteur = new LecteurTextuel();
+        lecteur.setTexteAAnalyser(texteALire);
         ArrayList<Keywords> instruction = lecteur.creeTableauCommande();
 
         return instruction;
@@ -140,24 +150,13 @@ public class Motor {
         return (fichier.substring(fichier.indexOf(".") + 1));
     }
 
-    public String getprogramme() {
-        return programme;
-    }
+    /**
+     * Permet d'obtenir le texte que l'on veut interpreter
+     * @return le texte à lire
+     */
 
-    public void rewrite() {
-        System.out.println("La traduction de votre programme en syntaxe courte est : ");
-        OperationTexte.toString(listeDeCommande);
-        System.out.println();
-    }
-
-    public void check() {
-        if (!kernel.commandeCheck(programme)) System.out.println("4");
-    }
-
-    public void translate() {
-        LecteurImage lecteurImage = new LecteurImage();
-        String nomFichier = fichierALire.substring(0, fichierALire.indexOf("."));
-        lecteurImage.translateFromShortcutToImage(listeDeCommande, nomFichier);
+    public String getTexteALire() {
+        return texteALire;
     }
 }
 
