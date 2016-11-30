@@ -6,8 +6,11 @@ import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.IsNotACommandException;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
+
+import static brainfuck.language.enumerations.Keywords.*;
 
 /**
  * @author BEAL Clément on 28/09/16.
@@ -22,24 +25,19 @@ public class LecteurTextuel {
         this.index = 0;
     }
 
-    /**
+   /* /**
      *
      * On cherche à savoir si le caractère actuellement lu est un des shortcuts que l'on connait. Sinon cela peut être un mot
      *
      * @param premierCaractere on fournit uniquement le premier caractère en test (shortcut = 1 caractère)
      * @return true si c'est un shortcut SINON false
-     */
+
 
     public boolean estShortcut(String premierCaractere) {
-
-        for(Keywords keywords : Keywords.values()) {
-            if(Objects.equals(keywords.getShortcut(), premierCaractere)) {
-
-                return true;
-            }
-        }
+        if (isKeyword(premierCaractere)) return true;
         return false;
-    }
+    }*/
+
 
     /**
      *
@@ -49,12 +47,21 @@ public class LecteurTextuel {
      * On regarde si cette chaine contient une des INSTRUCTIONS
      * SI la chaine est contenue, on rajoute à l'INDEX le nombre de lettre de l'instruction trouvé
      *
+     * Checks if the text to be analyzed is an instruction word or not
      *
-     * @return true si INSTRUCTION trouvée sinon false
+     *
+     * @return the keyword associated
      */
 
     public Keywords estInstruction() {
-        String regex;
+        for (String word : displayWords())
+            if (Pattern.matches("^"+word+"(.*)", texteAAnalyser)) {
+                supprimerMorceauProgramme(word.length());
+                return wordToKeyword(word);
+            }
+        return null;
+
+       /* String regex;
         for(Keywords word : Keywords.values()) {
             regex = "^" + word.getWord() + "(.*)";
             if(Pattern.matches(regex, texteAAnalyser)) {
@@ -62,20 +69,48 @@ public class LecteurTextuel {
                 return word;
             }
         }
-        return null;
+        return null;*/
     }
 
+    /**
+     * Erases the words in the current program from the beginning to the
+     * parameter
+     * @param nbCaracASupprimer the number of characters to be erased
+     */
     private void supprimerMorceauProgramme(int nbCaracASupprimer) {
         texteAAnalyser = texteAAnalyser.substring(nbCaracASupprimer);
     }
 
     /**
-     *  Grosse méthode. On lit le texte, trouve les commandes, les stocke dans une liste et on renvoie la liste
-     * @return une liste contenant toutes les commandes trouvees dans le programme. Une case = une instruction
+     * Creates a list of the keywords inside the program
+     * @return the list of keywords
      */
-
     public ArrayList<Keywords> creeTableauCommande() {
-        String premierCaractere;
+
+        String firstCharacter;
+        Keywords commandFound;
+        ArrayList<Keywords> commandFound_List = new ArrayList<>();
+
+        while (texteAAnalyser.length()!=0){
+            //Store the first character of the current untreated program
+            firstCharacter = Character.toString(texteAAnalyser.charAt(index));
+
+            if (isShortcut(firstCharacter)){ // if the first character is a shortcut, e.g +,-,>
+                commandFound_List.add(shortcutToKeyword(firstCharacter)); // We had the command
+                supprimerMorceauProgramme(1);//We delete that shortcut
+            }
+            else {
+                commandFound = estInstruction();
+                //If there is a bad command in the file, then we tell it to the user, it's might not be intended
+                if (commandFound == null) throw new IsNotACommandException();
+                //Else the command is added to the list
+                else commandFound_List.add(commandFound);
+            }
+        }
+
+        return commandFound_List;
+
+        /*String premierCaractere;
         Keywords commandeTrouvee;
         ArrayList<Keywords> listeCommandeTrouvee = new ArrayList<>();
 
@@ -95,7 +130,7 @@ public class LecteurTextuel {
             }
         }
 
-        return listeCommandeTrouvee;
+        return listeCommandeTrouvee;*/
     }
 
     /**

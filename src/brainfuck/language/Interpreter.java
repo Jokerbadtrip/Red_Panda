@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static brainfuck.language.enumerations.Keywords.isWord;
 
 
 /**
@@ -66,67 +67,67 @@ public class Interpreter {
             throws OutOfMemoryException, ValueOutOfBoundException {
 
         Metrics.PROC_SIZE = tableauCommande.size();
-        String commande;
         int i = 0, itot = 0;
         recenseCrochet(tableauCommande);
 
         while (i < tableauCommande.size()) {
-            switch (tableauCommande.get(i)) {
-                case INCR:
-                    memory.incr();
-                    tracerUpdate(i,itot);
-                    Metrics.DATA_WRITE++;
-                    break;
-                case DECR:
-                    memory.decr();
-                    tracerUpdate(i,itot);
-                    Metrics.DATA_WRITE++;
-                    break;
-
-                case LEFT:
-                    Metrics.DATA_MOVE++;
-                    memory.left();
-                    tracerUpdate(i, itot);
-                    break;
-
-                case RIGHT:
-                    Metrics.DATA_MOVE++;
-                    memory.right();
-                    tracerUpdate(i,itot);
-                    break;
-                case OUT:
-                    Metrics.DATA_READ++;
-                    outMethod();
-                    tracerUpdate(i,itot);
-                    break;
-
-                case IN:
-                    try {
+                switch (tableauCommande.get(i)) {
+                    case INCR:
+                        memory.incr();
+                        tracerUpdate(i, itot);
                         Metrics.DATA_WRITE++;
-                        inMethod();
-                        tracerUpdate(i,itot);
-                    } catch (WrongInput e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                case JUMP:
-                    Metrics.DATA_READ++;
-                    if (memory.getCellValue() == 0)
-                        i+=countInstru(tableauCommande, i);
+                        break;
+                    case DECR:
+                        memory.decr();
+                        tracerUpdate(i, itot);
+                        Metrics.DATA_WRITE++;
+                        break;
 
-                    tracerUpdate(i,itot);
-                    break;
-                case BACK:
-                    Metrics.DATA_READ++;
-                    if (memory.getCellValue() != 0)
-                        i = placeCrochet.get(retournePlace(tableauCommande,i));
+                    case LEFT:
+                        Metrics.DATA_MOVE++;
+                        memory.left();
+                        tracerUpdate(i, itot);
+                        break;
 
-                    tracerUpdate(i,itot);
-                    break;
+                    case RIGHT:
+                        Metrics.DATA_MOVE++;
+                        memory.right();
+                        tracerUpdate(i, itot);
+                        break;
+                    case OUT:
+                        Metrics.DATA_READ++;
+                        outMethod();
+                        tracerUpdate(i, itot);
+                        break;
 
-                default:
+                    case IN:
+                        try {
+                            Metrics.DATA_WRITE++;
+                            inMethod();
+                            tracerUpdate(i, itot);
+                        } catch (WrongInput e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case JUMP:
+                        Metrics.DATA_READ++;
+                        if (memory.getCellValue() == 0)
+                            i += countInstru(tableauCommande, i);
 
-            }
+                        tracerUpdate(i, itot);
+                        break;
+                    case BACK:
+                        Metrics.DATA_READ++;
+                        if (memory.getCellValue() != 0)
+                            i = placeCrochet.get(retournePlace(tableauCommande, i));
+
+                        tracerUpdate(i, itot);
+                        break;
+
+                    default:
+
+                }
+
             i++;
             itot++;
             Metrics.EXEC_MOVE++;

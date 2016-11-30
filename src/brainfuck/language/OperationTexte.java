@@ -4,6 +4,8 @@ import brainfuck.language.enumerations.Keywords;
 
 import java.util.ArrayList;
 
+import static brainfuck.language.enumerations.Keywords.shortcutToString;
+
 /**
  * Contient les méthodes qui manipule du texte
  * @author jamatofu on 04/11/16.
@@ -34,7 +36,7 @@ public class OperationTexte {
      */
     public static void toString(ArrayList<Keywords> liste) { // permet d'afficher une liste
         for (Keywords comm : liste) {
-            System.out.print(comm.getShortcut());
+            System.out.print(shortcutToString(comm));
         }
         System.out.println();
     }
