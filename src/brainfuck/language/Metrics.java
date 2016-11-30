@@ -3,15 +3,20 @@ package brainfuck.language;
 /**
  *
  * Contient toutes les métriques du programme
- * @author jamatofu on 03/11/16.
+ * @author  Red_Panda
  */
 public class Metrics {
     public static int PROC_SIZE;
     public static long EXEC_TIME; // millisecond
+    public static long START_TIME; // millisecond
     public static int EXEC_MOVE;
     public static int DATA_MOVE;
     public static int DATA_WRITE;
     public static int DATA_READ;
+
+    /**
+     * Permet d'afficher dans la console les différents metrics
+     */
 
     public static void displayMetrics() {
         System.out.println("Taille du programme : " + PROC_SIZE);
@@ -20,5 +25,9 @@ public class Metrics {
         System.out.println("Nombre de fois que le pointeur de mémoire a bougé : "  + DATA_MOVE);
         System.out.println("Nombre de fois que la mémoire a été modifiée : " + DATA_WRITE);
         System.out.println("Nombre de fois que la mémoire a été lue : " + DATA_READ);
+    }
+
+    public static void EXEC_TIME(long endTime) {
+        EXEC_TIME = endTime - START_TIME;
     }
 }

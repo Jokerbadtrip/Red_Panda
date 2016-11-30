@@ -1,19 +1,20 @@
 package brainfuck.language.exceptions;
 
 /**
- * This exception describes the fact that the pointer of the memory is out of the memory
- * Created by SERRANO Simon on 03/11/2016.
+ * Cette exception est levée lorsque le pointeur a dépassé les limites imposées (limite maximale ou minimale)
+ *
+ * @author  Red_Panda
  */
 public class OutOfMemoryException extends RuntimeException {
 
     /**
-     * Constructor for OutOfMemoryException
+     * Constructeur pour OutOfMemoryException
      */
-    public OutOfMemoryException() { }
+    public OutOfMemoryException() {}
 
     /**
-     * Prints the error in the console
-     * @return "Error Code : 2" all the time
+     * Renvoie le texte correspondant à la description de l'erreur
+     * @return "Error Code : 2"  est toujours renvoié
      */
     @Override
     public String toString(){return "Error Code : 2";}

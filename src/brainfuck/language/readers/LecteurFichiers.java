@@ -2,11 +2,9 @@ package brainfuck.language.readers;
 
 
 /**
+ * Cette classe permet de crée un lecteur de fichier, de lire le fichier voulu et de savoir si ce dernier est vide
  *
- * This class creates a new file reader, can scan the given file to the reader and checks if the file is empty
- * @author SERRANO Simon
- * @version 1.0
- *
+ * @author  Red_Panda
  **/
 
 import java.io.File;
@@ -19,8 +17,8 @@ public class LecteurFichiers {
 
     private boolean isEmpty;
     /**
-     * Scans the file given to the scanner
-     * @return an array list of each characters read
+     * Analyse le fichier donné dans le lecteur
+     * @return La liste de toutes les commandes trouvées
      */
     public String reader(String filepath) throws FileNotFoundException{
         isEmpty = false;

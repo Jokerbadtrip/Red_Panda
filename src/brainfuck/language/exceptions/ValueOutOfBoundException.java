@@ -1,20 +1,21 @@
 package brainfuck.language.exceptions;
 
 /**
- * This exception describes the fact that a cell in the memory cannot be incremented or decremented because the min/max
- * value is reached
- * Created by SERRANO Simon on 03/11/2016.
+ * Cette exception est levée lorsque la valeur de la case mémoire actuelle a dépassé
+ * les limites imposées (que ce soit la valeur maximale ou minimale)
+ *
+ * @author  Red_Panda
  */
 public class ValueOutOfBoundException extends RuntimeException {
 
     /**
-     * Constructor for the ValueOutOfBoundException
+     * Constructeur pour the ValueOutOfBoundException
      */
     public ValueOutOfBoundException(){}
 
     /**
-     * Prints the error in the console
-     * @return "Error Code : 1" everytime
+     * Renvoie le texte correspondant à la description de l'erreur
+     * @return "Error Code : 1"  est toujours renvoié
      */
     @Override
     public String toString(){return "Error Code : 1" ;}

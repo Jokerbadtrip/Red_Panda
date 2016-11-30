@@ -1,18 +1,20 @@
 package brainfuck.language.exceptions;
 
 /**
- * Created by Serrano Simon on 07/11/2016.
+ * Cette exception est levée lorsque le chemin d'accès n'a pas été entré en argument
+ *
+ * @author  Red_Panda
  */
 public class FilePathNotFoundException extends RuntimeException {
 
     /**
-     * Constructor for FilePathNotFoundException
+     * Constructeur pour FilePathNotFoundException
      */
     public FilePathNotFoundException() { }
 
     /**
-     * Prints a string in the console
-     * @return "You need to specify a file path after the flag" every time
+     * Renvoie le texte correspondant à la description de l'erreur
+     * @return "You need to specify a file path after the flag" est toujours renvoié
      */
     @Override
     public String toString(){return "You need to specify a file path after the flag";}
