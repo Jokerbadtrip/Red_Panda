@@ -18,14 +18,9 @@ public class OperationTexte {
      * @return la liste de commande en shortcut
      */
     public static String transformerInstructionEnSymbole(String programmeATraduire){
-        programmeATraduire = programmeATraduire.replaceAll("RIGHT", ">");
-        programmeATraduire = programmeATraduire.replaceAll("LEFT", "<");
-        programmeATraduire = programmeATraduire.replaceAll("INCR", "+");
-        programmeATraduire = programmeATraduire.replaceAll("DECR", "-");
-        programmeATraduire = programmeATraduire.replaceAll("JUMP", "[");
-        programmeATraduire = programmeATraduire.replaceAll("BACK", "]");
-        programmeATraduire = programmeATraduire.replaceAll("OUT", ".");
-        programmeATraduire = programmeATraduire.replaceAll("IN", ",");
+        for(Keywords key : Keywords.values()) {
+            programmeATraduire = programmeATraduire.replaceAll(key.name(), key.getShortcut());
+        }
 
         return programmeATraduire;
     }
