@@ -74,7 +74,7 @@ public class KernelReader {
 
                     if (!isFlag(args[i]) && !containsFilePath(args[i])) {
                         System.out.println(args[i] + " is not a command.");
-                        showFlags();
+                        System.out.println(showFlags());
                     }
 
                 }

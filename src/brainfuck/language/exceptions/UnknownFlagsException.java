@@ -2,6 +2,8 @@ package brainfuck.language.exceptions;
 
 import brainfuck.language.enumerations.Flags;
 
+import static brainfuck.language.enumerations.Flags.showFlags;
+
 /**
  * Created by Red_Panda on 30/11/2016.
  *
@@ -17,6 +19,7 @@ public class UnknownFlagsException extends RuntimeException {
 
     @Override
     public String toString(){
-        return "The flag "+flags+" is not a valid flag.";
+        return "The flag "+flags+" is not a valid flag.\n" +
+                showFlags();
     }
 }

@@ -2,6 +2,7 @@ package brainfuck.language.enumerations;
 
 import brainfuck.language.exceptions.UnknownFlagsException;
 
+import java.util.regex.Pattern;
 
 
 /**
@@ -37,19 +38,23 @@ private String flag;
      * @return true si l'argument en entrée est un flag
      */
     public static boolean isFlag(String arg) throws UnknownFlagsException{
-        for (Flags flags : Flags.values())
-            if (flags.getFlag().equals(arg)) return true;
-        throw new UnknownFlagsException(arg);
+        if (!isFilePath(arg)) {
+            for (Flags flags : Flags.values())
+                if (flags.getFlag().equals(arg)) return true;
+            throw new UnknownFlagsException(arg);
+        }
+        return false;
     }
 
     /**
      * Affiche tous les flags disponibles dans la console
      */
-    public static void showFlags(){
-        System.out.println("Available commands are :");
+    public static String showFlags(){
+        String printer = "Available commands are : ";
         for (Flags flags : Flags.values()) {
-            System.out.println(flags.getFlag());
+            printer += flags.getFlag()+" ";
         }
+        return printer;
     }
 
     /**
@@ -58,10 +63,19 @@ private String flag;
      * @return La flag lié a la chaine de caractère
      */
     public static Flags toFlag(String arg) throws UnknownFlagsException{
-        for (Flags flags : Flags.values())
-            if (arg.equals(flags.getFlag())) return flags;
-        throw new UnknownFlagsException(arg);
+        if (!isFilePath(arg)) {
+            for (Flags flags : Flags.values())
+                if (arg.equals(flags.getFlag())) return flags;
+            throw new UnknownFlagsException(arg);
+        }
+        return null;
     }
 
     public String getFlag() { return flag; }
+
+    private static boolean isFilePath(String arg){
+        if (arg.toLowerCase().matches("(?i).*bf")) return true;
+        else if (arg.toLowerCase().matches("(?i).*bmp")) return true;
+        else return false;
+    }
 }

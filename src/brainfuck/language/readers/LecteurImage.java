@@ -58,16 +58,13 @@ public class LecteurImage {
     public void translateFromShortcutToImage(ArrayList<Keywords> commandes, String nameImage) {
         int tailleImage = (int) ceil(sqrt(commandes.size()));
         BufferedImage img = new BufferedImage(tailleImage * 3, tailleImage * 3, BufferedImage.TYPE_INT_RGB);
-        int i = 0;
-
-        for(int y = 0; y < tailleImage * 3; y += 3)
-            for(int x = 0; x < tailleImage * 3; x += 3) {
-                int color;
-                Keywords comm = commandes.get(i);
-                color = keywordToColor(comm);
-                if (color !=-1) img = drawSquare(img, x, y, color);
-                i++;
-            }
+        for (Keywords keywords : commandes)
+            for (int y = 0; y < tailleImage * 3; y += 3)
+                for (int x = 0; x < tailleImage * 3; x += 3) {
+                    int color;
+                    color = keywordToColor(keywords);
+                    if (color != -1) img = drawSquare(img, x, y, color);
+                }
 
         File outfile = new File(nameImage + ".bmp");
         try {
@@ -78,14 +75,11 @@ public class LecteurImage {
     }
 
     public BufferedImage drawSquare(BufferedImage img, int x, int y, int color) {
-        Color col = new Color(color);
-
         for(int j = y; j < 3 + y; j++) {
             for(int i = x; i < 3 + x; i++) {
-                img.setRGB(i, j, col.getRGB());
+                img.setRGB(i, j, color);
             }
         }
-
         return img;
     }
 }

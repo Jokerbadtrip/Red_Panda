@@ -122,7 +122,7 @@ public enum Keywords {
      */
     public static int keywordToColor(Keywords shortcut){
         if (isKeyword(shortcut))
-            return Integer.parseInt(shortcut.getColor());
+            return Integer.decode(shortcut.getColor());
         return -1;
 
     }
