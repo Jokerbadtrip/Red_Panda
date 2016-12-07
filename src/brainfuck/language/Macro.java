@@ -33,7 +33,7 @@ public class Macro {
         findMacro();
         remplacerMacroParCode();
 
-        return programme.replaceAll("\\s+", "");
+        return programme;
     }
 
     /**

@@ -1,16 +1,11 @@
 package brainfuck.language.readers;
 
 import brainfuck.language.Macro;
-import brainfuck.language.OperationTexte;
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.IsNotACommandException;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Pattern;
-
-import static brainfuck.language.enumerations.Keywords.*;
 
 /**
  * Classe permettant de lire dans un fichier ".bf" les instructions qu'il contient, et de les envoyer à l'interpreteur
@@ -21,27 +16,17 @@ import static brainfuck.language.enumerations.Keywords.*;
 public class LecteurTextuel {
 
     private String texteAAnalyser;
-    private int index;
-
-    /**
-     * Constructeur de la classe LecteurTextuel
-     */
-
-    public LecteurTextuel() {
-        this.index = 0;
-    }
 
     /**
      * Vérifie si le texte à analyser est une instruction ou non
-     *
      * @return the keyword associated
      */
 
     public Keywords estInstruction() {
-        for (String word : displayWords())
+        for (String word : Keywords.displayWords())
             if (Pattern.matches("^"+word+"(.*)", texteAAnalyser)) {
                 supprimerMorceauProgramme(word.length());
-                return wordToKeyword(word);
+                return Keywords.wordToKeyword(word);
             }
         return null;
     }
@@ -49,7 +34,6 @@ public class LecteurTextuel {
     /**
      * Effacer les mots du programme actuelle, depuis le début du programme
      * jusqu'au parametre
-
      * @param nbCaracASupprimer Le nombre de caractere a effacer
      */
     private void supprimerMorceauProgramme(int nbCaracASupprimer) {
@@ -70,10 +54,10 @@ public class LecteurTextuel {
 
         while (texteAAnalyser.length()!=0){
             //Store the first character of the current untreated program
-            firstCharacter = Character.toString(texteAAnalyser.charAt(index));
+            firstCharacter = Character.toString(texteAAnalyser.charAt(0));
 
-            if (isShortcut(firstCharacter)){ // if the first character is a shortcut, e.g +,-,>
-                commandFound_List.add(shortcutToKeyword(firstCharacter)); // We had the command
+            if (Keywords.isShortcut(firstCharacter)){ // if the first character is a shortcut, e.g +,-,>
+                commandFound_List.add(Keywords.shortcutToKeyword(firstCharacter)); // We had the command
                 supprimerMorceauProgramme(1);//We delete that shortcut
             }
             else {
@@ -108,13 +92,16 @@ public class LecteurTextuel {
             texte = macro.readMacro();
             texte = removeCommentary(texte);
             texte = texte.replaceAll("\\s+", "");
-            texte = OperationTexte.transformerInstructionEnSymbole(texte);
 
             texteAAnalyser = texte;
         }
     }
 
-    public String getTexteAAnalyser() { return texteAAnalyser;}
+    public void setProgramme(String programme) { texteAAnalyser = programme;}
+
+    public String getTexteAAnalyser() {
+        return texteAAnalyser;
+    }
 }
 
 

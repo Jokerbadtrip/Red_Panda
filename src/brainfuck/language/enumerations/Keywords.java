@@ -43,24 +43,23 @@ public enum Keywords {
      * @return true si la chaine de caractère est valide
      * @throws IsNotACommandException
      */
-    public static boolean isWord(String word) throws IsNotACommandException{
+    public static boolean isWord(String word) {
         for (Keywords keyword: Keywords.values()) {
             if (keyword.name().equals(word)) return true;
         }
-        throw new IsNotACommandException();
+        return false;
     }
 
     /**
      * Verifie si le caractère entré est valide et interpretable
      * @param shortcut tLe caractère à vérifier
      * @return true si le caractère est valide
-     * @throws IsNotACommandException
      */
-    public static boolean isShortcut(String shortcut) throws IsNotACommandException{
+    public static boolean isShortcut(String shortcut) {
         for (Keywords keyword : Keywords.values()){
             if (keyword.getShortcut().equals(shortcut)) return true;
         }
-        throw new IsNotACommandException();
+        return false;
     }
 
     /**
