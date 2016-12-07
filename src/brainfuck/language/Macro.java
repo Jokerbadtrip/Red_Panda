@@ -139,8 +139,6 @@ public class Macro {
             for(int i = 0; i < valeurParam; i++) {
                 codeAMettre += entry.getValue();
             }
-            System.out.println(codeAMettre);
-
             programme = programme.replace(entry.getKey() + "(" + valeurParam + ")", codeAMettre);
         }
 
