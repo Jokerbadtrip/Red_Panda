@@ -28,10 +28,8 @@ import static brainfuck.language.enumerations.Keywords.isWord;
 public class Interpreter {
 
     private Memory memory = new Memory();
-    private File backLog;
-    private boolean aTracer = false;
     private List<Integer> placeCrochet = new ArrayList<Integer>();
-    FileWriter fw;
+    private Trace trace = null;
 
     /**
      * Initialise la partie "Tracé" de l'interpreteur lorsque
@@ -41,33 +39,7 @@ public class Interpreter {
      */
 
     public void iniATracer(String nomFichier) {
-        aTracer = true;
-        backLog = new File(nomFichier + ".log");
-        try {
-            fw = new FileWriter(backLog);
-        } catch (IOException e) {
-            System.out.println("Not implemented yet");
-        }
-    }
-
-    /**
-     * Permet d'écrire dans le fichier .log correspondant au fichier d'entrée, si l'option a été écrite
-     * dans la console, différentes données sur l'opération actuelle
-     *
-     * @param i La position du pointeur d'execution
-     * @param itot Le nombre total d'étape qui ont été éxécuté depuis le début de l'interpretation
-     */
-
-    private void tracerUpdate(int i, int itot) {
-        if (aTracer) {
-            try {
-                fw.write("Execution step number = " + (itot + 1) + ", execution pointer position : " + (i+1)
-                        + ", data pointer position : " + memory.getPointer() + ", Snapshot : " + memory.toString());
-                fw.write("\r\n");
-            } catch (IOException e) {
-                System.out.println("Not implemented yet");
-            }
-        }
+        trace = new Trace(nomFichier);
     }
 
     /**
@@ -87,37 +59,31 @@ public class Interpreter {
                 switch (tableauCommande.get(i)) {
                     case INCR:
                         memory.incr();
-                        tracerUpdate(i, itot);
                         Metrics.DATA_WRITE++;
                         break;
                     case DECR:
-                        memory.decr();
-                        tracerUpdate(i, itot);
                         Metrics.DATA_WRITE++;
+                        memory.decr();
                         break;
 
                     case LEFT:
                         Metrics.DATA_MOVE++;
                         memory.left();
-                        tracerUpdate(i, itot);
                         break;
 
                     case RIGHT:
                         Metrics.DATA_MOVE++;
                         memory.right();
-                        tracerUpdate(i, itot);
                         break;
                     case OUT:
                         Metrics.DATA_READ++;
                         outMethod();
-                        tracerUpdate(i, itot);
                         break;
 
                     case IN:
                         try {
                             Metrics.DATA_WRITE++;
                             inMethod();
-                            tracerUpdate(i, itot);
                         } catch (WrongInput e) {
                             e.printStackTrace();
                         }
@@ -126,20 +92,19 @@ public class Interpreter {
                         Metrics.DATA_READ++;
                         if (memory.getCellValue() == 0)
                             i += countInstru(tableauCommande, i);
-
-                        tracerUpdate(i, itot);
                         break;
                     case BACK:
                         Metrics.DATA_READ++;
                         if (memory.getCellValue() != 0)
                             i = placeCrochet.get(retournePlace(tableauCommande, i));
-
-                        tracerUpdate(i, itot);
                         break;
 
                     default:
                         break;
                 }
+
+            if (trace != null)
+                trace.tracerUpdate(itot, i, memory.getPointer(), memory.toString());
 
             i++;
             itot++;
@@ -147,13 +112,9 @@ public class Interpreter {
         }
 
         memory.printMemory();
-        if(fw != null) {
-            try {
-                fw.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+
+        if (trace != null)
+            trace.end();
     }
 
     /**
