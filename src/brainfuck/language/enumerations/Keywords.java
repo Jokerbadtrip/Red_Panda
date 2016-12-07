@@ -5,8 +5,10 @@ import brainfuck.language.exceptions.IsNotACommandException;
 import brainfuck.language.exceptions.IsNotAValidColorException;
 
 
-
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -34,6 +36,7 @@ public enum Keywords {
         this.shortcut = shortcut;
         this.color = color;
     }
+
 
 
 
@@ -72,6 +75,7 @@ public enum Keywords {
     public static boolean isColor(String color) throws IsNotAValidColorException{
         for (Keywords keywords : Keywords.values()){
             if (keywords.getColor().equals(color)) return true;
+            if (color.equals(new Color(0,0,0))) return true;
         }
         throw new IsNotAValidColorException();
     }
@@ -121,9 +125,9 @@ public enum Keywords {
      * @return le code couleur associé à la couleur entrée
      */
     public static int keywordToColor(Keywords shortcut){
-        if (isKeyword(shortcut))
-            return Integer.decode(shortcut.getColor());
-        return -1;
+        for (Keywords keywords : Keywords.values())
+            if (keywords.equals(shortcut)) return Integer.decode(keywords.getColor());
+        throw new IsNotACommandException();
 
     }
 

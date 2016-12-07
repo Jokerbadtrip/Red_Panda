@@ -4,15 +4,13 @@ import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.IsNotAValidColorException;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
-import static brainfuck.language.enumerations.Keywords.*;
-import static java.lang.Math.*;
+import static java.lang.Math.ceil;
+import static java.lang.Math.sqrt;
 
 
 /**
@@ -21,6 +19,12 @@ import static java.lang.Math.*;
  * @author  Red_Panda
  */
 public class LecteurImage {
+
+
+    private int x;
+    private int y;
+    private BufferedImage img;
+    private int tailleImage;
 
     /**
      * Renvoie une liste de commande contenues dans une image
@@ -40,11 +44,10 @@ public class LecteurImage {
                 int  green = (clr & 0x0000ff00) >> 8;
                 int  blue  =  clr & 0x000000ff;
                 String hexColor = String.format("#%02x%02x%02x", red, green, blue);
-                if (isColor(hexColor)){
-                    Keywords keywordsToAdd = colorToKeyword(hexColor);
+                if (Keywords.isColor(hexColor)){
+                    Keywords keywordsToAdd = Keywords.colorToKeyword(hexColor);
                     commandes.add(keywordsToAdd);
                 }
-                else throw new IsNotAValidColorException();
             }
         }
         return commandes;
@@ -56,16 +59,15 @@ public class LecteurImage {
      * @param nameImage le nom de l'image sortante
      */
     public void translateFromShortcutToImage(ArrayList<Keywords> commandes, String nameImage) {
-        int tailleImage = (int) ceil(sqrt(commandes.size()));
-        BufferedImage img = new BufferedImage(tailleImage * 3, tailleImage * 3, BufferedImage.TYPE_INT_RGB);
-        for (Keywords keywords : commandes)
-            for (int y = 0; y < tailleImage * 3; y += 3)
-                for (int x = 0; x < tailleImage * 3; x += 3) {
-                    int color;
-                    color = keywordToColor(keywords);
-                    if (color != -1) img = drawSquare(img, x, y, color);
-                }
+        tailleImage =(int) (3*ceil(sqrt(commandes.size())));
 
+        x = 0;
+        y = 0;
+        img = new BufferedImage(tailleImage, tailleImage, BufferedImage.TYPE_INT_RGB);
+        for (int i = 0; i<commandes.size(); i++){
+            makeImage(commandes.get(i));
+            incrementCoordinate();
+        }
         File outfile = new File(nameImage + ".bmp");
         try {
             ImageIO.write(img, "bmp",outfile);
@@ -74,12 +76,27 @@ public class LecteurImage {
         }
     }
 
-    public BufferedImage drawSquare(BufferedImage img, int x, int y, int color) {
-        for(int j = y; j < 3 + y; j++) {
-            for(int i = x; i < 3 + x; i++) {
-                img.setRGB(i, j, color);
+    /**
+     * Crée un carré de pixel 3*3 de la couleur du keyword
+     * @param keywords le keyword
+     */
+    private void makeImage(Keywords keywords) {
+        for (int i=x; i<x+3; i++){
+            for (int j=y; j<y+3; j++){
+                if (i<tailleImage && j<tailleImage) img.setRGB(i,j,Keywords.keywordToColor(keywords));
             }
         }
-        return img;
     }
+
+    /**
+     * Incrémentation de la bonne coordonnées en fonction de la taille de l'image
+     */
+    private void incrementCoordinate(){
+        if (x==tailleImage){
+            x =0;
+            y+=3;
+        }
+        else x+=3;
+    }
+
 }

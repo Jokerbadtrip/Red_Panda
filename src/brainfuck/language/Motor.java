@@ -68,19 +68,20 @@ public class Motor {
             OperationTexte.toString(listeDeCommande);
             System.out.println();
         }
-        if (aCheck) {
+        else if (aCheck) {
             if (!kernel.commandeCheck(texteALire)) System.out.println("4");
         }
 
-        if (aTranslate) {
+        else if (aTranslate) {
             LecteurImage lecteurImage = new LecteurImage();
             String nomFichier = fichierALire.substring(0, fichierALire.indexOf("."));
             lecteurImage.translateFromShortcutToImage(listeDeCommande, nomFichier);
         }
-        if (aTracer){
+        else if (aTracer){
             interpreter.iniATracer(fichierALire.replace("." + extensionFichier(fichierALire),""));
+            callInterpreter(listeDeCommande);
         }
-        callInterpreter(listeDeCommande);
+        else callInterpreter(listeDeCommande);
         Metrics.EXEC_TIME(System.currentTimeMillis());
     }
 
