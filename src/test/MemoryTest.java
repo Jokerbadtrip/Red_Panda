@@ -1,6 +1,8 @@
 package test;
 
 import brainfuck.language.Memory;
+import brainfuck.language.exceptions.OutOfMemoryException;
+import brainfuck.language.exceptions.ValueOutOfBoundException;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -11,13 +13,32 @@ import static org.junit.Assert.*;
 public class MemoryTest {
 
     Memory memory = new Memory();
-    @Test
-    public void incr() throws Exception {
+
+    @Test(expected = ValueOutOfBoundException.class)
+    public void incr(){
+        memory.incr();
+        assertEquals(1,memory.getCellValue());
+
+        memory.incr();
+        assertNotEquals(3, memory.getCellValue());
+
+        memory.updateMemory((short) 255);
+        memory.incr();
     }
 
-    @Test
+    @Test(expected = ValueOutOfBoundException.class)
     public void decr() throws Exception {
+        memory.updateMemory((short) 4);
 
+        memory.decr();
+        assertEquals(3,memory.getCellValue());
+
+        memory.decr();
+        memory.decr();
+        assertNotEquals(0,memory.getCellValue());
+
+        memory.decr();
+        memory.decr();
     }
 
     @Test
