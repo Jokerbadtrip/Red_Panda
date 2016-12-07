@@ -117,17 +117,6 @@ public class Motor {
 
     }
 
-
-    /**
-     *  Appelle l'interpréteur de texte. L'interpréteur de texte gérera ensuite l'éxution des instructions
-     *
-     * @param commandeAExecuter une liste de toutes les instructions contenues dans le fichier programme
-     * @return true si tout à bien été exécuté SINON false si une instruction a posée problème
-     */
-    public void callInterpreter(ArrayList<Keywords> commandeAExecuter) {
-        interpreter.keywordsExecution(commandeAExecuter);
-    }
-
     /**
      *  Appelle le lecteur textuel. Il gérera la lecture et la différencation entre toutes les instructions
      * @param texteALire
@@ -143,6 +132,16 @@ public class Motor {
     }
 
     /**
+     *  Appelle l'interpréteur de texte. L'interpréteur de texte gérera ensuite l'éxution des instructions
+     *
+     * @param commandeAExecuter une liste de toutes les instructions contenues dans le fichier programme
+     * @return true si tout à bien été exécuté SINON false si une instruction a posée problème
+     */
+    public void callInterpreter(ArrayList<Keywords> commandeAExecuter) {
+        interpreter.keywordsExecution(commandeAExecuter);
+    }
+
+    /**
      * Récupère l'extenion du fichier qui va être lu. Permet de savoir quel lecteur et interpréteur on va utiliser
      * @param fichier le nom du fichier ex => "programme.bf" ou "programme.bmp"
      * @return l'extension en string. Uniquement ce qu'il y a après le point
@@ -151,15 +150,6 @@ public class Motor {
     public String extensionFichier(String fichier) {
 
         return (fichier.substring(fichier.indexOf(".") + 1));
-    }
-
-    /**
-     * Permet d'obtenir le texte que l'on veut interpreter
-     * @return le texte à lire
-     */
-
-    public String getTexteALire() {
-        return texteALire;
     }
 }
 
