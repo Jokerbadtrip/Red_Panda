@@ -227,11 +227,9 @@ public class Interpreter {
         } else {
             LecteurFichiers lecteurFichiers = new LecteurFichiers();
 
-            try {
+
                 lecteurFichiers.write(arg,  String.valueOf((char) memory.getCellValue()));
-            } catch (FileNotFoundException e) {
-                System.out.println("Error Code : 3");
-            }
+
         }
     }
 

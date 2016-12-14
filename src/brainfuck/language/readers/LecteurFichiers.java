@@ -46,7 +46,7 @@ public class LecteurFichiers {
      * @param textToWrite le texte à stocker dans le fichier
      * @throws FileNotFoundException si on ne trouve pas le fichier
      */
-    public void write(String filepath, String textToWrite) throws FileNotFoundException {
+    public void write(String filepath, String textToWrite) {
         File file = new File(filepath);
         try {
             FileWriter fileWriter = new FileWriter(file);

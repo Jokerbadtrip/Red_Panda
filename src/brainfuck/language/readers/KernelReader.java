@@ -1,6 +1,7 @@
 package brainfuck.language.readers;
 
 
+import brainfuck.language.exceptions.CheckFailedException;
 import brainfuck.language.exceptions.FilePathNotFoundException;
 import brainfuck.language.exceptions.MainFlagNotFoundException;
 
@@ -97,11 +98,17 @@ public class KernelReader {
      */
 
     public boolean commandeCheck(String texteALire) {
-        int nbrJump, nbrBack;
+        int count = 0;
+        int i =0;
+        while (i<texteALire.length() && count >=0){
+            String c = Character.toString(texteALire.charAt(i));
+            if (c.equals("[")) count++;
+            else if (c.equals("]")) count--;
+            i++;
+        }
+        if (count == 0) return true;
+        else throw new CheckFailedException();
 
-        nbrJump = texteALire.length() - texteALire.replace("[", "").length();
-        nbrBack = texteALire.length() - texteALire.replace("]", "").length();
-        return nbrBack == nbrJump;
     }
 
     /**

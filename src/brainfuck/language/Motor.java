@@ -1,6 +1,7 @@
 package brainfuck.language;
 
 import brainfuck.language.enumerations.Keywords;
+import brainfuck.language.exceptions.CheckFailedException;
 import brainfuck.language.readers.KernelReader;
 import brainfuck.language.readers.LecteurFichiers;
 import brainfuck.language.readers.LecteurImage;
@@ -70,7 +71,8 @@ public class Motor {
             System.out.println();
         }
         else if (aCheck) {
-            if (!kernel.commandeCheck(texteALire)) ;
+            if (kernel.commandeCheck(texteALire)) System.out.println("Error Code : 0");
+            else throw new CheckFailedException();
         }
 
         else if (aTranslate) {
