@@ -13,6 +13,8 @@ public class MainFlagNotFoundException extends RuntimeException {
      */
     public MainFlagNotFoundException() {}
 
+
+
     /**
      * Renvoie le texte correspondant à la description de l'erreur
      * @return "You need to specify the main flag : -p \n exemple : ./bfck -p myfilepath" est toujours renvoié

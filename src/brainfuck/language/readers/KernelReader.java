@@ -14,9 +14,10 @@ import static brainfuck.language.enumerations.Flags.*;
  */
 public class KernelReader {
 
-    public static String filepathForWriting, filepathForReading;
+    public static String filepathToWrite, filepathToRead;
     private String nomFichier = null;
     private String fichierALire = null;
+    private boolean writeOrRead = true; // true write, false read
 
 
 
@@ -35,15 +36,15 @@ public class KernelReader {
 
         if (containsMainFlag(args)) {
             for (int i = 0; i < args.length; i++) {
-                if (isFlag(args[i])) {
+                if (isFlag(args[i]) && !containsFilePath(args[i])) {
                     switch (toFlag(args[i])) {
                         case FileToRead:
                             try {
                                 if (containsFilePath(args[i + 1])) {
                                     fichierALire = args[i + 1].replace("./", "");
                                     i++;// We increment i here to skip the file path and go to the next flag
-                                } else throw new FilePathNotFoundException();
-                            }catch (ArrayIndexOutOfBoundsException e){throw new FilePathNotFoundException();}
+                                }
+                            }catch (ArrayIndexOutOfBoundsException e){throw new FilePathNotFoundException(args[i]);}
                             break;
 
 
@@ -53,26 +54,24 @@ public class KernelReader {
 
                         case In: // on va lire un fichier
 
-                            if (containsFilePath(args[i+1])) {
-                                filepathForReading = args[i+1];
+                            try {
+                                writeOrRead = false;
+                                getFilepath(args[i+1]);
                                 i++;
-                            }
-                            else throw new FilePathNotFoundException();
-
+                            }catch (ArrayIndexOutOfBoundsException e) {throw new FilePathNotFoundException(args[i]);}
                             break;
 
                         case Out: // on va écrire dans un fichier
 
-                            if (containsFilePath(args[i+1])){
-                                filepathForWriting = args[i+1];
+                            try {
+                                writeOrRead = true;
+                                getFilepath(args[i+1]);
                                 i++;
-                            }
-                            else throw new FilePathNotFoundException();
-
+                            }catch (ArrayIndexOutOfBoundsException e) {throw new FilePathNotFoundException(args[i]);}
                             break;
                     }
 
-                    if (!isFlag(args[i]) && !containsFilePath(args[i])) {
+                     if (!isFlag(args[i]) && !containsFilePath(args[i])) {
                         System.out.println(args[i] + " is not a command.");
                         System.out.println(showFlags());
                     }
@@ -126,9 +125,18 @@ public class KernelReader {
      * @return true si le chemin d'accès existe bien
      */
     public boolean containsFilePath(String arg){
-        //if the argument contains a file with .bf or .bmp extension then there is a file path
-        if (arg.indexOf(".bf") != -1 || arg.indexOf(".bmp") != -1) return true;
+        //if the argument contains a file with .bf or .bmp or .txt extension then there is a file path
+        if (arg.toLowerCase().matches("(?i).*bf") || arg.toLowerCase().matches("(?i).*bmp") || arg.toLowerCase().matches("(?i).*txt")) return true;
         return false;
+    }
+
+    public void getFilepath(String arg){
+        if (containsFilePath(arg)){
+            if (writeOrRead){
+                filepathToWrite = arg;
+            }
+            else filepathToRead = arg;
+        }
     }
 
 

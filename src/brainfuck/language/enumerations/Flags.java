@@ -74,8 +74,7 @@ private String flag;
     public String getFlag() { return flag; }
 
     private static boolean isFilePath(String arg){
-        if (arg.toLowerCase().matches("(?i).*bf")) return true;
-        else if (arg.toLowerCase().matches("(?i).*bmp")) return true;
+        if (arg.toLowerCase().matches("(?i).*bf") || arg.toLowerCase().matches("(?i).*bmp") || arg.toLowerCase().matches("(?i).*txt")) return true;
         else return false;
     }
 }

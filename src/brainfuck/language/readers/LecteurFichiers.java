@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class LecteurFichiers {
 
-    private boolean isEmpty;
+    private boolean isEmpty; // boolean pour dire si le fichier est vide ou non
     /**
      * Analyse le fichier donné dans le lecteur
      * @return La liste de toutes les commandes trouvées
@@ -23,17 +23,20 @@ public class LecteurFichiers {
     public String reader(String filepath) throws FileNotFoundException{
         isEmpty = false;
         File file = new File(filepath);
-        Scanner input = new Scanner(file);
-        String chaine = "";
+        if (file.exists() && !file.isDirectory()) {
+            Scanner input = new Scanner(file);
+            String chaine = "";
 
-        if (!input.hasNextLine() && !isEmpty) isEmpty = true;
+            if (file.length() == 0) isEmpty = true;
 
 
-        while (input.hasNextLine()){
-            chaine += input.nextLine();
-            chaine += "\n";
+            while (input.hasNextLine()) {
+                chaine += input.nextLine();
+                chaine += "\n";
+            }
+            return (chaine);
         }
-        return (chaine);
+        else throw new FileNotFoundException();
     }
 
     /**
@@ -45,16 +48,13 @@ public class LecteurFichiers {
      */
     public void write(String filepath, String textToWrite) throws FileNotFoundException {
         File file = new File(filepath);
-
         try {
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(textToWrite);
             fileWriter.close();
+        } catch (IOException e) { }
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public boolean isEmpty() {

@@ -27,6 +27,7 @@ public class Motor {
     private String texteALire;
     private String fichierALire;
     private ArrayList<Keywords> listeDeCommande;
+    private boolean fileIsEmpty = false;
 
 
     /**
@@ -69,7 +70,7 @@ public class Motor {
             System.out.println();
         }
         else if (aCheck) {
-            if (!kernel.commandeCheck(texteALire)) System.out.println("4");
+            if (!kernel.commandeCheck(texteALire)) ;
         }
 
         else if (aTranslate) {
@@ -81,7 +82,7 @@ public class Motor {
             interpreter.iniATracer(fichierALire.replace("." + extensionFichier(fichierALire),""));
             callInterpreter(listeDeCommande);
         }
-        else callInterpreter(listeDeCommande);
+        else if (!fileIsEmpty) callInterpreter(listeDeCommande);
         Metrics.EXEC_TIME(System.currentTimeMillis());
     }
 
@@ -96,10 +97,10 @@ public class Motor {
 
             if ("bf".equals(extensionFichier)) {
                 try {
-                    LecteurFichiers reader = new LecteurFichiers();
-                    texteALire = reader.reader(fichierALire);
-
-                    listeDeCommande = callLecteurTextuel(this.texteALire);
+                    LecteurFichiers lecteur = new LecteurFichiers();
+                    texteALire = lecteur.reader(fichierALire);
+                    if (!lecteur.isEmpty()) listeDeCommande = callLecteurTextuel(this.texteALire);
+                    else fileIsEmpty = true;
                 } catch (FileNotFoundException e) {
                     System.out.println(e.toString());
                 }
@@ -109,6 +110,7 @@ public class Motor {
                 LecteurImage lecteurImage = new LecteurImage();
                 try {
                     listeDeCommande = lecteurImage.read(fichierALire);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -5,10 +5,9 @@ import brainfuck.language.exceptions.IsNotACommandException;
 import brainfuck.language.exceptions.IsNotAValidColorException;
 
 
-import java.awt.*;
+
+
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -72,9 +71,9 @@ public enum Keywords {
      * @throws IsNotAValidColorException
      */
     public static boolean isColor(String color) throws IsNotAValidColorException{
-        for (Keywords keywords : Keywords.values()){
-            if (keywords.getColor().equals(color)) return true;
-            if (color.equals(new Color(0,0,0))) return true;
+        for (Keywords keyword : Keywords.values()){
+            if (keyword.getColor().equals(color)) return true;
+            if (color.equals("#000000")) return true;
         }
         throw new IsNotAValidColorException();
     }

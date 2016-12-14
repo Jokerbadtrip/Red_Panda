@@ -48,8 +48,7 @@ public class Interpreter {
      * @param tableauCommande la liste de commande extrait du programme
      * @throws ValueOutOfBoundException OutOfMemoryException
      */
-    public void keywordsExecution(ArrayList<Keywords> tableauCommande)
-            throws OutOfMemoryException, ValueOutOfBoundException {
+    public void keywordsExecution(ArrayList<Keywords> tableauCommande) throws OutOfMemoryException, ValueOutOfBoundException {
 
         Metrics.PROC_SIZE = tableauCommande.size();
         int i = 0, itot = 0;
@@ -77,13 +76,13 @@ public class Interpreter {
                         break;
                     case OUT:
                         Metrics.DATA_READ++;
-                        outMethod();
+                        outMethod(KernelReader.filepathToWrite);
                         break;
 
                     case IN:
                         try {
                             Metrics.DATA_WRITE++;
-                            inMethod();
+                            inMethod(KernelReader.filepathToRead);
                         } catch (WrongInput e) {
                             e.printStackTrace();
                         }
@@ -185,10 +184,10 @@ public class Interpreter {
      * Gère la commande IN. On gère le case ou nous rentrons "-i" et le cas
      * par défaut (console)
      */
-    public void inMethod() {
+    public void inMethod(String arg) {
         String entree;
 
-        if (KernelReader.filepathForReading == null) { // dans le cas oÃ¹ on n'a
+        if (arg == null) { // dans le cas oÃ¹ on n'a
             // pas fait -i
             Scanner scanner = new Scanner(System.in);
             entree = scanner.nextLine();
@@ -208,10 +207,10 @@ public class Interpreter {
             LecteurFichiers lecteurFichiers = new LecteurFichiers();
 
             try {
-                short modifyMemory = Short.parseShort(lecteurFichiers.reader(KernelReader.filepathForReading));
+                short modifyMemory =(short) lecteurFichiers.reader(arg).charAt(0);
                 memory.updateMemory(modifyMemory);
             } catch (FileNotFoundException e) {
-                e.toString();
+                System.out.println("Error Code : 3");
             }
         }
     }
@@ -221,17 +220,17 @@ public class Interpreter {
      * par défaut (console)
      */
 
-    public void outMethod() {
-        if (KernelReader.filepathForWriting == null) {
+    public void outMethod(String arg) {
+        if (arg == null) {
             char numb = (char) memory.getCellValue();
             System.out.println(numb);
         } else {
             LecteurFichiers lecteurFichiers = new LecteurFichiers();
 
             try {
-                lecteurFichiers.write(KernelReader.filepathForWriting, Integer.toString(memory.getCellValue()));
+                lecteurFichiers.write(arg,  String.valueOf((char) memory.getCellValue()));
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                System.out.println("Error Code : 3");
             }
         }
     }
