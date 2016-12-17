@@ -6,7 +6,7 @@ package brainfuck.language.exceptions;
  * @author  Red_Panda
  */
 
-public class MainFlagNotFoundException extends RuntimeException {
+public class MainFlagNotFoundException extends Exception {
 
     /**
      * Constructeur pour MainFlagNotFoundException
@@ -14,13 +14,10 @@ public class MainFlagNotFoundException extends RuntimeException {
     public MainFlagNotFoundException() {}
 
 
-
     /**
      * Renvoie le texte correspondant à la description de l'erreur
      * @return "You need to specify the main flag : -p \n exemple : ./bfck -p myfilepath" est toujours renvoié
      */
     @Override
-    public String toString() {
-        return "You need to specify the main flag : -p \n exemple : ./bfck -p myfilepath";
-    }
+    public String toString() { return "Error Code -1 : You need to specify the main flag : -p \n exemple : ./bfck -p myfilepath"; }
 }

@@ -7,7 +7,7 @@ package brainfuck.language.exceptions;
  * @author  Red_Panda
  */
 
-public class IsNotAValidColorException extends RuntimeException {
+public class IsNotAValidColorException extends Exception {
 
     /**
      * Constructeur pour IsNotAValidColorException
@@ -19,5 +19,5 @@ public class IsNotAValidColorException extends RuntimeException {
      * @return "One of the colors is not a valid color" est toujours renvoié
      */
     @Override
-    public String toString(){ return "One of the colors is not a valid color"; }
+    public String toString(){ return "Error Code -1 : One of the colors is not a valid color"; }
 }

@@ -4,6 +4,7 @@ package brainfuck.language.readers;
 import brainfuck.language.exceptions.CheckFailedException;
 import brainfuck.language.exceptions.FilePathNotFoundException;
 import brainfuck.language.exceptions.MainFlagNotFoundException;
+import brainfuck.language.exceptions.UnknownFlagsException;
 
 import static brainfuck.language.enumerations.Flags.*;
 
@@ -33,7 +34,7 @@ public class KernelReader {
      * @throws FilePathNotFoundException
      * @throws MainFlagNotFoundException
      */
-    public String interpreterCommande(String[] args) throws FilePathNotFoundException, MainFlagNotFoundException {
+    public String interpreterCommande(String[] args) throws FilePathNotFoundException, MainFlagNotFoundException, UnknownFlagsException {
 
         if (containsMainFlag(args)) {
             for (int i = 0; i < args.length; i++) {
@@ -97,7 +98,7 @@ public class KernelReader {
      * @return true si tout est bien refermé SINON false
      */
 
-    public boolean commandeCheck(String texteALire) {
+    public boolean commandeCheck(String texteALire) throws CheckFailedException {
         int count = 0;
         int i =0;
         while (i<texteALire.length() && count >=0){
@@ -117,7 +118,7 @@ public class KernelReader {
      * @param args La liste d'arguments qui ont été entré dans la console
      * @return True si le "-p" a bien été entré
      */
-    public boolean containsMainFlag(String[] args){
+    public boolean containsMainFlag(String[] args) throws UnknownFlagsException {
         for (String arg : args){
             if (FileToRead.equals(toFlag(arg))) return true;
         }

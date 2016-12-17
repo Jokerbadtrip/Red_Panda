@@ -1,6 +1,7 @@
 package brainfuck.language;
 
 import brainfuck.language.enumerations.Keywords;
+import brainfuck.language.exceptions.IsNotACommandException;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public class OperationTexte {
      * Permet d'afficher une liste
      * @param liste une liste
      */
-    public static void toString(ArrayList<Keywords> liste) { // permet d'afficher une liste
+    public static void toString(ArrayList<Keywords> liste) throws IsNotACommandException { // permet d'afficher une liste
         for (Keywords comm : liste) {
             System.out.print(shortcutToString(comm));
         }

@@ -1,7 +1,7 @@
 package brainfuck.language;
 
 import brainfuck.language.enumerations.Keywords;
-import brainfuck.language.exceptions.BadMacro;
+import brainfuck.language.exceptions.WrongMacroNameException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class Macro {
      * Permet de globalement lire une macro et de la remplacer par son code
      * @return le programme avec les macro remplacées par le code
      */
-    public String readMacro() {
+    public String readMacro() throws WrongMacroNameException {
         findMacro();
         remplacerMacroParCode();
 
@@ -40,26 +40,23 @@ public class Macro {
      * Permet de détecter les lignes qui correspondent à une macro
      * Les renvoie ensuite au découpeur de macro
      */
-    public void findMacro() {
+    public void findMacro() throws WrongMacroNameException {
         ArrayList<String> toutesLesMacros = new ArrayList<String>();
         while(programme.charAt(0) == '@') {
             toutesLesMacros.add(programme.substring(0, programme.indexOf("\n")));
             programme = supprimerLigneDeTexte(toutesLesMacros.get(toutesLesMacros.size() -1), programme);
         }
 
-        try {
+
             decomposerMacro(toutesLesMacros);
-        }
-        catch (BadMacro e) {
-            e.printStackTrace();
-        }
+
     }
 
     /**
      * Découpe dans chaque ligne de macro son nom et son code puis l'insère dans le Map macro
      * @param macrosADecouper les lignes contenants les macros
      */
-    public void decomposerMacro(ArrayList<String> macrosADecouper) throws BadMacro {
+    public void decomposerMacro(ArrayList<String> macrosADecouper) throws WrongMacroNameException {
         boolean isParameterized;
         String caractereLimitant1 = " ";
         String caractereLimitant2 = " ";
@@ -77,10 +74,10 @@ public class Macro {
             String code = mac.substring(mac.indexOf(caractereLimitant2) + 1, mac.length());
 
             // vérifie que le nom de la macro ne correspond pas à une macro déjà existante
-            if(macro.containsKey(name) || macroRecursive.containsKey(name)) throw new BadMacro();
+            if(macro.containsKey(name) || macroRecursive.containsKey(name)) throw new WrongMacroNameException();
             for(Keywords keywords : Keywords.values()) {
                 if(keywords.getShortcut().equals(name) || keywords.name().equals(name)) {
-                    throw new BadMacro();
+                    throw new WrongMacroNameException();
                 }
             }
 

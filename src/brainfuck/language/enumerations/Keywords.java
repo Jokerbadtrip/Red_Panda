@@ -110,7 +110,7 @@ public enum Keywords {
      * @param color La couleur à interpreter
      * @return L'instruction associée à la couleur entrée
      */
-    public static Keywords colorToKeyword(String color){
+    public static Keywords colorToKeyword(String color) throws IsNotAValidColorException {
         if (isColor(color))
             for (Keywords keywords : Keywords.values())
                 if (keywords.getColor().equals(color)) return keywords;
@@ -122,7 +122,7 @@ public enum Keywords {
      * @param shortcut l'instruction à transformer en couleur
      * @return le code couleur associé à la couleur entrée
      */
-    public static int keywordToColor(Keywords shortcut){
+    public static int keywordToColor(Keywords shortcut) throws IsNotACommandException {
         for (Keywords keywords : Keywords.values())
             if (keywords.equals(shortcut)) return Integer.decode(keywords.getColor());
         throw new IsNotACommandException();
@@ -137,7 +137,7 @@ public enum Keywords {
      * @param any_type La chaine à convertir
      * @return l'instruction associée a la chaine en entrée
      */
-    public static Keywords getKeywords(String any_type){
+    public static Keywords getKeywords(String any_type) throws IsNotAValidColorException {
         if (isColor(any_type)) return colorToKeyword(any_type);
         else if(isShortcut(any_type)) return shortcutToKeyword(any_type);
         else if (isWord(any_type)) return wordToKeyword(any_type);
@@ -163,7 +163,7 @@ public enum Keywords {
      * @param keyword L'instruction à convertir en caractère
      * @return Le caractère associé à l'isntruction en entrée
      */
-    public static String shortcutToString(Keywords keyword){
+    public static String shortcutToString(Keywords keyword) throws IsNotACommandException {
         if (isKeyword(keyword)){
             return keyword.getShortcut();
         }

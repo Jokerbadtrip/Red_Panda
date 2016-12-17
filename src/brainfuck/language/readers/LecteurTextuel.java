@@ -3,6 +3,7 @@ package brainfuck.language.readers;
 import brainfuck.language.Macro;
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.IsNotACommandException;
+import brainfuck.language.exceptions.WrongMacroNameException;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -44,7 +45,7 @@ public class LecteurTextuel {
      * Crée une liste de commande dans le programme à interpreter
      * @return la liste de commande
      */
-    public ArrayList<Keywords> creeTableauCommande() {
+    public ArrayList<Keywords> creeTableauCommande() throws IsNotACommandException {
 
         String firstCharacter;
         Keywords commandFound;
@@ -86,7 +87,7 @@ public class LecteurTextuel {
      * Reçois de la classe Moteur le nom d'un fichier à lire
      * @param texte nom du fichier à lire
      */
-    public void setTexteAAnalyser(String texte) {
+    public void setTexteAAnalyser(String texte) throws WrongMacroNameException {
         if (!texte.equals("")) {
             Macro macro = new Macro(texte);
             texte = macro.readMacro();

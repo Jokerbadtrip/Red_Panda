@@ -5,12 +5,12 @@ package brainfuck.language.exceptions;
  *
  * @author  Red_Panda
  */
-public class WrongInput extends RuntimeException {
+public class WrongInputException extends Exception {
 
     /**
      * Constructeur pour WrongInput
      */
-    public WrongInput() {}
+    public WrongInputException() {}
 
     /**
      * Renvoie le texte correspondant à la description de l'erreur

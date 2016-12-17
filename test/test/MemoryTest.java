@@ -8,14 +8,14 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Created by Enzo on 16/11/2016.
+ * Created by Red_Panda on 16/11/2016.
  */
 public class MemoryTest {
 
     Memory memory = new Memory();
 
     @Test(expected = ValueOutOfBoundException.class)
-    public void incr(){
+    public void incr() throws ValueOutOfBoundException {
         memory.incr();
         assertEquals(1,memory.getCellValue());
 

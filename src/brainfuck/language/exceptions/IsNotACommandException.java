@@ -7,7 +7,7 @@ package brainfuck.language.exceptions;
  *
  * @author  Red_Panda
  */
-public class IsNotACommandException extends RuntimeException {
+public class IsNotACommandException extends Exception {
 
     /**
      * Constructeur pour IsNotACommandException
@@ -19,7 +19,7 @@ public class IsNotACommandException extends RuntimeException {
      * @return "One of the commands is not an available command" est toujours renvoié
      */
     @Override
-    public String toString(){return "One of the commands is not an available command";}
+    public String toString(){return "Error Code -1 : One of the commands is not an available command";}
 
 
 }

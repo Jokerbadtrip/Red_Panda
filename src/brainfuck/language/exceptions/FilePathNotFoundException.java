@@ -5,7 +5,7 @@ package brainfuck.language.exceptions;
  *
  * @author  Red_Panda
  */
-public class FilePathNotFoundException extends RuntimeException {
+public class FilePathNotFoundException extends Exception {
     String s;
 
     /**

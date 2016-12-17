@@ -1,7 +1,7 @@
 package brainfuck.language;
 
 import brainfuck.language.enumerations.Keywords;
-import brainfuck.language.exceptions.CheckFailedException;
+import brainfuck.language.exceptions.*;
 import brainfuck.language.readers.KernelReader;
 import brainfuck.language.readers.LecteurFichiers;
 import brainfuck.language.readers.LecteurImage;
@@ -50,7 +50,9 @@ public class Motor {
      * Avec l'interpréteur textue, on effectue l'action appropriée à l'instruction
      */
 
-    public void lancerProgramme() {
+    public void lancerProgramme() throws UnknownFlagsException, CheckFailedException, IsNotACommandException, ValueOutOfBoundException,
+            OutOfMemoryException, FilePathNotFoundException, MainFlagNotFoundException, FileNotFoundException, WrongInputException, WrongMacroNameException {
+
         boolean aReWrite = false;
         boolean aCheck = false;
         boolean aTranslate = false;
@@ -92,20 +94,19 @@ public class Motor {
      *  Appelle un objet KernelReadear afin de lire les commandes
      * @param args la liste des arguments rentrées dans la console
      */
-    public void callKernel(String[] args) {
+    public void callKernel(String[] args) throws FilePathNotFoundException, MainFlagNotFoundException, UnknownFlagsException, IsNotACommandException, FileNotFoundException, WrongMacroNameException {
+
         fichierALire = kernel.interpreterCommande(args);
         if (fichierALire != null) {
             String extensionFichier = this.extensionFichier(fichierALire);
 
             if ("bf".equals(extensionFichier)) {
-                try {
+
                     LecteurFichiers lecteur = new LecteurFichiers();
                     texteALire = lecteur.reader(fichierALire);
                     if (!lecteur.isEmpty()) listeDeCommande = callLecteurTextuel(this.texteALire);
                     else fileIsEmpty = true;
-                } catch (FileNotFoundException e) {
-                    System.out.println(e.toString());
-                }
+
 
             }
             else if (extensionFichier.equals("bmp")) {
@@ -127,7 +128,7 @@ public class Motor {
      * @return commande une liste contenye toutes les instructions
      */
 
-    public ArrayList<Keywords> callLecteurTextuel(String texteALire){
+    public ArrayList<Keywords> callLecteurTextuel(String texteALire) throws IsNotACommandException, WrongMacroNameException {
         lecteur = new LecteurTextuel();
         lecteur.setTexteAAnalyser(texteALire);
         ArrayList<Keywords> instruction = lecteur.creeTableauCommande();
@@ -141,7 +142,7 @@ public class Motor {
      * @param commandeAExecuter une liste de toutes les instructions contenues dans le fichier programme
      * @return true si tout à bien été exécuté SINON false si une instruction a posée problème
      */
-    public void callInterpreter(ArrayList<Keywords> commandeAExecuter) {
+    public void callInterpreter(ArrayList<Keywords> commandeAExecuter) throws ValueOutOfBoundException, OutOfMemoryException, WrongInputException {
         interpreter.keywordsExecution(commandeAExecuter);
     }
 

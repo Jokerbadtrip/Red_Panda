@@ -10,7 +10,7 @@ import static brainfuck.language.enumerations.Flags.showFlags;
  * This exception is thrown when a flag is not a valid flag
  * Valid flags : -p -i -o --rewrite --check --translate --trace
  */
-public class UnknownFlagsException extends RuntimeException {
+public class UnknownFlagsException extends Exception {
     private String flags;
 
     public UnknownFlagsException(String flags) {
@@ -19,7 +19,7 @@ public class UnknownFlagsException extends RuntimeException {
 
     @Override
     public String toString(){
-        return "The flag "+flags+" is not a valid flag.\n" +
+        return "Error Code -1 : The flag "+flags+" is not a valid flag.\n" +
                 showFlags();
     }
 }

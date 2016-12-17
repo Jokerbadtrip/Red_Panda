@@ -1,6 +1,7 @@
 package brainfuck.language.readers;
 
 import brainfuck.language.enumerations.Keywords;
+import brainfuck.language.exceptions.IsNotACommandException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -56,7 +57,7 @@ public class LecteurImage {
      * @param commandes la liste des commandes à traduire
      * @param nameImage le nom de l'image sortante
      */
-    public void translateFromShortcutToImage(ArrayList<Keywords> commandes, String nameImage) {
+    public void translateFromShortcutToImage(ArrayList<Keywords> commandes, String nameImage) throws IsNotACommandException {
 
         int tailleImage =(int) (3*(ceil(sqrt(commandes.size()))+1)); // On calcule la taille de l'image n fonction du nombre d'instruction
         int x = 0;
@@ -92,7 +93,7 @@ public class LecteurImage {
      * @param y la coordonnée en ordonnée du carré à remplir
      * @param tailleImage la taille de l'image
      */
-    private void makeImage(Keywords keywords, BufferedImage img, int x, int y, int tailleImage) {
+    private void makeImage(Keywords keywords, BufferedImage img, int x, int y, int tailleImage) throws IsNotACommandException {
 
         for (int i=x; i<x+3; i++){
             for (int j=y; j<y+3; j++){

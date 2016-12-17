@@ -93,7 +93,7 @@ public class Memory {
 	 * Change la valeur de la case mémoire actuellement pointée
 	 * @param value la nouvelle valeur de la case mémoire
 	 */
-	public void updateMemory(short value) {
+	public void updateMemory(short value) throws ValueOutOfBoundException {
 		if(value > 255) throw new ValueOutOfBoundException();
 		mArray[pointer] = value;
 		Metrics.DATA_WRITE++;

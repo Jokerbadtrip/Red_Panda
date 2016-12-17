@@ -5,10 +5,15 @@ package brainfuck.language.exceptions;
  *
  * Created by Red_Panda on 14/12/16.
  */
-public class CheckFailedException extends RuntimeException {
+public class CheckFailedException extends Exception {
 
     public CheckFailedException() {
         super();
+    }
+
+    @Override
+    public String toString(){
+        return "Code Error 4 : There is a BACK before a JUMP, or not the same numbers of BACK and JUMP";
     }
 
 

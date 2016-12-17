@@ -5,7 +5,7 @@ package brainfuck.language.exceptions;
  *
  * @author  Red_Panda
  */
-public class OutOfMemoryException extends RuntimeException {
+public class OutOfMemoryException extends Exception {
 
     /**
      * Constructeur pour OutOfMemoryException
@@ -17,5 +17,5 @@ public class OutOfMemoryException extends RuntimeException {
      * @return "Error Code : 2"  est toujours renvoié
      */
     @Override
-    public String toString(){return "Error Code : 2";}
+    public String toString(){return "Error Code 2 : The program is pointing on an unexisting memory cell";}
 }

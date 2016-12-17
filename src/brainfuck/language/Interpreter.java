@@ -3,19 +3,14 @@ package brainfuck.language;
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.OutOfMemoryException;
 import brainfuck.language.exceptions.ValueOutOfBoundException;
-import brainfuck.language.exceptions.WrongInput;
+import brainfuck.language.exceptions.WrongInputException;
 import brainfuck.language.readers.KernelReader;
 import brainfuck.language.readers.LecteurFichiers;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import static brainfuck.language.enumerations.Keywords.isWord;
 
 
 /**
@@ -48,7 +43,7 @@ public class Interpreter {
      * @param tableauCommande la liste de commande extrait du programme
      * @throws ValueOutOfBoundException OutOfMemoryException
      */
-    public void keywordsExecution(ArrayList<Keywords> tableauCommande) throws OutOfMemoryException, ValueOutOfBoundException {
+    public void keywordsExecution(ArrayList<Keywords> tableauCommande) throws OutOfMemoryException, ValueOutOfBoundException, WrongInputException {
 
         Metrics.PROC_SIZE = tableauCommande.size();
         int i = 0, itot = 0;
@@ -80,12 +75,8 @@ public class Interpreter {
                         break;
 
                     case IN:
-                        try {
-                            Metrics.DATA_WRITE++;
-                            inMethod(KernelReader.filepathToRead);
-                        } catch (WrongInput e) {
-                            e.printStackTrace();
-                        }
+                        Metrics.DATA_WRITE++;
+                        inMethod(KernelReader.filepathToRead);
                         break;
                     case JUMP:
                         Metrics.DATA_READ++;
@@ -184,7 +175,7 @@ public class Interpreter {
      * Gère la commande IN. On gère le case ou nous rentrons "-i" et le cas
      * par défaut (console)
      */
-    public void inMethod(String arg) {
+    public void inMethod(String arg) throws WrongInputException, ValueOutOfBoundException {
         String entree;
 
         if (arg == null) { // dans le cas oÃ¹ on n'a
@@ -193,15 +184,11 @@ public class Interpreter {
             entree = scanner.nextLine();
 
             if (entree.length() != 1) {
-                throw new WrongInput();
+                throw new WrongInputException();
             } else {
                 char character = entree.charAt(0);
 
-                try {
-                    memory.updateMemory((short) character);
-                } catch (ValueOutOfBoundException e) {
-                    System.out.println(e.toString());
-                }
+                memory.updateMemory((short) character);
             }
         } else { // dans le cas oÃ¹ on a fait i
             LecteurFichiers lecteurFichiers = new LecteurFichiers();
