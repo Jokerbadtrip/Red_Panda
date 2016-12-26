@@ -25,7 +25,9 @@ public class Main {
         catch (WrongInputException e){error.handle(e);}
         catch (WrongMacroNameException e){error.handle(e);}
         catch (FileNotFoundException e){error.handle(e);}
-
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }
