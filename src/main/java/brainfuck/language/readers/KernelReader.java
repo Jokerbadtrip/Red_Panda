@@ -2,6 +2,7 @@ package brainfuck.language.readers;
 
 
 import brainfuck.language.Interpreter;
+import brainfuck.language.Metrics;
 import brainfuck.language.OperationTexte;
 import brainfuck.language.Trace;
 import brainfuck.language.enumerations.Keywords;
@@ -47,7 +48,7 @@ public class KernelReader {
         boolean containTranslate = false;// Si "--translate" est présent
         boolean containTrace=false;// Si "--trace" est présent
         boolean containCheck=false;// Si "--check" est présent
-        int numberOfFlags = 0; // Le nombre de flags présent
+        int numberOfFlags = 0; // Le nombre de flags différents de -p, -i, -o
 
         for (int i = 0; i < args.length; i++) {
             if (isMainFlag(args[i])) {
@@ -61,7 +62,8 @@ public class KernelReader {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     throw new FilePathNotFoundException(args[i]);
                 }
-            } else if (isInFlag(args[i])) {
+            }
+            else if (isInFlag(args[i])) {
                 try {
                     if (fileExists(args[i + 1]) && isValidExtensionOfFile(args[i + 1])) {
                         getFilepath(args[i + 1], false);
@@ -69,19 +71,23 @@ public class KernelReader {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     throw new FilePathNotFoundException(args[i]);
                 }
-            } else if (isOutFlag(args[i])) {
+            }
+            else if (isOutFlag(args[i])) {
                 try {
                     getFilepath(args[i + 1], true);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     throw new FilePathNotFoundException((args[i]));
                 }
-            } else if (isRewriteFlag(args[i])) {
+            }
+            else if (isRewriteFlag(args[i])) {
                 containRewrite = true;
                 numberOfFlags++;
-            } else if (isTranslateFlag(args[i])) {
+            }
+            else if (isTranslateFlag(args[i])) {
                 containTranslate = true;
                 numberOfFlags++;
-            } else if (isTraceFlag(args[i])) {
+            }
+            else if (isTraceFlag(args[i])) {
                 containTrace=true;
                 numberOfFlags++;
             }
@@ -91,7 +97,7 @@ public class KernelReader {
             }
         }
 
-        if (fichierALire.equals(""));//ne rien faire
+        if (fichierALire.equals(""))throw new MainFlagNotFoundException();//C'est que le flag principal "-p" n'a pas été écrit
         else if (containMainFlag) {
 
             ArrayList<Keywords> listeCommande = readFile(fichierALire); //Les commandes écrites par l'utilisateur sous forme de tableau
@@ -111,8 +117,8 @@ public class KernelReader {
                     else if (containTranslate) {
                         commandTranslate(listeCommande);
                     }
-                    else if (containCheck) {
-                        commandCheck(listeCommande);
+                    else if (containCheck && commandCheck(listeCommande)) {
+                        System.out.println("Error Code 0");
                     }
                     else if (containTrace && !listeCommande.equals(null)) {
                         commandTrace(listeCommande);
@@ -126,11 +132,11 @@ public class KernelReader {
                         commandTranslate(listeCommande);
                     }
                     else if (containRewrite && containCheck){
-                        commandCheck(listeCommande);
+                        if (commandCheck(listeCommande)) System.out.println("Error Code 0");
                         commandRewrite(listeCommande);
                     }
                     else if (containCheck && containTranslate){
-                        commandCheck(listeCommande);
+                        if (commandCheck(listeCommande)) System.out.println("Error Code 0");
                         commandTranslate(listeCommande);
                     }
                     else throw new IncompatibleFlagsException();
@@ -139,14 +145,14 @@ public class KernelReader {
                 case 3 :
                     if (containCheck && containRewrite && containTranslate){
                         commandTranslate(listeCommande);
-                        commandCheck(listeCommande);
+                        if (commandCheck(listeCommande)) System.out.println("Error Code 0");
                         commandRewrite(listeCommande);
                     }
                     else throw new IncompatibleFlagsException();
                     break;
             }
         }
-        else throw new MainFlagNotFoundException();
+
 
 
     }
@@ -172,7 +178,6 @@ public class KernelReader {
             i++;
         }
         if (count == 0){
-            System.out.println("Error Code 0");
             return true;
         }
 

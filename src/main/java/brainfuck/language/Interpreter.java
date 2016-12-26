@@ -178,7 +178,7 @@ public class Interpreter {
     public void inMethod(String arg) throws WrongInputException, ValueOutOfBoundException {
         String entree;
 
-        if (arg == null) { // dans le cas oÃ¹ on n'a
+        if (arg.equals("")) { // dans le cas oÃ¹ on n'a
             // pas fait -i
             Scanner scanner = new Scanner(System.in);
             entree = scanner.nextLine();

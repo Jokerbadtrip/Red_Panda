@@ -39,6 +39,8 @@ public class Motor {
 
         callKernel(args);
         Metrics.EXEC_TIME(System.currentTimeMillis());
+        Metrics.displayMetrics();
+
     }
 
     /**
