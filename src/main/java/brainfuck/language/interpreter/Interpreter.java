@@ -1,13 +1,16 @@
-package brainfuck.language;
+package brainfuck.language.interpreter;
 
+import brainfuck.language.Memory;
+import brainfuck.language.Metrics;
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.OutOfMemoryException;
 import brainfuck.language.exceptions.ValueOutOfBoundException;
 import brainfuck.language.exceptions.WrongInputException;
-import brainfuck.language.readers.KernelReader;
-import brainfuck.language.readers.LecteurFichiers;
 
-import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -23,12 +26,28 @@ import java.util.Scanner;
 public class Interpreter {
 
     private Memory memory = new Memory();
-    private List<Integer> placeCrochet = new ArrayList<Integer>();
+    private List<Integer> placeCrochet = new ArrayList<>();
+    private List<Keywords> tableauCommande = new ArrayList<>();
     private Trace trace = null;
+    private int cursor = 0;
+
+    private String infilepath;
+    private String outfilepath;
+
+    /**
+     *
+     * @param infilepath
+     * @param outfilepath
+     */
+    public Interpreter(String infilepath, String outfilepath, List<Keywords> tableauCommande) {
+        this.infilepath = infilepath;
+        this.outfilepath = outfilepath;
+        this.tableauCommande = tableauCommande;
+    }
 
     /**
      * Initialise la partie "Tracé" de l'interpreteur lorsque
-     * l'argument "--Trace" a été entré dans la console
+     * l'argument "--TRACE" a été entré dans la console
      *
      * @param nomFichier Le nom du fichier dans lequel sera enregistré les logs
      */
@@ -40,68 +59,52 @@ public class Interpreter {
     /**
      * Compare le mot avec la liste des mots exécutables et agit en conséquence
      *
-     * @param tableauCommande la liste de commande extrait du programme
      * @throws ValueOutOfBoundException OutOfMemoryException
      */
-    public void keywordsExecution(ArrayList<Keywords> tableauCommande) throws OutOfMemoryException, ValueOutOfBoundException, WrongInputException {
-
+    public void keywordsExecution() throws OutOfMemoryException, ValueOutOfBoundException, WrongInputException {
         Metrics.PROC_SIZE = tableauCommande.size();
-        int i = 0, itot = 0;
         recenseCrochet(tableauCommande);
 
-        while (i < tableauCommande.size()) {
-                switch (tableauCommande.get(i)) {
+        while (cursor < tableauCommande.size()) {
+                switch (tableauCommande.get(cursor)) {
                     case INCR:
-                        memory.incr();
-                        Metrics.DATA_WRITE++;
+                        incrMethod();
                         break;
                     case DECR:
-                        Metrics.DATA_WRITE++;
-                        memory.decr();
+                        decrMethod();
                         break;
-
                     case LEFT:
-                        Metrics.DATA_MOVE++;
-                        memory.left();
+                        leftMethod();
                         break;
-
                     case RIGHT:
-                        Metrics.DATA_MOVE++;
-                        memory.right();
+                        rightMethod();
                         break;
                     case OUT:
-                        Metrics.DATA_READ++;
-                        outMethod(KernelReader.filepathToWrite);
+                        outMethod(outfilepath);
                         break;
-
                     case IN:
-                        Metrics.DATA_WRITE++;
-                        inMethod(KernelReader.filepathToRead);
+                        inMethod(infilepath);
                         break;
                     case JUMP:
-                        Metrics.DATA_READ++;
-                        if (memory.getCellValue() == 0)
-                            i += countInstru(tableauCommande, i);
+                        jumpMethod();
                         break;
                     case BACK:
-                        Metrics.DATA_READ++;
-                        if (memory.getCellValue() != 0)
-                            i = placeCrochet.get(retournePlace(tableauCommande, i));
+                        backMethod();
                         break;
 
                     default:
                         break;
                 }
 
-            if (trace != null)
-                trace.tracerUpdate(itot, i, memory.getPointer(), memory.toString());
-
-            i++;
-            itot++;
+            if (trace != null) {
+                trace.tracerUpdate(cursor, memory.getPointer(), memory.writeStateOfMemory());
+            }
             Metrics.EXEC_MOVE++;
+
+            cursor++;
         }
 
-        memory.printMemory();
+        System.out.println(memory.writeStateOfMemory());
 
         if (trace != null)
             trace.end();
@@ -114,7 +117,7 @@ public class Interpreter {
      * @param tableauCommande La liste de commande que l'on veut analyser
      */
 
-    public void recenseCrochet(ArrayList<Keywords> tableauCommande) {
+    public void recenseCrochet(List<Keywords> tableauCommande) {
         int i;
 
         for (i =0; i < tableauCommande.size();i++)
@@ -133,7 +136,7 @@ public class Interpreter {
      * @return La position dans la liste de commande du crochet ouvrantassocié au crochet fermant actuel
      */
 
-    public int retournePlace(ArrayList<Keywords> tableauCommande, int i){
+    public int retournePlace(List<Keywords> tableauCommande, int i){
         int placeCrochetActu = 0;
         int j = 0;
 
@@ -142,7 +145,7 @@ public class Interpreter {
                 placeCrochetActu++;
             j++;
         }
-        return (placeCrochet.size() - placeCrochetActu - 1);
+        return placeCrochet.size() - placeCrochetActu - 1;
     }
 
     /**
@@ -154,7 +157,7 @@ public class Interpreter {
      * @return Le nombre d'instructions entre le crochet ouvrant actuel et le crochet fermant associé
      */
 
-    public int countInstru(ArrayList<Keywords> tableauCommande, int i) {
+    public int countInstru(List<Keywords> tableauCommande, int i) {
         int nbOuvrante = 1;
         int it = i + 1;
 
@@ -163,11 +166,12 @@ public class Interpreter {
                 nbOuvrante++;
             }
             if (tableauCommande.get(it) == Keywords.BACK) {
+                        Metrics.DATA_WRITE++;
                 nbOuvrante--;
             }
             it++;
         }
-        return (it - i);
+        return it - i;
     }
 
     /**
@@ -178,8 +182,7 @@ public class Interpreter {
     public void inMethod(String arg) throws WrongInputException, ValueOutOfBoundException {
         String entree;
 
-        if (arg.equals("")) { // dans le cas oÃ¹ on n'a
-            // pas fait -i
+        if ("".equals(arg)) { // dans le cas où on n'a pas fait -i
             Scanner scanner = new Scanner(System.in);
             entree = scanner.nextLine();
 
@@ -190,16 +193,19 @@ public class Interpreter {
 
                 memory.updateMemory((short) character);
             }
-        } else { // dans le cas oÃ¹ on a fait i
-            LecteurFichiers lecteurFichiers = new LecteurFichiers();
+        } else { // dans le cas où on a fait -i
+            File file = new File(infilepath);
+            int charactere;
 
-            try {
-                short modifyMemory =(short) lecteurFichiers.reader(arg).charAt(0);
-                memory.updateMemory(modifyMemory);
-            } catch (FileNotFoundException e) {
-                System.out.println("Error Code : 3");
+            try(FileInputStream fis = new FileInputStream(file)) {
+                while((charactere = fis.read()) != -1) {
+                    memory.updateMemory((short) charactere);
+                }
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
             }
         }
+        Metrics.DATA_WRITE++;
     }
 
     /**
@@ -208,19 +214,50 @@ public class Interpreter {
      */
 
     public void outMethod(String arg) {
+        Metrics.DATA_READ++;
         if (arg == null) {
             char numb = (char) memory.getCellValue();
-            System.out.println(numb);
+            System.out.print(numb);
         } else {
-            LecteurFichiers lecteurFichiers = new LecteurFichiers();
-
-
-                lecteurFichiers.write(arg,  String.valueOf((char) memory.getCellValue()));
-
+            File file = new File(arg);
+            try(FileWriter fileWriter = new FileWriter(file)) {
+                fileWriter.write(String.valueOf((char) memory.getCellValue()));
+                fileWriter.close();
+            } catch (IOException e) { }
         }
     }
 
-    public void appellerMemoire() {
-        memory.printMemory();
+    private void incrMethod() {
+        memory.incr();
+        Metrics.DATA_WRITE++;
+    }
+
+    private void decrMethod() {
+        memory.decr();
+        Metrics.DATA_WRITE++;
+    }
+
+    private void leftMethod() {
+        Metrics.DATA_MOVE++;
+        memory.left();
+    }
+
+    private void rightMethod() {
+        Metrics.DATA_MOVE++;
+        memory.right();
+    }
+
+    private void jumpMethod() {
+        if (memory.getCellValue() == 0)
+            cursor += countInstru(tableauCommande, cursor);
+
+        Metrics.DATA_READ++;
+    }
+
+    private void backMethod() {
+        if (memory.getCellValue() != 0)
+            cursor = placeCrochet.get(retournePlace(tableauCommande, cursor));
+
+        Metrics.DATA_READ++;
     }
 }

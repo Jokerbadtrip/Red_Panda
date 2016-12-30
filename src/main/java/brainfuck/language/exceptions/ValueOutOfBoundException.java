@@ -6,7 +6,7 @@ package brainfuck.language.exceptions;
  *
  * @author  Red_Panda
  */
-public class ValueOutOfBoundException extends Exception {
+public class ValueOutOfBoundException extends RuntimeException {
 
     /**
      * Constructeur pour ValueOutOfBoundException

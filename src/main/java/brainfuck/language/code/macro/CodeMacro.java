@@ -1,4 +1,4 @@
-package brainfuck.language.CodeMacro;
+package brainfuck.language.code.macro;
 
 import java.util.List;
 import java.util.ArrayList;

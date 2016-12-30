@@ -5,7 +5,9 @@ import brainfuck.language.exceptions.WrongMacroNameException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,12 +16,13 @@ import java.util.regex.Pattern;
  *
  * Syntaxe d'une macro :
  *      \@NOM_MACRO (param)  code
+ * ex: @MACRO() ++++
  * @author jamatofu on 04/11/16.
  */
 public class Macro {
-    private HashMap<String, String> macro = new HashMap<String, String>();
-    private HashMap<String, String> macroRecursive = new HashMap<>();
+    private HashMap<String, String> macro = new HashMap();
     private String programme;
+    private StringBuilder stringBuilder = new StringBuilder();
 
     public Macro(String programme) {
         this.programme = programme;
@@ -30,7 +33,8 @@ public class Macro {
      * @return le programme avec les macro remplacées par le code
      */
     public String readMacro() throws WrongMacroNameException {
-        findMacro();
+        findPrototype();
+        changeCodeIntoMacro();
         remplacerMacroParCode();
 
         return programme;
@@ -40,117 +44,138 @@ public class Macro {
      * Permet de détecter les lignes qui correspondent à une macro
      * Les renvoie ensuite au découpeur de macro
      */
-    public void findMacro() throws WrongMacroNameException {
-        ArrayList<String> toutesLesMacros = new ArrayList<String>();
+    public void findPrototype() throws WrongMacroNameException {
+        List<String> prototypes = new ArrayList<>();
         while(programme.charAt(0) == '@') {
-            toutesLesMacros.add(programme.substring(0, programme.indexOf("\n")));
-            programme = supprimerLigneDeTexte(toutesLesMacros.get(toutesLesMacros.size() -1), programme);
+            prototypes.add(programme.substring(0, programme.indexOf('\n')));
+            programme = supprimerLigneDeTexte(prototypes.get(prototypes.size() -1), programme);
         }
 
-
-            decomposerMacro(toutesLesMacros);
-
+        sliceMacro(prototypes);
     }
 
     /**
-     * Découpe dans chaque ligne de macro son nom et son code puis l'insère dans le Map macro
+     * Découpe dans chaque prototype son nom et son code puis l'insère dans le Map macro
      * @param macrosADecouper les lignes contenants les macros
      */
-    public void decomposerMacro(ArrayList<String> macrosADecouper) throws WrongMacroNameException {
-        boolean isParameterized;
-        String caractereLimitant1 = " ";
-        String caractereLimitant2 = " ";
+    public void sliceMacro(List<String> macrosADecouper) throws WrongMacroNameException {
+        String caractereLimitant = " ";
 
         for (String mac : macrosADecouper) {
-            isParameterized = isParameterizedMacro(mac);
-            if(isParameterized) {
-                caractereLimitant1 = "(";
-                caractereLimitant2 = ")";
-            }
-
             mac = mac.replaceFirst("@", "");
 
-            String name = mac.substring(0, mac.indexOf(caractereLimitant1));
-            String code = mac.substring(mac.indexOf(caractereLimitant2) + 1, mac.length());
+            String name = mac.substring(0, mac.indexOf(caractereLimitant));
+            String code = mac.substring(mac.indexOf(caractereLimitant) + 1, mac.length());
+            code = code.replaceAll("\\s+", "");
 
-            // vérifie que le nom de la macro ne correspond pas à une macro déjà existante
-            if(macro.containsKey(name) || macroRecursive.containsKey(name)) throw new WrongMacroNameException();
-            for(Keywords keywords : Keywords.values()) {
-                if(keywords.getShortcut().equals(name) || keywords.name().equals(name)) {
-                    throw new WrongMacroNameException();
-                }
-            }
+            if(!isValidName(name))
+                throw new WrongMacroNameException(name);
 
-            if(isParameterized) macroRecursive.put(name, code);
-            else macro.put(name, code);
-
-            caractereLimitant1 = " ";
-            caractereLimitant2 = " ";
+            macro.put(name, code);
         }
     }
 
     /**
-     * Vérifie que la macro est une macro paramétrisée. C'est-à-dire que l'on a la structure nom(param)
-     * @param macro la macro à analyser
-     * @return vrai si la macro est paramétrée SINON faux
+     * Vérifie que le nom de la macro est valide
+     * @param name nom macro
+     * @return vrai si valide
      */
+    private boolean isValidName(String name) {
+        for(Keywords keywords : Keywords.values()) {
+            if(name.equals(keywords.name()) || keywords.getShortcut() == name.charAt(0)) {
+                return false;
+            }
+        }
 
-    public boolean isParameterizedMacro(String macro) {
-        String regex = "^@(.*)\\(\\) (.*)+";
-        return Pattern.matches(regex, macro);
+        return !name.matches("(\\d+)");
     }
 
+    /**
+     * Permet de changer le code à l'intérieur des macros récursives
+     */
+    private void changeCodeIntoMacro() {
+        Set<String> nameMacro = macro.keySet();
+        for(Entry<String, String> entry : macro.entrySet()) {
+            if(nameMacro.contains(entry.getValue()))
+                macro.put(entry.getKey(), macro.get(entry.getValue()));
+        }
+    }
+
+    private boolean isParametrised(String line) {
+        String regex = "^(.*) (\\d)+( #(.*))?";
+        return Pattern.matches(regex, line);
+    }
     /**
      * Récupère la valeur du paramètre d'une macro (ex : A(5) => 5)
      * @param macro la macro appelée avec son paramètre
      * @return la valeur du paramètre
      */
-    public int retournerParametre(String macro) {
-        return Integer.parseInt(macro.substring(macro.indexOf("(") + 1, macro.indexOf(")")));
+    public String retournerParametre(String macro) {
+        return macro.substring(macro.indexOf(' ') + 1, macro.length());
     }
 
     /**
-     * Change les commandes macro dans le programme par les instructions correspondantes
+     * Lis chacunes des lignes du programme et en récupère le code
      * @return le texte modifié
      */
     public void remplacerMacroParCode() {
-        String codeAMettre = "";
+        programme = programme.trim();
+        String[] linesProgram = programme.split(System.getProperty("line.separator"));
+
+        for(String line : linesProgram) {
+            if(line.isEmpty())
+                continue;
+
+            if(!getCodeFromOneLine(line))
+                stringBuilder.append(line);
+            stringBuilder.append('\n');
+        }
+        programme = stringBuilder.toString();
+    }
+
+    /**
+     * Lis une macro sur une seule ligne et en récupère le code
+     * @param line ligne programme
+     */
+    private boolean getCodeFromOneLine(String line) {
         String regex;
         Pattern p;
         Matcher m;
+        String[] cutLine;
+        cutLine = line.split("\\s");
 
-        for(Entry<String, String> entry : macroRecursive.entrySet()) {
-            regex = entry.getKey() + "\\(\\d\\)";
-            p = Pattern.compile(regex);
-            m  = p.matcher(programme);
+        for (Entry<String, String> macroEntry : macro.entrySet()) {
+            if (cutLine[0].matches(macroEntry.getKey())) {
+                if (isParametrised(line)) {
+                    regex = macroEntry.getKey() + "\\d";
+                    p = Pattern.compile(regex);
+                    m = p.matcher(programme);
 
-            String truc = null;
-            while(m.find()) {
-                truc = m.group();
+                    while (m.find()) {
+                        m.group();
+                    }
+
+                    int valeurParam = Integer.parseInt(cutLine[1]);
+                    for (int i = 0; i < valeurParam; i++) {
+                        stringBuilder.append(macroEntry.getValue());
+                    }
+
+                    return true;
+
+                } else {
+                    stringBuilder.append(macroEntry.getValue());
+                    return true;
+                }
             }
-
-            //TODO retourner une exception
-//            if(truc == null) {}
-            int valeurParam = retournerParametre(truc);
-
-            for(int i = 0; i < valeurParam; i++) {
-                codeAMettre += entry.getValue();
-            }
-            programme = programme.replace(entry.getKey() + "(" + valeurParam + ")", codeAMettre);
         }
 
-
-        for(Entry<String, String> entry : macro.entrySet()) {
-            programme = programme.replaceAll(entry.getKey(), entry.getValue());
-        }
+        return false;
     }
-
-
     /**
      * Supprime une ligne d'un texte
      * @param ligneASupprimer la ligne à supprimer du texte
      */
-    public String supprimerLigneDeTexte(String ligneASupprimer, String texte) {
+    private String supprimerLigneDeTexte(String ligneASupprimer, String texte) {
         return texte.replace(ligneASupprimer + "\n", "");
     }
 }

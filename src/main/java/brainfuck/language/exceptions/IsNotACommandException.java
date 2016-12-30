@@ -7,7 +7,7 @@ package brainfuck.language.exceptions;
  *
  * @author  Red_Panda
  */
-public class IsNotACommandException extends Exception {
+public class IsNotACommandException extends RuntimeException {
 
     /**
      * Constructeur pour IsNotACommandException

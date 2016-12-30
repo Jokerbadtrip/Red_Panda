@@ -1,14 +1,15 @@
 package brainfuck.language;
 
 import brainfuck.language.enumerations.Keywords;
+import brainfuck.language.exceptions.IsNotACommandException;
 import brainfuck.language.readers.LecteurTextuel;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author jamatofu on 07/12/16.
@@ -17,26 +18,12 @@ public class LecteurTextuelTest {
     LecteurTextuel lecteurTextuel;
     @Before
     public void setUp() throws Exception {
-        lecteurTextuel = new LecteurTextuel();
-    }
-
-    @Test
-    public void estInstruction() throws Exception {
-        lecteurTextuel.setProgramme("INCRINDECRRIGHTLEFTOUTJUMPBACKMAMAN");
-        Assert.assertEquals(Keywords.INCR, lecteurTextuel.estInstruction());
-        Assert.assertEquals(Keywords.IN, lecteurTextuel.estInstruction());
-        Assert.assertEquals(Keywords.DECR, lecteurTextuel.estInstruction());
-        Assert.assertEquals(Keywords.RIGHT, lecteurTextuel.estInstruction());
-        Assert.assertEquals(Keywords.LEFT, lecteurTextuel.estInstruction());
-        Assert.assertEquals(Keywords.OUT, lecteurTextuel.estInstruction());
-        Assert.assertEquals(Keywords.JUMP, lecteurTextuel.estInstruction());
-        Assert.assertEquals(Keywords.BACK, lecteurTextuel.estInstruction());
-        Assert.assertEquals(null, lecteurTextuel.estInstruction());
+        lecteurTextuel = new LecteurTextuel("/HOME");
     }
 
     @Test
     public void creeTableauCommande() throws Exception {
-        lecteurTextuel.setProgramme("INCR+DECR[]BACKIN.OUT,JUMP<>LEFTRIGHT-");
+        lecteurTextuel.setProgram("INCR\n+\nDECR\n[\n]\nBACK\nIN\n.\nOUT\n,\nJUMP\n<>\nLEFT\nRIGHT\n-");
         ArrayList<Keywords> listeTest = new ArrayList<>();
         listeTest.add(Keywords.INCR);
         listeTest.add(Keywords.INCR);
@@ -64,13 +51,23 @@ public class LecteurTextuelTest {
 
     }
 
-    @Test
-    public void setTexteAAnalyser() throws Exception {
-        String texte = "@JEAN +++\nDECR++  #comment ça va?\n#bien et toi?\n<<JEANJEAN";
+    @Test(expected = IsNotACommandException.class)
+    public void inTheCaseOfShortcut() throws IsNotACommandException{
+        String line = "+-.,[]<>";
+        List<Keywords> result = new ArrayList<>();
+        result.add(Keywords.INCR);
+        result.add(Keywords.DECR);
+        result.add(Keywords.OUT);
+        result.add(Keywords.IN);
+        result.add(Keywords.JUMP);
+        result.add(Keywords.BACK);
+        result.add(Keywords.LEFT);
+        result.add(Keywords.RIGHT);
 
-        lecteurTextuel.setTexteAAnalyser(texte);
-        assertEquals("DECR++<<++++++", lecteurTextuel.getTexteAAnalyser());
+        assertEquals(result, lecteurTextuel.inTheCaseOfShortcut(line));
 
+        line += "{";
+        assertEquals(result, lecteurTextuel.inTheCaseOfShortcut(line));
     }
 
 }

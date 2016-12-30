@@ -1,4 +1,4 @@
-package brainfuck.language.enumerations;
+package brainfuck.language.flag;
 
 import brainfuck.language.exceptions.UnknownFlagsException;
 
@@ -9,24 +9,26 @@ import brainfuck.language.exceptions.UnknownFlagsException;
  * @author  Red_Panda
  */
 public enum Flags {
-    FileToRead("-p"),
-    In("-i"),
-    Out("-o"),
-    Rewrite("--rewrite"),
-    Check("--check"),
-    Translate("--translate"),
-    Trace("--trace");
+    FILE_TO_READ("-p", true),
+    IN("-i", true ),
+    OUT("-o", true ),
+    REWRITE("--rewrite", false),
+    CHECK("--check", false),
+    TRANSLATE("--translate", false),
+    TRACE("--trace", false);
 
 
 
-private String flag;
+    private String flag;
+    private boolean needAFilePath;
 
     /**
      * Constructeur de Flag
      * @param flag Le flag que l'utilisateur peut entrer dans la console
      */
-    Flags(String flag) {
+    Flags(String flag, boolean needAFilePath) {
         this.flag = flag;
+        this.needAFilePath = needAFilePath;
     }
 
     /**
@@ -38,7 +40,8 @@ private String flag;
     public static boolean isFlag(String arg) throws UnknownFlagsException{
         if (!isFilePath(arg)) {
             for (Flags flags : Flags.values())
-                if (flags.getFlag().equals(arg)) return true;
+                if (flags.getFlag().equals(arg))
+                    return true;
             throw new UnknownFlagsException(arg);
         }
         return false;
@@ -48,11 +51,14 @@ private String flag;
      * Affiche tous les flags disponibles dans la console
      */
     public static String showFlags(){
-        String printer = "Available commands are : ";
+        StringBuilder printer = new StringBuilder();
+        printer.append("Available commands are : ");
+
         for (Flags flags : Flags.values()) {
-            printer += flags.getFlag()+" ";
+            printer.append(flags.getFlag());
+            printer.append(" ");
         }
-        return printer;
+        return printer.toString();
     }
 
     /**
@@ -63,16 +69,38 @@ private String flag;
     public static Flags toFlag(String arg) throws UnknownFlagsException{
         if (!isFilePath(arg)) {
             for (Flags flags : Flags.values())
-                if (arg.equals(flags.getFlag())) return flags;
+                if (arg.equals(flags.getFlag()))
+                    return flags;
             throw new UnknownFlagsException(arg);
         }
         return null;
     }
 
-    public String getFlag() { return flag; }
-
     private static boolean isFilePath(String arg){
-        if (arg.toLowerCase().matches("(?i).*bf") || arg.toLowerCase().matches("(?i).*bmp") || arg.toLowerCase().matches("(?i).*txt")) return true;
-        else return false;
+        return arg.toLowerCase().matches("(?i).*bf") || arg.toLowerCase().matches("(?i).*bmp") || arg.toLowerCase().matches("(?i).*txt");
+    }
+
+    public static Flags fromFlagToEnum(String arg) {
+        for(Flags flags : Flags.values()) {
+            if(flags.getFlag().equals(arg))
+                return flags;
+        }
+        return null;
+    }
+
+    /**
+     * Accesseur de l'attribut flag
+     * @return flag
+     */
+    public String getFlag() {
+        return flag;
+    }
+
+    /**
+     * Accesseur de l'attribut needAFilePath
+     * @return needAFilePath
+     */
+    public boolean isNeedAFilePath() {
+        return needAFilePath;
     }
 }

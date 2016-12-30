@@ -13,7 +13,7 @@ public class CheckFailedException extends Exception {
 
     @Override
     public String toString(){
-        return "Code Error 4 : There is a BACK before a JUMP, or not the same numbers of BACK and JUMP";
+        return "Code Error 4 : Check your brackets";
     }
 
 

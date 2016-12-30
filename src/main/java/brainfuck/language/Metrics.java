@@ -14,6 +14,10 @@ public class Metrics {
     public static int DATA_WRITE;
     public static int DATA_READ;
 
+    private Metrics() {
+        throw new IllegalAccessError("La classe Metrics est statique. Appeller le contructeur est impossible.");
+    }
+
     /**
      * Permet d'afficher dans la console les différents metrics
      */
@@ -27,7 +31,11 @@ public class Metrics {
         System.out.println("Nombre de fois que la mémoire a été lue : " + DATA_READ);
     }
 
-    public static void EXEC_TIME(long endTime) {
+    public static void execTime(long endTime) {
         EXEC_TIME = endTime - START_TIME;
+    }
+
+    public static void incrementProgSize() {
+        PROC_SIZE++;
     }
 }

@@ -5,12 +5,17 @@ package brainfuck.language.exceptions;
  * @author jamatofu on 04/11/16.
  */
 public class WrongMacroNameException extends Exception{
+    String message;
 
     /**
      * Constructeur de BadMacro
      */
-    public WrongMacroNameException() {super(); }
+    public WrongMacroNameException(String message) {
+        this.message = message;
+    }
 
     @Override
-    public String toString(){return "Error Code -1 : One of the macros has a reserved name.";}
+    public String toString() {
+        return "Invalid name for macro : " + message;
+    }
 }

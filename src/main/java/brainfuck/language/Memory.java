@@ -12,7 +12,7 @@ import brainfuck.language.exceptions.ValueOutOfBoundException;
 
 public class Memory {
 
-	public static final int memorySize = 30000;
+	public static final int MEMORY_SIZE = 30000;
 	private short[] mArray;
 	private short pointer;
 	private short maxArray;
@@ -22,7 +22,7 @@ public class Memory {
      */
 	
 	public Memory() {
-		mArray = new short[memorySize];
+		mArray = new short[MEMORY_SIZE];
 		pointer = 0;
 	}
 
@@ -31,7 +31,8 @@ public class Memory {
 	 * @throws ValueOutOfBoundException
 	 */
 	public void incr() throws ValueOutOfBoundException {
-		if (mArray[pointer] == 255) throw new ValueOutOfBoundException();
+		if (mArray[pointer] == 255)
+			throw new ValueOutOfBoundException();
 		mArray[pointer]++;
 	}
 
@@ -40,7 +41,8 @@ public class Memory {
 	 * @throws ValueOutOfBoundException
 	 */
 	public void decr() throws ValueOutOfBoundException {
-		if (mArray[pointer] == 0) throw new ValueOutOfBoundException();
+		if (mArray[pointer] == 0)
+			throw new ValueOutOfBoundException();
 		mArray[pointer]--;
 	}
 
@@ -50,9 +52,11 @@ public class Memory {
 	 */
 
 	public void right() throws OutOfMemoryException {
-		if (pointer >= mArray.length - 1) throw new OutOfMemoryException();
+		if (pointer >= mArray.length - 1)
+			throw new OutOfMemoryException();
 		pointer++;
-		if (pointer >= maxArray) maxArray = pointer;
+		if (pointer >= maxArray)
+			maxArray = pointer;
 	}
 
 	/**
@@ -61,7 +65,8 @@ public class Memory {
 	 */
 
 	public void left() throws OutOfMemoryException {
-		if (pointer <= 0) throw new OutOfMemoryException();
+		if (pointer <= 0)
+			throw new OutOfMemoryException();
 		pointer--;
 	}
 
@@ -80,12 +85,18 @@ public class Memory {
 	 * @return l'état de la mémoire actuelle
 	 */
 
-	public String toString(){
-		String résumé = "";
+	public String writeStateOfMemory(){
+		StringBuilder resume = new StringBuilder();
 		for (int i =  0; i <= maxArray; i++){
-			résumé += ("C" + i + ": " + mArray[i] + " ");
+			if(mArray[i] != 0) {
+				resume.append('C');
+				resume.append(i);
+				resume.append(": ");
+				resume.append(mArray[i]);
+				resume.append(' ');
+			}
 		}
-		return résumé;
+		return resume.toString();
 	}
 
 
@@ -94,7 +105,10 @@ public class Memory {
 	 * @param value la nouvelle valeur de la case mémoire
 	 */
 	public void updateMemory(short value) throws ValueOutOfBoundException {
-		if(value > 255) throw new ValueOutOfBoundException();
+		if(value > 255)
+			throw new ValueOutOfBoundException();
+
+
 		mArray[pointer] = value;
 		Metrics.DATA_WRITE++;
 	}

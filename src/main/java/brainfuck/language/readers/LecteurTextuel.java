@@ -5,8 +5,9 @@ import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.IsNotACommandException;
 import brainfuck.language.exceptions.WrongMacroNameException;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
+import java.util.List;
 
 /**
  * Classe permettant de lire dans un fichier ".bf" les instructions qu'il contient, et de les envoyer à l'interpreteur
@@ -15,62 +16,50 @@ import java.util.regex.Pattern;
  */
 
 public class LecteurTextuel {
+    private String program;
 
-    private String texteAAnalyser;
-
-    /**
-     * Vérifie si le texte à analyser est une instruction ou non
-     * @return the keyword associated
-     */
-
-    public Keywords estInstruction() {
-        for (String word : Keywords.displayWords())
-            if (Pattern.matches("^"+word+"(.*)", texteAAnalyser)) {
-                supprimerMorceauProgramme(word.length());
-                return Keywords.wordToKeyword(word);
-            }
-        return null;
-    }
-
-    /**
-     * Effacer les mots du programme actuelle, depuis le début du programme
-     * jusqu'au parametre
-     * @param nbCaracASupprimer Le nombre de caractere a effacer
-     */
-    private void supprimerMorceauProgramme(int nbCaracASupprimer) {
-        texteAAnalyser = texteAAnalyser.substring(nbCaracASupprimer);
+    public LecteurTextuel(String program) throws WrongMacroNameException {
+        this.program = modifiedProgram(program);
     }
 
     /**
      * Crée une liste de commande dans le programme à interpreter
      * @return la liste de commande
      */
-    public ArrayList<Keywords> creeTableauCommande() throws IsNotACommandException {
+    public List<Keywords> creeTableauCommande() throws IsNotACommandException, FileNotFoundException {
+        List<Keywords> commandFoundList = new ArrayList<>();
+        String[] linesOfProgram = program.split(System.getProperty("line.separator"));
 
-        String firstCharacter;
-        Keywords commandFound;
-        ArrayList<Keywords> commandFound_List = new ArrayList<>();
-
-
-
-        while (texteAAnalyser.length()!=0){
-            //Store the first character of the current untreated program
-            firstCharacter = Character.toString(texteAAnalyser.charAt(0));
-
-            if (Keywords.isShortcut(firstCharacter)){ // if the first character is a shortcut, e.g +,-,>
-                commandFound_List.add(Keywords.shortcutToKeyword(firstCharacter)); // We had the command
-                supprimerMorceauProgramme(1);//We delete that shortcut
-            }
+        for(String line : linesOfProgram) {
+            if (Keywords.isWord(line))
+                commandFoundList.add(Keywords.valueOf(line));
             else {
-                commandFound = estInstruction();
-                //If there is a bad command in the file, then we tell it to the user, it's might not be intended
-                if (commandFound == null) throw new IsNotACommandException();
-                //Else the command is added to the list
-                else commandFound_List.add(commandFound);
+                commandFoundList.addAll(inTheCaseOfShortcut(line));
             }
+
         }
 
-        return commandFound_List;
+        return commandFoundList;
+    }
+
+    /**
+     * Permet de récupérer les keywords situé sur une ligne String
+     * @param line un String
+     * @return une liste contenant les keywords de la ligne
+     * @throws IsNotACommandException
+     */
+    public List<Keywords> inTheCaseOfShortcut(String line) throws IsNotACommandException {
+        List<Keywords> keywordsList = new ArrayList<>();
+
+        for (char character : line.toCharArray()) {
+            if(Keywords.isShortcut(character))
+                keywordsList.add(Keywords.shortcutToKeyword(character));
+            else if(Character.isWhitespace(character));
+            else
+                throw new IsNotACommandException();
+        }
+
+        return keywordsList;
     }
 
     /**
@@ -87,21 +76,20 @@ public class LecteurTextuel {
      * Reçois de la classe Moteur le nom d'un fichier à lire
      * @param texte nom du fichier à lire
      */
-    public void setTexteAAnalyser(String texte) throws WrongMacroNameException {
-        if (!texte.equals("")) {
+    private String modifiedProgram(String texte) throws WrongMacroNameException {
+        if (!"".equals(texte)) {
             Macro macro = new Macro(texte);
             texte = macro.readMacro();
             texte = removeCommentary(texte);
-            texte = texte.replaceAll("\\s+", "");
 
-            texteAAnalyser = texte;
+            return texte;
         }
+
+        return "";
     }
 
-    public void setProgramme(String programme) { texteAAnalyser = programme;}
-
-    public String getTexteAAnalyser() {
-        return texteAAnalyser;
+    public void setProgram(String program) {
+        this.program = program;
     }
 }
 

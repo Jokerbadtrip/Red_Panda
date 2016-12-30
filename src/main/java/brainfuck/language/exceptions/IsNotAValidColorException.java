@@ -7,7 +7,7 @@ package brainfuck.language.exceptions;
  * @author  Red_Panda
  */
 
-public class IsNotAValidColorException extends Exception {
+public class IsNotAValidColorException extends RuntimeException {
 
     /**
      * Constructeur pour IsNotAValidColorException

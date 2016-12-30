@@ -1,6 +1,6 @@
 package brainfuck.language.exceptions;
 
-import static brainfuck.language.enumerations.Flags.showFlags;
+import static brainfuck.language.flag.Flags.showFlags;
 
 /**
  * Created by Red_Panda on 30/11/2016.

@@ -3,7 +3,7 @@ package brainfuck.language.exceptions;
 /**
  * Created by Red_Panda on 26/12/16.
  */
-public class IncompatibleFlagsException extends Exception {
+public class IncompatibleFlagsException extends RuntimeException {
     public IncompatibleFlagsException() {
         super();
     }

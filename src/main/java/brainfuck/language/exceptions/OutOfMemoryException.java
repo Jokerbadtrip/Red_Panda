@@ -5,7 +5,7 @@ package brainfuck.language.exceptions;
  *
  * @author  Red_Panda
  */
-public class OutOfMemoryException extends Exception {
+public class OutOfMemoryException extends RuntimeException {
 
     /**
      * Constructeur pour OutOfMemoryException

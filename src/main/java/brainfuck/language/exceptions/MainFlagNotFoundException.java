@@ -6,7 +6,7 @@ package brainfuck.language.exceptions;
  * @author  Red_Panda
  */
 
-public class MainFlagNotFoundException extends Exception {
+public class MainFlagNotFoundException extends RuntimeException {
 
     /**
      * Constructeur pour MainFlagNotFoundException
