@@ -11,7 +11,7 @@ import static org.junit.Assert.assertNotEquals;
  */
 public class MemoryTest {
 
-    Memory memory = new Memory();
+    Memory memory = new Memory(true);
 
     @Test(expected = ValueOutOfBoundException.class)
     public void incr() throws ValueOutOfBoundException {

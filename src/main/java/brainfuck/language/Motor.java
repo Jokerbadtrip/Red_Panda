@@ -3,13 +3,14 @@ package brainfuck.language;
 
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.*;
-import brainfuck.language.flag.*;
+import brainfuck.language.flag.Flags;
+import brainfuck.language.flag.KernelReader;
 import brainfuck.language.flag.commande.Check;
 import brainfuck.language.flag.commande.Rewrite;
 import brainfuck.language.flag.commande.Translate;
-import brainfuck.language.interpreter.Interpreter;
+import brainfuck.language.interpreter.InterpreterMaster;
 import brainfuck.language.readers.LecteurImage;
-import brainfuck.language.readers.LecteurTextuel;
+import brainfuck.language.readers.ProgramReader;
 import org.omg.CORBA.DynAnyPackage.InvalidValue;
 
 import java.io.File;
@@ -31,6 +32,8 @@ public class Motor {
 
     private String[] args;
     private KernelReader kernelReader;
+    private ProgramProcess programProcess;
+    private ProgramReader programReader;
 
 
     /**
@@ -50,7 +53,7 @@ public class Motor {
      * Avec l'interpréteur textue, on effectue l'action appropriée à l'instruction
      */
 
-    public void lancerProgramme() throws InvalidValue, FileNotFoundException, WrongMacroNameException, WrongInputException, OutOfMemoryException {
+    public void lancerProgramme() throws InvalidValue, FileNotFoundException, WrongMacroNameException, WrongInputException, OutOfMemoryException, WrongFunctionNameException {
         Metrics.execTime(System.currentTimeMillis());
 
         String filePathToProgram;
@@ -62,7 +65,8 @@ public class Motor {
 
 
         if(filePathToProgram.endsWith(".bf")) {
-                keywordsList = callLecteurTextuel(program);
+            callLecteurTextuel(program);
+            keywordsList = new ArrayList<>(programReader.getKeywordsToInterpreter().values());
         }
         else if (filePathToProgram.endsWith(".bmp")) {
             keywordsList = callLecteurImage(filePathToProgram);
@@ -70,6 +74,9 @@ public class Motor {
         else
             throw new InvalidValue("Your file can only have two extension : .bf .bmp");
 
+
+
+        // --------------------------------------------------------
         if(this.kernelReader.getFlag(Flags.REWRITE)) {
             Rewrite rewrite = new Rewrite(keywordsList);
             System.out.println("La traduction de votre programme en syntaxe courte est : " + rewrite.rewriteProgram() + "\n");
@@ -96,6 +103,7 @@ public class Motor {
             }
             needInterpreter = false;
         }
+        // --------------------------------------------------------
 
         if(needInterpreter)
             callInterpreter(keywordsList, filePathToProgram);
@@ -122,13 +130,22 @@ public class Motor {
         return kernelReader.getFilePath(Flags.FILE_TO_READ);
     }
 
+
     /**
      *
-     * @param filePath
+     * @param program
+     * @return
+     * @throws FileNotFoundException
+     * @throws IsNotACommandException
+     * @throws WrongMacroNameException
+     * @throws WrongFunctionNameException
      */
-    public List<Keywords> callLecteurTextuel(String filePath) throws FileNotFoundException, IsNotACommandException, WrongMacroNameException {
-        LecteurTextuel lecteurTextuel = new LecteurTextuel(filePath);
-        return lecteurTextuel.creeTableauCommande();
+    public void callLecteurTextuel(String program) throws FileNotFoundException, IsNotACommandException, WrongMacroNameException, WrongFunctionNameException {
+        programProcess = new ProgramProcess(program);
+        program = programProcess.transform();
+
+        programReader = new ProgramReader(program, programProcess.getFunctionMap());
+        programReader.createBothMap();
     }
 
     /**
@@ -150,11 +167,11 @@ public class Motor {
      * @throws ValueOutOfBoundException
      */
     public void callInterpreter(List<Keywords> keywordsList, String filePath) throws WrongInputException, OutOfMemoryException, ValueOutOfBoundException {
-        Interpreter interpreter = new Interpreter(kernelReader.getFilePath(Flags.IN), kernelReader.getFilePath(Flags.OUT), keywordsList);
-        if(kernelReader.getFlag(Flags.TRACE)) {
-            interpreter.iniATracer(filePath);
-        }
-        interpreter.keywordsExecution();
+        boolean needTrace = kernelReader.getFlag(Flags.TRACE);
+        InterpreterMaster interpreterMaster = new InterpreterMaster(needTrace, programReader.getKeywordsToInterpreter(), programReader.getFunctionToInterpreter());
+        interpreterMaster.initializeInterpreters(kernelReader.getFilePath(Flags.IN), kernelReader.getFilePath(Flags.OUT), filePath, programProcess.getFunctionMap());
+        interpreterMaster.interpreterProgram();
+        interpreterMaster.finishInterpreter();
     }
 
     /**
@@ -174,10 +191,6 @@ public class Motor {
         }
 
         return program.toString();
-    }
-
-    private void executeFlag() {
-
     }
 
 }

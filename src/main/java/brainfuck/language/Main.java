@@ -4,11 +4,13 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            Motor motor = new Motor(args);
+            String[] arg = {"-p", "/home/jamatofu/Documents/Projet Red Panda/Red_Panda2/src/test/resources/prog.bf"};
+            Motor motor = new Motor(arg);
             motor.lancerProgramme();
         }
         catch (Exception e) {
             System.out.println(e.toString());
+            e.printStackTrace();
         }
     }
 }

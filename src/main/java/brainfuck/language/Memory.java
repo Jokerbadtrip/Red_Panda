@@ -13,6 +13,7 @@ import brainfuck.language.exceptions.ValueOutOfBoundException;
 public class Memory {
 
 	public static final int MEMORY_SIZE = 30000;
+	public static final short MEMORY_FOR_FUNCTION = 255;
 	private short[] mArray;
 	private short pointer;
 	private short maxArray;
@@ -21,8 +22,11 @@ public class Memory {
      * Le constructeur de la classe mémoire
      */
 	
-	public Memory() {
-		mArray = new short[MEMORY_SIZE];
+	public Memory(boolean memoryForFunction) {
+		if(memoryForFunction)
+			mArray = new short[MEMORY_FOR_FUNCTION];
+		else
+			mArray = new short[MEMORY_SIZE - MEMORY_FOR_FUNCTION];
 		pointer = 0;
 	}
 
@@ -134,7 +138,7 @@ public class Memory {
 	 * @return La valeur de la case mémoire actuellement pointée
 	 */
 
-	public int getCellValue() {
-		return (int) mArray[pointer];
+	public short getCellValue() {
+		return  mArray[pointer];
 	}
 }

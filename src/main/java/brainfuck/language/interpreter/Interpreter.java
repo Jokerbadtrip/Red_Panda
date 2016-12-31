@@ -1,9 +1,7 @@
 package brainfuck.language.interpreter;
 
 import brainfuck.language.Memory;
-import brainfuck.language.Metrics;
 import brainfuck.language.enumerations.Keywords;
-import brainfuck.language.exceptions.OutOfMemoryException;
 import brainfuck.language.exceptions.ValueOutOfBoundException;
 import brainfuck.language.exceptions.WrongInputException;
 
@@ -23,93 +21,29 @@ import java.util.Scanner;
  * @author  Red_Panda
  */
 
-public class Interpreter {
+public abstract class Interpreter {
+    protected Memory memory = new Memory(false);
+    protected List<Integer> placeCrochet = new ArrayList<>();
+    protected int cursor = 0;
 
-    private Memory memory = new Memory();
-    private List<Integer> placeCrochet = new ArrayList<>();
-    private List<Keywords> tableauCommande = new ArrayList<>();
-    private Trace trace = null;
-    private int cursor = 0;
+    protected String infilepath;
+    protected String outfilepath;
 
-    private String infilepath;
-    private String outfilepath;
+
+    public Interpreter() {
+        this(null, null);
+    }
 
     /**
-     *
-     * @param infilepath
-     * @param outfilepath
+     * Constructeur d'un interpréteur
+     * @param infilepath chemin d'accès pour la commande -i
+     * @param outfilepath chemin d'accès pour la commande -o
      */
-    public Interpreter(String infilepath, String outfilepath, List<Keywords> tableauCommande) {
+    public Interpreter(String infilepath, String outfilepath) {
         this.infilepath = infilepath;
         this.outfilepath = outfilepath;
-        this.tableauCommande = tableauCommande;
     }
-
-    /**
-     * Initialise la partie "Tracé" de l'interpreteur lorsque
-     * l'argument "--TRACE" a été entré dans la console
-     *
-     * @param nomFichier Le nom du fichier dans lequel sera enregistré les logs
-     */
-
-    public void iniATracer(String nomFichier) {
-        trace = new Trace(nomFichier);
-    }
-
-    /**
-     * Compare le mot avec la liste des mots exécutables et agit en conséquence
-     *
-     * @throws ValueOutOfBoundException OutOfMemoryException
-     */
-    public void keywordsExecution() throws OutOfMemoryException, ValueOutOfBoundException, WrongInputException {
-        Metrics.PROC_SIZE = tableauCommande.size();
-        recenseCrochet(tableauCommande);
-
-        while (cursor < tableauCommande.size()) {
-                switch (tableauCommande.get(cursor)) {
-                    case INCR:
-                        incrMethod();
-                        break;
-                    case DECR:
-                        decrMethod();
-                        break;
-                    case LEFT:
-                        leftMethod();
-                        break;
-                    case RIGHT:
-                        rightMethod();
-                        break;
-                    case OUT:
-                        outMethod(outfilepath);
-                        break;
-                    case IN:
-                        inMethod(infilepath);
-                        break;
-                    case JUMP:
-                        jumpMethod();
-                        break;
-                    case BACK:
-                        backMethod();
-                        break;
-
-                    default:
-                        break;
-                }
-
-            if (trace != null) {
-                trace.tracerUpdate(cursor, memory.getPointer(), memory.writeStateOfMemory());
-            }
-            Metrics.EXEC_MOVE++;
-
-            cursor++;
-        }
-
-        System.out.println(memory.writeStateOfMemory());
-
-        if (trace != null)
-            trace.end();
-    }
-
+    
     /**
      * Permet d'enregistrer la position de tous les crochets ouvrants présent dans le fichier
      * actuelle, dans une liste.
@@ -117,61 +51,12 @@ public class Interpreter {
      * @param tableauCommande La liste de commande que l'on veut analyser
      */
 
-    public void recenseCrochet(List<Keywords> tableauCommande) {
-        int i;
-
-        for (i =0; i < tableauCommande.size();i++)
+    protected void recenseCrochet(List<Keywords> tableauCommande) {
+        for (int i =0; i < tableauCommande.size();i++)
         {
             if (tableauCommande.get(i).equals(Keywords.JUMP))
                 placeCrochet.add(i);
         }
-    }
-
-    /**
-     * Permet de connaitre rapidement la position du crochet ouvrant associé
-     * au crochet fermant actuel
-     *
-     * @param i La position du crochet fermant que l'on interprete
-     * @param tableauCommande La liste de commande que l'on est en train d'interpreter
-     * @return La position dans la liste de commande du crochet ouvrantassocié au crochet fermant actuel
-     */
-
-    public int retournePlace(List<Keywords> tableauCommande, int i){
-        int placeCrochetActu = 0;
-        int j = 0;
-
-        while (j < i) {
-            if (tableauCommande.get(j) == Keywords.BACK)
-                placeCrochetActu++;
-            j++;
-        }
-        return placeCrochet.size() - placeCrochetActu - 1;
-    }
-
-    /**
-     * Permet de connaitre le nombre d'instruction qui sont compris entre le crochet ouvrant
-     * actuel et le crochet fermant associé
-     *
-     * @param i La position du crochet ouvrant que l'on interprete
-     * @param tableauCommande La liste de commande que l'on est en train d'interpreter
-     * @return Le nombre d'instructions entre le crochet ouvrant actuel et le crochet fermant associé
-     */
-
-    public int countInstru(List<Keywords> tableauCommande, int i) {
-        int nbOuvrante = 1;
-        int it = i + 1;
-
-        while (nbOuvrante != 0) {
-            if (tableauCommande.get(it) == Keywords.JUMP) {
-                nbOuvrante++;
-            }
-            if (tableauCommande.get(it) == Keywords.BACK) {
-                        Metrics.DATA_WRITE++;
-                nbOuvrante--;
-            }
-            it++;
-        }
-        return it - i;
     }
 
     /**
@@ -205,7 +90,6 @@ public class Interpreter {
                 System.out.println(ex.getMessage());
             }
         }
-        Metrics.DATA_WRITE++;
     }
 
     /**
@@ -213,8 +97,7 @@ public class Interpreter {
      * par défaut (console)
      */
 
-    public void outMethod(String arg) {
-        Metrics.DATA_READ++;
+    protected void outMethod(String arg) {
         if (arg == null) {
             char numb = (char) memory.getCellValue();
             System.out.print(numb);
@@ -227,37 +110,19 @@ public class Interpreter {
         }
     }
 
-    private void incrMethod() {
+    protected void incrMethod() {
         memory.incr();
-        Metrics.DATA_WRITE++;
     }
 
-    private void decrMethod() {
+    protected void decrMethod() {
         memory.decr();
-        Metrics.DATA_WRITE++;
     }
 
-    private void leftMethod() {
-        Metrics.DATA_MOVE++;
+    protected void leftMethod() {
         memory.left();
     }
 
-    private void rightMethod() {
-        Metrics.DATA_MOVE++;
+    protected void rightMethod() {
         memory.right();
-    }
-
-    private void jumpMethod() {
-        if (memory.getCellValue() == 0)
-            cursor += countInstru(tableauCommande, cursor);
-
-        Metrics.DATA_READ++;
-    }
-
-    private void backMethod() {
-        if (memory.getCellValue() != 0)
-            cursor = placeCrochet.get(retournePlace(tableauCommande, cursor));
-
-        Metrics.DATA_READ++;
     }
 }
