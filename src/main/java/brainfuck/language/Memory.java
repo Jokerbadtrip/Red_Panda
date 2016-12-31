@@ -141,4 +141,12 @@ public class Memory {
 	public short getCellValue() {
 		return  mArray[pointer];
 	}
+
+	public void setValue(short value) {
+		mArray[pointer] = value;
+	}
+
+	public void resetMemory() {
+		mArray = new short[mArray.length];
+	}
 }

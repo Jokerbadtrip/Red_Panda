@@ -12,7 +12,6 @@ import java.util.Map;
  * @author jamatofu on 30/12/16.
  */
 public class FunctionInterpreter extends Interpreter{
-    private Memory memory;
     private Map<String, Function> functionMap;
 
     /**
@@ -30,7 +29,7 @@ public class FunctionInterpreter extends Interpreter{
      * @throws WrongInputException
      */
     public void identifyAndExecuteInstruction(Function function) throws WrongInputException {
-        List<Keywords> keywordsList = this.functionMap.get(function).getCode();
+        List<Keywords> keywordsList = function.getCode();
         recenseCrochet(keywordsList);
 
         for (Keywords keywords : keywordsList) {
@@ -82,7 +81,9 @@ public class FunctionInterpreter extends Interpreter{
      * @return
      */
     public short getResult() {
-        return memory.getCellValue();
+        short value = memory.getCellValue();
+        memory.resetMemory();
+        return value;
     }
 
     /**

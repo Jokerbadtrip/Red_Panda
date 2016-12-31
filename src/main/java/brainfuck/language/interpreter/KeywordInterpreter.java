@@ -88,4 +88,8 @@ public class KeywordInterpreter extends Interpreter {
     }
 
     public short getCurrentValue() { return memory.getCellValue(); }
+
+    public void setCurrentValue(short value) {
+        memory.setValue(value);
+    }
 }

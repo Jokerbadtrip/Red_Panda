@@ -52,6 +52,7 @@ public class ParseFunction  {
                 stringBuilder.append('\n');
             }
         }
+
         return stringBuilder.toString();
     }
 

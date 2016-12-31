@@ -49,7 +49,7 @@ public class InterpreterMaster {
      */
     public void interpreterProgram() throws WrongInputException {
         List<Keywords> keywordsList = new ArrayList<>(keywordsMap.values());
-
+        System.out.println(functionMap.get(0).getCode());
         while (cursorIsInInterval()) {
             if(keywordsMap.containsKey(cursor)) {
                 Keywords keywords = keywordsMap.get(cursor);
@@ -69,8 +69,10 @@ public class InterpreterMaster {
                     keywordInterpreter.identifyAndExecuteInstruction(keywords);
                 }
             }
-            else
+            else {
                 functionInterpreter.identifyAndExecuteInstruction(functionMap.get(cursor));
+                keywordInterpreter.setCurrentValue(functionInterpreter.getResult());
+            }
 
             cursor++;
         }
