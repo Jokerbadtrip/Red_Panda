@@ -1,8 +1,5 @@
 package brainfuck.language.flag;
 
-import brainfuck.language.exceptions.UnknownFlagsException;
-
-
 /**
  * Enum permettant d'associer les differents arguments consoles a des instructions compréhensible par notre programme
  *
@@ -17,8 +14,6 @@ public enum Flags {
     TRANSLATE("--translate", false),
     TRACE("--trace", false);
 
-
-
     private String flag;
     private boolean needAFilePath;
 
@@ -29,22 +24,6 @@ public enum Flags {
     Flags(String flag, boolean needAFilePath) {
         this.flag = flag;
         this.needAFilePath = needAFilePath;
-    }
-
-    /**
-     * Verifie si l'argument en entrée est bien un flag ou non
-     *
-     * @param arg L'argument que l'utilisateur a entré dans la console
-     * @return true si l'argument en entrée est un flag
-     */
-    public static boolean isFlag(String arg) throws UnknownFlagsException{
-        if (!isFilePath(arg)) {
-            for (Flags flags : Flags.values())
-                if (flags.getFlag().equals(arg))
-                    return true;
-            throw new UnknownFlagsException(arg);
-        }
-        return false;
     }
 
     /**
@@ -62,24 +41,10 @@ public enum Flags {
     }
 
     /**
-     * Transforme la chaine de caractère en entrée en flag
-     * @param arg Le flag entré par l'utilisateur dans la console
-     * @return La flag lié a la chaine de caractère
+     * Permet de retourner un objet Flag en fonction d'un String
+     * @param arg le string à "convertir" en Flag
+     * @return le flag correspondant SINON rien
      */
-    public static Flags toFlag(String arg) throws UnknownFlagsException{
-        if (!isFilePath(arg)) {
-            for (Flags flags : Flags.values())
-                if (arg.equals(flags.getFlag()))
-                    return flags;
-            throw new UnknownFlagsException(arg);
-        }
-        return null;
-    }
-
-    private static boolean isFilePath(String arg){
-        return arg.toLowerCase().matches("(?i).*bf") || arg.toLowerCase().matches("(?i).*bmp") || arg.toLowerCase().matches("(?i).*txt");
-    }
-
     public static Flags fromFlagToEnum(String arg) {
         for(Flags flags : Flags.values()) {
             if(flags.getFlag().equals(arg))

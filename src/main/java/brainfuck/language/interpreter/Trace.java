@@ -39,7 +39,7 @@ public class Trace {
         try {
             fw.write("Execution step number = " + (stepNb + 1) + ", execution pointer position : " + (cursor+1)
                     + ", data pointer position : " + mPointer + ", Snapshot : " + snapShot);
-            fw.write("\r\n");
+            fw.write(System.lineSeparator());
         } catch (IOException e) {
             System.out.println("Not implemented yet");
         }
@@ -47,12 +47,15 @@ public class Trace {
         stepNb++;
     }
 
+    /**
+     * Permet de fermer les flux de donnée
+     */
     public void end(){
         if(fw != null) {
             try {
                 fw.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Flux de donnée de la trace mal fermé.");
             }
         }
     }

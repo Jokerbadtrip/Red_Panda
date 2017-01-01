@@ -8,18 +8,20 @@ package brainfuck.language.exceptions;
  * @author  Red_Panda
  */
 public class IsNotACommandException extends RuntimeException {
-
+    char message;
     /**
      * Constructeur pour IsNotACommandException
      */
-    public IsNotACommandException() {}
+    public IsNotACommandException(char message) {
+        this.message = message;
+    }
 
     /**
      * Renvoie le texte correspondant à la description de l'erreur
      * @return "One of the commands is not an available command" est toujours renvoié
      */
     @Override
-    public String toString(){return "Error Code -1 : One of the commands is not an available command";}
+    public String toString(){ return message + " is not a valid command.";}
 
 
 }

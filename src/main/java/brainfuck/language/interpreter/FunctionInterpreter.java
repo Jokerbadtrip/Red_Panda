@@ -6,21 +6,18 @@ import brainfuck.language.exceptions.WrongInputException;
 import brainfuck.language.function.Function;
 
 import java.util.List;
-import java.util.Map;
 
 /**
+ * Interpréteur de fonction. A 255 cases mémoires allouée
  * @author jamatofu on 30/12/16.
  */
 public class FunctionInterpreter extends Interpreter{
-    private Map<String, Function> functionMap;
-
     /**
      * @param infilepath
      * @param outfilepath
      */
-    public FunctionInterpreter(String infilepath, String outfilepath, Map<String, Function> functionMap) {
+    public FunctionInterpreter(String infilepath, String outfilepath) {
         super(infilepath, outfilepath);
-        this.functionMap = functionMap;
         this.memory = new Memory(true);
     }
 
@@ -30,6 +27,8 @@ public class FunctionInterpreter extends Interpreter{
      */
     public void identifyAndExecuteInstruction(Function function) throws WrongInputException {
         List<Keywords> keywordsList = function.getCode();
+        if(function.hasParameter())
+            keywordsList.addAll(0, function.getParametre());
         recenseCrochet(keywordsList);
 
         for (Keywords keywords : keywordsList) {

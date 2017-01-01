@@ -14,11 +14,13 @@ import static java.lang.Math.ceil;
 import static java.lang.Math.sqrt;
 
 /**
+ * Permet de passer d'une liste de commande à une image
+ * Permet d'exécuter la commande --translate
  * @author jamatofu on 30/12/16.
  */
 public class Translate {
-    private final static int WIDTH = LecteurImage.WIDTH_IMAGE;
-    private final static int HEIGHT = LecteurImage.HEIGHT_IMAGE;
+    private static final int WIDTH = LecteurImage.WIDTH_IMAGE;
+    private static final int HEIGHT = LecteurImage.HEIGHT_IMAGE;
     private String filePath;
     private int tailleImage;
 

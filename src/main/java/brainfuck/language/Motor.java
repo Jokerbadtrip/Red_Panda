@@ -3,6 +3,7 @@ package brainfuck.language;
 
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.*;
+import brainfuck.language.exceptions.function.BadFunctionDefinition;
 import brainfuck.language.flag.Flags;
 import brainfuck.language.flag.KernelReader;
 import brainfuck.language.flag.commande.Check;
@@ -10,6 +11,7 @@ import brainfuck.language.flag.commande.Rewrite;
 import brainfuck.language.flag.commande.Translate;
 import brainfuck.language.interpreter.InterpreterMaster;
 import brainfuck.language.readers.LecteurImage;
+import brainfuck.language.readers.ProgramProcess;
 import brainfuck.language.readers.ProgramReader;
 import org.omg.CORBA.DynAnyPackage.InvalidValue;
 
@@ -53,7 +55,7 @@ public class Motor {
      * Avec l'interpréteur textue, on effectue l'action appropriée à l'instruction
      */
 
-    public void lancerProgramme() throws InvalidValue, FileNotFoundException, WrongMacroNameException, WrongInputException, OutOfMemoryException, WrongFunctionNameException {
+    public void lancerProgramme() throws InvalidValue, FileNotFoundException, WrongMacroNameException, WrongInputException, OutOfMemoryException, WrongFunctionNameException, BadFunctionDefinition {
         Metrics.execTime(System.currentTimeMillis());
 
         String filePathToProgram;
@@ -140,7 +142,7 @@ public class Motor {
      * @throws WrongMacroNameException
      * @throws WrongFunctionNameException
      */
-    public void callLecteurTextuel(String program) throws FileNotFoundException, IsNotACommandException, WrongMacroNameException, WrongFunctionNameException {
+    public void callLecteurTextuel(String program) throws FileNotFoundException, IsNotACommandException, WrongMacroNameException, WrongFunctionNameException, BadFunctionDefinition {
         programProcess = new ProgramProcess(program);
         program = programProcess.transform();
 
@@ -168,8 +170,12 @@ public class Motor {
      */
     public void callInterpreter(List<Keywords> keywordsList, String filePath) throws WrongInputException, OutOfMemoryException, ValueOutOfBoundException {
         boolean needTrace = kernelReader.getFlag(Flags.TRACE);
-        InterpreterMaster interpreterMaster = new InterpreterMaster(needTrace, programReader.getKeywordsToInterpreter(), programReader.getFunctionToInterpreter());
-        interpreterMaster.initializeInterpreters(kernelReader.getFilePath(Flags.IN), kernelReader.getFilePath(Flags.OUT), filePath, programProcess.getFunctionMap());
+        InterpreterMaster interpreterMaster = new InterpreterMaster(needTrace, programReader.getKeywordsToInterpreter(),
+                programReader.getFunctionToInterpreter());
+
+        interpreterMaster.initializeInterpreters(kernelReader.getFilePath(Flags.IN),
+                kernelReader.getFilePath(Flags.OUT), filePath);
+
         interpreterMaster.interpreterProgram();
         interpreterMaster.finishInterpreter();
     }

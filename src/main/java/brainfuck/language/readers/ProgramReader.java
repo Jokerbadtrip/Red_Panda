@@ -34,9 +34,14 @@ public class ProgramReader extends LecteurTextuel{
      */
     public void createBothMap() throws IsNotACommandException, FileNotFoundException {
         String[] linesOfProgram = program.split(System.getProperty("line.separator"));
+        String[] cutLine;
+        Function function;
 
         for(String line: linesOfProgram) {
             line.trim();
+            cutLine = line.split(" ");
+            line = cutLine[0];
+
             if (line.isEmpty())
                 continue;
 
@@ -45,7 +50,13 @@ public class ProgramReader extends LecteurTextuel{
                 cursor++;
             }
             else if(functionMap.containsKey(line)) {
-                functionToInterpreter.put(cursor, functionMap.get(line));
+                function = functionMap.get(line);
+
+                if(cutLine.length == 2) {
+                    function.setParametre(cutLine[1]);
+                }
+
+                functionToInterpreter.put(cursor, function);
                 cursor++;
             }
             else {
@@ -69,7 +80,7 @@ public class ProgramReader extends LecteurTextuel{
             }
             else if(Character.isWhitespace(character));
             else
-                throw new IsNotACommandException();
+                throw new IsNotACommandException(character  );
         }
         return keywordsList;
     }

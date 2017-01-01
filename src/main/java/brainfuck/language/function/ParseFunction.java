@@ -3,6 +3,7 @@ package brainfuck.language.function;
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.WrongFunctionNameException;
 import brainfuck.language.exceptions.WrongMacroNameException;
+import brainfuck.language.exceptions.function.BadFunctionDefinition;
 import brainfuck.language.readers.LecteurTextuel;
 
 import java.io.FileNotFoundException;
@@ -18,7 +19,6 @@ import java.util.Map;
 public class ParseFunction  {
     private String program;
     private Map<String, Function> functionMap;
-    private LecteurTextuel lecteurTextuel;
 
     public ParseFunction(String program) {
         this.program = program.trim();
@@ -32,8 +32,8 @@ public class ParseFunction  {
      * @throws FileNotFoundException
      * @throws WrongFunctionNameException
      */
-    public String findPrototype() throws WrongMacroNameException, FileNotFoundException, WrongFunctionNameException {
-        String[] lineOfProgram = program.split(System.getProperty("line.separator"));
+    public String findPrototype() throws WrongMacroNameException, FileNotFoundException, WrongFunctionNameException, BadFunctionDefinition {
+        String[] lineOfProgram = program.split(System.lineSeparator());
         StringBuilder stringBuilder = new StringBuilder();
 
         for(String line : lineOfProgram) {
@@ -64,12 +64,15 @@ public class ParseFunction  {
      * @throws WrongFunctionNameException
      * @throws WrongMacroNameException
      */
-    public void addProcedure(String line, boolean isProcedure) throws FileNotFoundException, WrongFunctionNameException, WrongMacroNameException {
+    public void addProcedure(String line, boolean isProcedure) throws FileNotFoundException, WrongFunctionNameException, BadFunctionDefinition {
         String[] piecesOfLine = line.split(" ");
-        lecteurTextuel = new LecteurTextuel(piecesOfLine[2]);
 
-        if(isValidName(piecesOfLine[1]))
+
+        if(piecesOfLine.length != 3)
+            throw new BadFunctionDefinition(line);
+        if(!isValidName(piecesOfLine[1]))
             throw new WrongFunctionNameException(piecesOfLine[1]);
+        LecteurTextuel lecteurTextuel = new LecteurTextuel(piecesOfLine[2]);
 
         Function function = new Function(lecteurTextuel.creeTableauCommande(), isProcedure);
         functionMap.put(piecesOfLine[1], function);
@@ -80,13 +83,13 @@ public class ParseFunction  {
      * @param name nom de la fonction
      * @return vrai si valide
      */
-    private boolean isValidName(String name) {
+    public boolean isValidName(String name) {
         for(Keywords keywords : Keywords.values()) {
             if(keywords.name().equals(name) || keywords.getShortcut() == name.charAt(0))
                 return false;
         }
 
-        return name.matches("(\\d+)");
+        return !name.matches("(\\d+)");
     }
 
     /**

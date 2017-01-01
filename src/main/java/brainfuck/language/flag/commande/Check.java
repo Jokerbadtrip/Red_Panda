@@ -9,7 +9,7 @@ import java.util.*;
  * @author jamatofu on 29/12/16.
  */
 public class Check {
-    private Deque<Keywords> stack = new ArrayDeque<>();
+    private Deque<Keywords> stack;
     private static final Map<Keywords, Keywords> brackets = new EnumMap<>(Keywords.class);
     static {
         brackets.put(Keywords.JUMP, Keywords.BACK);
@@ -20,6 +20,7 @@ public class Check {
      * @return vrai si bien parenthèsé SINON faux
      */
     public boolean isWellChecked(List<Keywords> keywordsList) {
+        stack = new ArrayDeque<>();
         for(Keywords keywords : keywordsList) {
             if(Keywords.JUMP.equals(keywords)) {
                 stack.addFirst(Keywords.JUMP);
@@ -31,7 +32,6 @@ public class Check {
                     closingBracket();
             }
         }
-
         return stack.isEmpty();
     }
 

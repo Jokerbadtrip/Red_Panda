@@ -6,6 +6,7 @@ import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.WrongInputException;
 
 /**
+ * Interpréter de Keyword. A 29745 cases mémoires allouées
  * @author jamatofu on 31/12/16.
  */
 public class KeywordInterpreter extends Interpreter {

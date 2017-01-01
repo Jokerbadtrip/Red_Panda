@@ -2,14 +2,13 @@ package brainfuck.language.readers;
 
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.IsNotACommandException;
-import brainfuck.language.exceptions.WrongMacroNameException;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Classe permettant de lire dans un fichier ".bf" les instructions qu'il contient, et de les envoyer à l'interpreteur
+ * Mini-identificateur d'instruction pour une seule ligne de programme
  *
  * @author  Red_Panda
  */
@@ -18,7 +17,7 @@ public class LecteurTextuel {
     protected String program;
     private List<Keywords> keywordsList;
 
-    public LecteurTextuel(String program) throws WrongMacroNameException {
+    public LecteurTextuel(String program) {
         this.program = program;
     }
 
@@ -56,7 +55,7 @@ public class LecteurTextuel {
             }
             else if(Character.isWhitespace(character));
             else
-                throw new IsNotACommandException();
+                throw new IsNotACommandException(character);
         }
         return keywordsList;
     }

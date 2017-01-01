@@ -34,24 +34,22 @@ public class InterpreterMaster {
      * @param infilepath chemin d'accès -i
      * @param outfilepath chemin d'accès -o
      * @param tracePath chemin d'accès pour la trace
-     * @param functionMap le catalogue des fonctions du programme
      */
-    public void initializeInterpreters(String infilepath, String outfilepath, String tracePath, Map<String, Function> functionMap) {
+    public void initializeInterpreters(String infilepath, String outfilepath, String tracePath) {
         this.keywordInterpreter = new KeywordInterpreter(infilepath, outfilepath);
         if(this.needTrace)
             keywordInterpreter.iniATracer(tracePath);
 
-        this.functionInterpreter = new FunctionInterpreter(infilepath, outfilepath, functionMap);
+        this.functionInterpreter = new FunctionInterpreter(infilepath, outfilepath);
     }
 
     /**
-     *
+     * Interpréteur général. "Exécute" le programme brainfuck
      */
     public void interpreterProgram() throws WrongInputException {
         List<Keywords> keywordsList = new ArrayList<>(keywordsMap.values());
-        System.out.println(functionMap.get(0).getCode());
         while (cursorIsInInterval()) {
-            if(keywordsMap.containsKey(cursor)) {
+            if(keywordsMap.containsKey(cursor)) { // interprète un keyword
                 Keywords keywords = keywordsMap.get(cursor);
                 switch (keywords) {
                     case JUMP:
@@ -64,12 +62,12 @@ public class InterpreterMaster {
 
                 keywordInterpreter.identifyAndExecuteInstruction(keywords);
             }
-            else if (functionMap.get(cursor).isProcedure()) {
+            else if (functionMap.get(cursor).isProcedure()) { // interprète une procédure
                 for(Keywords keywords : functionMap.get(cursor).getCode()) {
                     keywordInterpreter.identifyAndExecuteInstruction(keywords);
                 }
             }
-            else {
+            else { // interprète une fonction
                 functionInterpreter.identifyAndExecuteInstruction(functionMap.get(cursor));
                 keywordInterpreter.setCurrentValue(functionInterpreter.getResult());
             }
@@ -85,7 +83,9 @@ public class InterpreterMaster {
      */
     public void finishInterpreter() {
         keywordInterpreter.endTrace();
+        System.out.println("\n/*----------------------------*/");
         System.out.println(keywordInterpreter.writeStateOfMemory());
+        System.out.println("\n/*----------------------------*/\n");
     }
 
     /**

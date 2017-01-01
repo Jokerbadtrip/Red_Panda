@@ -1,11 +1,7 @@
 package brainfuck.language.enumerations;
 
 
-import brainfuck.language.exceptions.IsNotACommandException;
 import brainfuck.language.exceptions.IsNotAValidColorException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -66,28 +62,10 @@ public enum Keywords {
      */
     public static boolean isColor(String color) throws IsNotAValidColorException{
         for (Keywords keyword : Keywords.values()){
-            if (keyword.getColor().equals(color))
-                return true;
-            if ("#000000".equals(color))
+            if (keyword.getColor().equals(color) || "#000000".equals(color))
                 return true;
         }
         return false;
-    }
-
-
-
-
-    /**
-     * Renvoie l'instruction associée a la chaine de caractère entrée
-     * @param word Le caractère à interpreter
-     * @return L'instruction associée a la chaine de caractère entrée
-     */
-    public static Keywords wordToKeyword(String word){
-        if (isWord(word))
-            for (Keywords keywords : Keywords.values())
-                if (keywords.name().equals(word))
-                    return keywords;
-        return null;
     }
 
     /**
@@ -121,66 +99,12 @@ public enum Keywords {
      * @param shortcut l'instruction à transformer en couleur
      * @return le code couleur associé à la couleur entrée
      */
-    public static int keywordToColor(Keywords shortcut) throws IsNotACommandException {
+    public static int keywordToColor(Keywords shortcut) {
         for (Keywords keywords : Keywords.values())
             if (keywords.equals(shortcut))
                 return Integer.decode(keywords.getColor());
-        throw new IsNotACommandException();
-
+        return 0;
     }
-
-
-    /**
-     * Renvoie l'instruction asssociée à la chaine de caractère en entrée,
-     * quelque soit son type (couleur...)
-     *
-     * @param anyType La chaine à convertir
-     * @return l'instruction associée a la chaine en entrée
-     */
-    public static Keywords getKeywords(String anyType) throws IsNotAValidColorException {
-        if (isColor(anyType))
-            return colorToKeyword(anyType);
-        else if(isShortcut(anyType.charAt(0)))
-            return shortcutToKeyword(anyType.charAt(0));
-        else if (isWord(anyType))
-            return wordToKeyword(anyType);
-        else return null;
-    }
-
-    /**
-     * Affiche toutes les instructions en tant que liste de chaine de caractère
-     *
-     * @return La liste des instructions
-     */
-    public static List<String> displayWords(){
-        ArrayList<String> words = new ArrayList<>();
-        for (Keywords keywords: Keywords.values()){
-            words.add(keywords.name());
-        }
-        return words;
-    }
-
-    /**
-     * Renvoie le caractère associé à l'instruction en entrée
-     *
-     * @param keyword L'instruction à convertir en caractère
-     * @return Le caractère associé à l'isntruction en entrée
-     */
-    public static char shortcutToString(Keywords keyword) throws IsNotACommandException {
-        if (isKeyword(keyword)){
-            return keyword.getShortcut();
-        }
-        else throw new IsNotACommandException();
-    }
-
-    public static boolean isKeyword(Keywords anyKeyword){
-        for (Keywords keywords : Keywords.values()){
-            if (keywords.equals(anyKeyword))
-                return true;
-        }
-        return false;
-    }
-
 
     public char getShortcut() { return  this.shortcut; }
     public String getColor() { return this.color; }

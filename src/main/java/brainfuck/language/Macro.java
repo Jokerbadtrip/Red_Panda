@@ -2,6 +2,7 @@ package brainfuck.language;
 
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.WrongMacroNameException;
+import brainfuck.language.exceptions.function.BadFunctionDefinition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,8 +16,8 @@ import java.util.regex.Pattern;
  * Cette classe gère les macros dans le langage BrainFuck
  *
  * Syntaxe d'une macro :
- *      \@NOM_MACRO (param)  code
- * ex: @MACRO() ++++
+ *      \@NOM_MACRO param  code
+ * ex: @MACRO ++++
  * @author jamatofu on 04/11/16.
  */
 public class Macro {
@@ -32,7 +33,7 @@ public class Macro {
      * Permet de globalement lire une macro et de la remplacer par son code
      * @return le programme avec les macro remplacées par le code
      */
-    public String readMacro() throws WrongMacroNameException {
+    public String readMacro() throws WrongMacroNameException, BadFunctionDefinition {
         findPrototype();
         changeCodeIntoMacro();
         remplacerMacroParCode();
@@ -44,7 +45,7 @@ public class Macro {
      * Permet de détecter les lignes qui correspondent à une macro
      * Les renvoie ensuite au découpeur de macro
      */
-    public void findPrototype() throws WrongMacroNameException {
+    public void findPrototype() throws WrongMacroNameException, BadFunctionDefinition {
         List<String> prototypes = new ArrayList<>();
         while(programme.charAt(0) == '@') {
             prototypes.add(programme.substring(0, programme.indexOf('\n')));
@@ -58,15 +59,21 @@ public class Macro {
      * Découpe dans chaque prototype son nom et son code puis l'insère dans le Map macro
      * @param macrosADecouper les lignes contenants les macros
      */
-    public void sliceMacro(List<String> macrosADecouper) throws WrongMacroNameException {
-        String caractereLimitant = " ";
+    public void sliceMacro(List<String> macrosADecouper) throws WrongMacroNameException, BadFunctionDefinition {
+        String[] cutLine;
 
         for (String mac : macrosADecouper) {
             mac = mac.replaceFirst("@", "");
+            cutLine = mac.split(" ");
 
-            String name = mac.substring(0, mac.indexOf(caractereLimitant));
-            String code = mac.substring(mac.indexOf(caractereLimitant) + 1, mac.length());
+            if(cutLine.length != 2)
+                throw new BadFunctionDefinition(mac);
+
+            String name = cutLine[0];
+            String code = cutLine[1];
             code = code.replaceAll("\\s+", "");
+
+
 
             if(!isValidName(name))
                 throw new WrongMacroNameException(name);
@@ -101,26 +108,23 @@ public class Macro {
         }
     }
 
+    /**
+     * Regarde si la macro a un paramètre
+     * @param line ligne à regarder
+     * @return vrai si paramètre présent
+     */
     private boolean isParametrised(String line) {
         String regex = "^(.*) (\\d)+( #(.*))?";
         return Pattern.matches(regex, line);
-    }
-    /**
-     * Récupère la valeur du paramètre d'une macro (ex : A(5) => 5)
-     * @param macro la macro appelée avec son paramètre
-     * @return la valeur du paramètre
-     */
-    public String retournerParametre(String macro) {
-        return macro.substring(macro.indexOf(' ') + 1, macro.length());
     }
 
     /**
      * Lis chacunes des lignes du programme et en récupère le code
      * @return le texte modifié
      */
-    public void remplacerMacroParCode() {
+    public void remplacerMacroParCode() throws BadFunctionDefinition {
         programme = programme.trim();
-        String[] linesProgram = programme.split(System.getProperty("line.separator"));
+        String[] linesProgram = programme.split(System.lineSeparator());
 
         for(String line : linesProgram) {
             if(line.isEmpty())
@@ -128,7 +132,7 @@ public class Macro {
 
             if(!getCodeFromOneLine(line))
                 stringBuilder.append(line);
-            stringBuilder.append('\n');
+            stringBuilder.append(System.lineSeparator());
         }
         programme = stringBuilder.toString();
     }
@@ -137,7 +141,7 @@ public class Macro {
      * Lis une macro sur une seule ligne et en récupère le code
      * @param line ligne programme
      */
-    private boolean getCodeFromOneLine(String line) {
+    private boolean getCodeFromOneLine(String line) throws BadFunctionDefinition {
         String regex;
         Pattern p;
         Matcher m;
@@ -176,6 +180,6 @@ public class Macro {
      * @param ligneASupprimer la ligne à supprimer du texte
      */
     private String supprimerLigneDeTexte(String ligneASupprimer, String texte) {
-        return texte.replace(ligneASupprimer + "\n", "");
+        return texte.replace(ligneASupprimer + System.lineSeparator(), "");
     }
 }
