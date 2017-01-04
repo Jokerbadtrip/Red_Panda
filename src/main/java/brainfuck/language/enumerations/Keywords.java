@@ -2,7 +2,6 @@ package brainfuck.language.enumerations;
 
 
 import brainfuck.language.exceptions.IsNotAValidColorException;
-import brainfuck.language.exceptions.KeywordsConversionException;
 
 
 /**
@@ -14,8 +13,8 @@ public enum Keywords {
 
     INCR('+', "#ffffff", "memory[pointer]+="),
     DECR('-', "#4b0082", "memory[pointer]-="),
-    LEFT('<', "#9400d3", "pointer--;\n"),
-    RIGHT('>', "#0000ff", "pointer++;\n"),
+    LEFT('<', "#9400d3", "pointer-=;\n"),
+    RIGHT('>', "#0000ff", "pointer+=;\n"),
     OUT('.', "#00ff00", "out(String filename);\n"),
     IN(',', "#ffff00", "in(String filename);\n"),
     JUMP('[', "#ff7f00", ""),
@@ -114,8 +113,12 @@ public enum Keywords {
         return 0;
     }
 
+    public static boolean isSimpleKeyword(Keywords keyword){
+        if (keyword.equals(INCR) || keyword.equals(DECR) || keyword.equals(RIGHT) || keyword.equals(LEFT)) return true;
+        else return false;
+    }
+
     public char getShortcut() { return  this.shortcut; }
-
     public String getColor() { return this.color; }
-
+    public String getCorrespondingCode() { return correspondingCode; }
 }
