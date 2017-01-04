@@ -12,7 +12,8 @@ public enum Flags {
     REWRITE("--rewrite", false),
     CHECK("--check", false),
     TRANSLATE("--translate", false),
-    TRACE("--trace", false);
+    TRACE("--trace", false),
+    TRANSLATE_IN_JAVA("--java", false);
 
     private String flag;
     private boolean needAFilePath;

@@ -5,5 +5,5 @@ package brainfuck.language.function;
  */
 public enum PrimitiveFunction {
     VOID,
-    FUNCTION;
+    FUNCTION
 }
