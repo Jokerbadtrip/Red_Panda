@@ -14,10 +14,12 @@ public class Function {
     private List<Keywords> code;
     private boolean procedure;
     private List<Keywords> parametre = null;
+    private String functionName;
 
-    public Function(List<Keywords> code, boolean procedure) {
+    public Function(List<Keywords> code, boolean procedure, String functionName) {
         this.code = code;
         this.procedure = procedure;
+        this.functionName = functionName;
     }
 
     public List<Keywords> getCode() {
@@ -40,4 +42,6 @@ public class Function {
     public List<Keywords> getParametre() {
         return  parametre;
     }
+
+    public String getFunctionName() { return functionName; }
 }

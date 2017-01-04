@@ -74,7 +74,7 @@ public class ParseFunction  {
             throw new WrongFunctionNameException(piecesOfLine[1]);
         LecteurTextuel lecteurTextuel = new LecteurTextuel(piecesOfLine[2]);
 
-        Function function = new Function(lecteurTextuel.creeTableauCommande(), isProcedure);
+        Function function = new Function(lecteurTextuel.creeTableauCommande(), isProcedure, piecesOfLine[1]);
         functionMap.put(piecesOfLine[1], function);
     }
 
