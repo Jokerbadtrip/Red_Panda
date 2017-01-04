@@ -2,6 +2,7 @@ package brainfuck.language.function;
 
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.WrongFunctionNameException;
+import brainfuck.language.exceptions.function.BadFunctionDefinition;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +28,7 @@ public class ParseFunctionTest {
                 "void bye ..");
     }
 
-    @Test
+    @Test(expected = BadFunctionDefinition.class)
     public void findPrototype() throws Exception {
         Map<String, Function> catalogue;
         assertEquals("++\nINCR\n<<>>\n", this.parser.findPrototype());

@@ -15,8 +15,8 @@ public class Memory {
 	public static final int MEMORY_SIZE = 30000;
 	public static final short MEMORY_FOR_FUNCTION = 255;
 	private short[] mArray;
-	private short pointer;
-	private short maxArray;
+	private int pointer;
+	private int maxArray;
 
 	/**
      * Le constructeur de la classe mémoire
@@ -75,16 +75,6 @@ public class Memory {
 	}
 
 	/**
-	 *  Affiche dans la console l'état de la mémoire actuelle
-	 */
-	public void printMemory(){
-		for (int i =  0; i <= maxArray; i++){
-			System.out.println("C" + i + ": " + mArray[i]);
-		}
-		System.out.println();
-	}
-
-	/**
 	 * Renvoie l'état de la mémoire actuelle
 	 * @return l'état de la mémoire actuelle
 	 */
@@ -133,8 +123,8 @@ public class Memory {
 		return  mArray[pointer];
 	}
 
-	public void setValue(short value) {
-		mArray[pointer] = value;
+	public void setPointer(int value) {
+		pointer = value;
 	}
 
 	public void resetMemory() {
