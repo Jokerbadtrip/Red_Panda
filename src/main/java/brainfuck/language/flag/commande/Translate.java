@@ -28,6 +28,7 @@ public class Translate {
     public Translate(String filePath) {
         this.filePath = filePath.replace(".bf", ".bmp");
     }
+
     /**
      * Dessine une image contenant une code couleur des commandes
      * @param commandes la liste des commandes à traduire
@@ -59,7 +60,7 @@ public class Translate {
      * @param x la coordonnée en abscisse du carré à remplir
      * @param y la coordonnée en ordonnée du carré à remplir
      */
-    private void makeImage(Keywords keywords, BufferedImage img, int x, int y) throws IsNotACommandException {
+    public void makeImage(Keywords keywords, BufferedImage img, int x, int y) throws IsNotACommandException {
         for (int i = x; i < x + WIDTH; i++){
             for (int j = y; j < y + HEIGHT; j++){
                 if (i < tailleImage && j < tailleImage)
@@ -76,5 +77,13 @@ public class Translate {
         File outfile = new File(filePath);
 
         ImageIO.write(img, "bmp",outfile);
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public int getTailleImage() {
+        return tailleImage;
     }
 }

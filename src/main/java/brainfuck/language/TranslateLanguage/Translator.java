@@ -1,13 +1,11 @@
 package brainfuck.language.TranslateLanguage;
 
-import brainfuck.language.Main;
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.function.Function;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -77,9 +75,6 @@ public class Translator {
             }
         }
     }
-
-
-    public
 
 
 

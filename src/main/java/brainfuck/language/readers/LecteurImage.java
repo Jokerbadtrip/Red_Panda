@@ -62,7 +62,7 @@ public class LecteurImage {
      * @param y coordonnée y
      * @return vrai si unicolore
      */
-    private boolean isAnUniColorSquare(int x, int y, BufferedImage image) {
+    public boolean isAnUniColorSquare(int x, int y, BufferedImage image) {
         int color = image.getRGB(x, y);
         for(int i = x; i < x + WIDTH_IMAGE; i++) {
             for(int j = y; j < y + HEIGHT_IMAGE; j++) {

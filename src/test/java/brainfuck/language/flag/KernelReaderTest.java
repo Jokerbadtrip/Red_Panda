@@ -1,12 +1,9 @@
 package brainfuck.language.flag;
 
 import brainfuck.language.exceptions.FilePathNotFoundException;
-import brainfuck.language.flag.Flags;
 import brainfuck.language.exceptions.IncompatibleFlagsException;
-import brainfuck.language.flag.KernelReader;
 import org.junit.Test;
 
-import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -43,7 +40,7 @@ public class KernelReaderTest {
         assertEquals(result, this.kernelReader.getFlagMap());
     }
 
-    @Test(expected = InvalidPathException.class)
+    @Test(expected = FilePathNotFoundException.class)
     public void identifyFilePathForSpecificFlag() throws FilePathNotFoundException {
         List<String> flagList = new ArrayList<>();
         flagList.add("-p");
