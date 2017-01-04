@@ -107,15 +107,6 @@ public class Memory {
 	public int getPointer(){return pointer;}
 
 	/**
-	 * Retourne la mémoire entiere
-	 * @return La mémoire entiere
-	 */
-
-	public short[] getmArray(){
-		return mArray;
-	}
-
-	/**
 	 * Retourne la valeur de la case mémoire actuellement pointée
 	 * @return La valeur de la case mémoire actuellement pointée
 	 */
