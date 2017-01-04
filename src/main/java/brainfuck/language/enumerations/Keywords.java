@@ -2,6 +2,7 @@ package brainfuck.language.enumerations;
 
 
 import brainfuck.language.exceptions.IsNotAValidColorException;
+import brainfuck.language.exceptions.KeywordsConversionException;
 
 
 /**
@@ -114,8 +115,10 @@ public enum Keywords {
     }
 
     public static boolean isSimpleKeyword(Keywords keyword){
-        if (keyword.equals(INCR) || keyword.equals(DECR) || keyword.equals(RIGHT) || keyword.equals(LEFT)) return true;
-        else return false;
+        return (keyword.equals(INCR) ||
+                keyword.equals(DECR) ||
+                keyword.equals(RIGHT) ||
+                keyword.equals(LEFT));
     }
 
     public char getShortcut() { return  this.shortcut; }
