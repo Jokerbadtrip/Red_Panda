@@ -1,5 +1,6 @@
 package brainfuck.language;
 
+import brainfuck.language.exceptions.OutOfMemoryException;
 import brainfuck.language.exceptions.ValueOutOfBoundException;
 import org.junit.Test;
 
@@ -18,9 +19,6 @@ public class MemoryTest {
         memory.incr();
         assertEquals(1,memory.getCellValue());
 
-        memory.incr();
-        assertNotEquals(3, memory.getCellValue());
-
         memory.updateMemory((short) 255);
         memory.incr();
     }
@@ -28,46 +26,71 @@ public class MemoryTest {
     @Test(expected = ValueOutOfBoundException.class)
     public void decr() throws Exception {
         memory.updateMemory((short) 4);
+        assertEquals(4,memory.getCellValue());
 
         memory.decr();
         assertEquals(3,memory.getCellValue());
 
         memory.decr();
         memory.decr();
-        assertNotEquals(0,memory.getCellValue());
-
         memory.decr();
+
         memory.decr();
     }
 
-    @Test
+    @Test (expected = OutOfMemoryException.class)
     public void right() throws Exception {
+        assertEquals(0,memory.getPointer());
+        memory.right();
+        assertEquals(1,memory.getPointer());
 
+        memory.setPointer(29999);
+        memory.right();
     }
 
-    @Test
+    @Test (expected = OutOfMemoryException.class)
     public void left() throws Exception {
+        memory.setPointer(2);
+        assertEquals(2,memory.getPointer());
+        memory.left();
+        assertEquals(1,memory.getPointer());
 
+        memory.left();
+        memory.left();
     }
 
     @Test
-    public void printMemory() throws Exception {
+    public void writeStateOfMemory(){
+        memory.incr();
+        memory.right();
+        memory.right();
+        memory.incr();
 
+        assertEquals("C0: 1 C2: 1 ", memory.writeStateOfMemory());
+    }
+
+    @Test (expected = ValueOutOfBoundException.class)
+    public void updateMemory(){
+        memory.updateMemory((short) 255);
+        assertEquals(255, memory.getCellValue());
+
+        memory.right();
+        memory.incr();
+        memory.updateMemory((short) 0);
+        assertEquals(0,memory.getCellValue());
+
+        memory.updateMemory((short) 10000);
     }
 
     @Test
-    public void updateMemory() throws Exception {
+    public void resetMemory(){
+        memory.incr();
+        memory.right();
+        memory.incr();
+
+        assertEquals("C0: 1 C1: 1 ", memory.writeStateOfMemory());
+        memory.resetMemory();
+        assertEquals("", memory.writeStateOfMemory());
 
     }
-
-    @Test
-    public void getmArray() throws Exception {
-
-    }
-
-    @Test
-    public void getCellValue() throws Exception {
-
-    }
-
 }

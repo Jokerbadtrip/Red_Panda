@@ -17,7 +17,7 @@ public class FlagsTest {
 
     @Test
     public void showFlags() throws Exception {
-        String exceptedResult = "Available commands are : -p -i -o --rewrite --check --translate --trace ";
+        String exceptedResult = "Available commands are : -p -i -o --rewrite --check --translate --trace --java ";
         assertEquals(exceptedResult, Flags.showFlags());
     }
 

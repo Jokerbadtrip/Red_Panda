@@ -43,7 +43,7 @@ public class KernelReaderTest {
         assertEquals(result, this.kernelReader.getFlagMap());
     }
 
-    @Test(expected = InvalidPathException.class)
+    @Test(expected = FilePathNotFoundException.class)
     public void identifyFilePathForSpecificFlag() throws FilePathNotFoundException {
         List<String> flagList = new ArrayList<>();
         flagList.add("-p");

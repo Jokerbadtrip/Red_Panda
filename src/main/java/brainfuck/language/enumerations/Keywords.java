@@ -2,6 +2,7 @@ package brainfuck.language.enumerations;
 
 
 import brainfuck.language.exceptions.IsNotAValidColorException;
+import brainfuck.language.exceptions.KeywordsConversionException;
 
 
 /**
@@ -75,11 +76,14 @@ public enum Keywords {
      * @param shortcut Le caractère à interpreter
      * @return L'instruction associée au caractère entré
      */
-    public static Keywords shortcutToKeyword(char shortcut){
-        if (isShortcut(shortcut))
-            for (Keywords keywords : Keywords.values())
-                if (keywords.getShortcut() == shortcut)
-                    return keywords;
+    public static Keywords shortcutToKeyword(char shortcut) throws KeywordsConversionException{
+        if (!isShortcut(shortcut)){
+            throw new KeywordsConversionException();
+        }
+        for (Keywords keywords : Keywords.values())
+            if (keywords.getShortcut() == shortcut)
+                return keywords;
+
         return null;
     }
 
@@ -89,7 +93,9 @@ public enum Keywords {
      * @return L'instruction associée à la couleur entrée
      */
     public static Keywords colorToKeyword(String color) throws IsNotAValidColorException {
-        if (isColor(color))
+        if (!isColor(color)){
+            throw new KeywordsConversionException();
+        }
             for (Keywords keywords : Keywords.values())
                 if (keywords.getColor().equals(color))
                     return keywords;
@@ -109,7 +115,7 @@ public enum Keywords {
     }
 
     public char getShortcut() { return  this.shortcut; }
-    public String getColor() { return this.color; }
 
+    public String getColor() { return this.color; }
 
 }
