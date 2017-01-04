@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * Cette classe gère les macros dans le langage BrainFuck
  *
  * Syntaxe d'une macro :
- *      \@NOM_MACRO param  code
+ *      \@NOM_MACRO  code
  * ex: @MACRO ++++
  * @author jamatofu on 04/11/16.
  */
