@@ -88,9 +88,13 @@ public class KeywordInterpreter extends Interpreter {
         return memory.writeStateOfMemory();
     }
 
+    public int getCurrentPointer() { return memory.getPointer();}
+
     public short getCurrentValue() { return memory.getCellValue(); }
 
     public void setCurrentValue(short value) {
         memory.updateMemory(value);
     }
+
+    public Trace getTrace(){ return trace;}
 }
