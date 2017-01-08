@@ -2,15 +2,13 @@ package brainfuck.language.TranslateLanguage;
 
 
 import brainfuck.language.enumerations.Keywords;
-import brainfuck.language.function.Function;
+
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 
 /**
  * Classe qui fait la traduction de brainfuck à java
@@ -39,6 +37,9 @@ public class Translator {
 
     }
 
+    /**
+     * procédure qui écrit dans les fichiers initiallement pour avoir le code de base
+     */
     public void writeFilesInitially(){
         try{
             FileWriter main = new FileWriter(this.main);
@@ -56,60 +57,22 @@ public class Translator {
     }
 
 
-    public void addFunction(Map<Integer, Function> functionMap){
-
-        for (Map.Entry<Integer, Function> function : functionMap.entrySet()){ // Pour chaque fonction
-            if (function.getValue().isProcedure()){ // Si c'est une procédure
-                try{
-                    FileWriter brainfuck = new FileWriter(this.brainfuck); // On essai d'écrire
-                    if (function.getValue().hasParameter()){ // S'il y a des paramètres
-                        brainfuck.write("public void " + function.getValue().getFunctionName()+ "(int pointeur){\n"); // On écrit les paramètres ( ce sera toujours le pointeur )
-                        //Finalement on écrit le code correspondant aux instructions
-                        Map<Keywords, Integer> occurences = countNumberOfOccurencesOfKeywords(function.getValue().getCode());
-
-                    }
-                    else {
-                        brainfuck.write("public void "+ function.getValue().getFunctionName()+ "(){");
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            else {
-
+    public void writeLaunchMethod(short[] memory) throws IOException {
+        FileWriter brainfuck = new FileWriter(this.brainfuck);
+        brainfuck.write(BaseSyntax.LaunchMethod.code);
+        for (int i = 0; i<memory.length; i++){
+            if (memory[i] != 0){
+                brainfuck.write("memory["+i+"]="+memory[i]+";\n");
             }
         }
+        brainfuck.write(BaseSyntax.CloseFile.code);
+        brainfuck.flush();
+        brainfuck.close();
     }
 
 
 
-    public Map<Keywords, Integer> countNumberOfOccurencesOfKeywords(List<Keywords> keywords){
-        int count = 1;// Variable représentant le nombre d'occurences
-        Map<Keywords, Integer> occurrences = new HashMap<>(); // Nombre d'occurences et le keyword associé
-        for (Keywords keyword : keywords) { // pour chaque keyword
-            if (previousKeyword.equals(null)){ // si on commence
-                previousKeyword = keyword;
-            }
-            else if (previousKeyword.equals(keyword)){ // si ce sont les mêmes
-                count++; // on incrémente le nombre d'occurrences
-            }
-            else{ // s'ils sont différents
-                occurrences.put(previousKeyword, count);
-                previousKeyword = keyword;
-                count = 1;
-            }
-        }
-        return occurrences;
-    }
 
-    public void writeFunctionBody(Map<Keywords, Integer> occurences, FileWriter brainfuck) throws IOException {
-        for (Map.Entry<Keywords, Integer> entry : occurences.entrySet()){
-            if (Keywords.isSimpleKeyword(entry.getKey())) {
-                brainfuck.write(entry.getKey().getCorrespondingCode() + entry.getValue() + ";\n");
-            }
-        }
-    }
 
 
 
