@@ -1,42 +1,52 @@
 package brainfuck.language.function;
 
-
 import brainfuck.language.enumerations.Keywords;
+import brainfuck.language.exceptions.IsNotACommandException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
- * @author jamatofu on 04/01/17.
+ * Created by Enzo on 06/01/2017.
  */
 public class FunctionTest {
 
-    Function function;
+    Function func;
+
+    List<Keywords> keywords;
 
     @Before
-    public void setUp() throws Exception {
-        List<Keywords> keywordList = Arrays.asList(new Keywords[]{Keywords.IN, Keywords.OUT});
-        function = new Function(keywordList, true, "Fonction");
+    public void initialize() {
+        keywords = new ArrayList<Keywords>();
+        keywords.add(Keywords.INCR);
+        keywords.add(Keywords.INCR);
+        keywords.add(Keywords.RIGHT);
+        keywords.add(Keywords.INCR);
+
+        func = new Function(keywords,true,"This is a test");
     }
 
-    @Test
+    @Test (expected = IsNotACommandException.class)
     public void setParametre() throws Exception {
-        function.setParametre("++-");
-        List<Keywords> keywordsList = Arrays.asList(new Keywords[] {Keywords.INCR, Keywords.INCR, Keywords.DECR});
-        assertEquals(keywordsList, function.getParametre());
+        func.setParametre("++>+");
+        assertEquals(keywords, func.getParametre());
+
+        keywords.remove(Keywords.INCR);
+        assertNotEquals(keywords, func.getParametre());
+
+        func.setParametre("Not a command");
     }
 
     @Test
     public void hasParameter() throws Exception {
-        assertFalse(function.hasParameter());
-        function.setParametre("+");
-        assertTrue(function.hasParameter());
+        assertFalse(func.hasParameter());
+        func.setParametre("+++");
+        assertTrue(func.hasParameter());
+
     }
 
 }

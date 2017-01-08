@@ -63,4 +63,8 @@ public class Trace {
     public void setStepNb(int stepNb) {
         this.stepNb = stepNb;
     }
+
+    public File getNomFichier(){ return backLog;}
+
+    public FileWriter getFileWriter(){ return fw;}
 }
