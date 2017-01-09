@@ -8,19 +8,23 @@ package brainfuck.language.TranslateLanguage;
 public enum BaseSyntax {
 
     MainFile("public class Main{\n" +
-            "\t public static void main(String[] args) {\n" +
-            "\t\tBrainfuck brainfuck = new Brainfuck();\n" +
-            "\t\tbrainfuck.launch();\n" +
-            "\t}\n" +
+            "   public static void main(String[] args) {\n" +
+            "       Brainfuck brainfuck = new Brainfuck();\n" +
+            "       brainfuck.launch();\n" +
+            "   }\n" +
             "}"),
     BrainfuckFile("public class Brainfuck{\n" +
-            "\tshort[] memory;\n" +
-            "\tint pointer;\n" +
-            "\tpublic Brainfuck(){\n" +
-            "\t\tmemory = new short[30000];\n" +
-            "\t}\n" +
+            "   short[] memory;\n" +
+            "   public Brainfuck(){\n" +
+            "       memory = new short[30000];\n" +
+            "   }\n" +
             "\n"),
-    LaunchMethod("\tpublic void launch(){\n");
+
+
+    LaunchMethod("  public void launch(){\n"),
+    CloseFile(" }\n" +
+            "}");
+
 
 
     String code;

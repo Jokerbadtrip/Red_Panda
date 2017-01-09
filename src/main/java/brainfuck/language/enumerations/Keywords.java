@@ -12,24 +12,23 @@ import brainfuck.language.exceptions.KeywordsConversionException;
  */
 public enum Keywords {
 
-    INCR('+', "#ffffff", "memory[pointer]+="),
-    DECR('-', "#4b0082", "memory[pointer]-="),
-    LEFT('<', "#9400d3", "pointer-=;\n"),
-    RIGHT('>', "#0000ff", "pointer+=;\n"),
-    OUT('.', "#00ff00", "out(String filename);\n"),
-    IN(',', "#ffff00", "in(String filename);\n"),
-    JUMP('[', "#ff7f00", ""),
-    BACK(']', "#ff0000", "");
+    INCR('+', "#ffffff"),
+    DECR('-', "#4b0082"),
+    LEFT('<', "#9400d3"),
+    RIGHT('>', "#0000ff"),
+    OUT('.', "#00ff00"),
+    IN(',', "#ffff00"),
+    JUMP('[', "#ff7f00"),
+    BACK(']', "#ff0000");
 
 
     private char shortcut;
     private String color;
-    private String correspondingCode;
 
-    Keywords(char shortcut, String color, String correspondingCode) {
+
+    Keywords(char shortcut, String color) {
         this.shortcut = shortcut;
         this.color = color;
-        this.correspondingCode = correspondingCode;
     }
 
     /**
@@ -114,14 +113,9 @@ public enum Keywords {
         return 0;
     }
 
-    public static boolean isSimpleKeyword(Keywords keyword){
-        return (keyword.equals(INCR) ||
-                keyword.equals(DECR) ||
-                keyword.equals(RIGHT) ||
-                keyword.equals(LEFT));
-    }
+
 
     public char getShortcut() { return  this.shortcut; }
     public String getColor() { return this.color; }
-    public String getCorrespondingCode() { return correspondingCode; }
+
 }
