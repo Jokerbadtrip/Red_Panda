@@ -8,15 +8,7 @@ package brainfuck.language.exceptions;
 public class CheckFailedException extends Exception {
 
     public CheckFailedException() {
-        super();
+        super("Code Error 4 : Check your brackets");
     }
-
-    @Override
-    public String toString(){
-        return "Code Error 4 : Check your brackets";
-    }
-
-
-
 
 }

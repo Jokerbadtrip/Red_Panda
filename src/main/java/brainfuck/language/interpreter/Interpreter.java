@@ -67,7 +67,7 @@ public abstract class Interpreter {
     public void inMethod(String arg) throws WrongInputException, ValueOutOfBoundException {
         String entree;
 
-        if ("".equals(arg)) { // dans le cas où on n'a pas fait -i
+        if (arg == null) { // dans le cas où on n'a pas fait -i
             Scanner scanner = new Scanner(System.in);
             entree = scanner.nextLine();
 

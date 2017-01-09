@@ -141,20 +141,6 @@ public class InterpreterMaster {
     }
 
     /**
-     * Permet d'enregistrer la position de tous les crochets ouvrants présent dans le fichier
-     * actuelle, dans une liste.
-     *
-     * @param tableauCommande La liste de commande que l'on veut analyser
-     */
-
-    protected void recenseCrochet(List<Keywords> tableauCommande) {
-        for (Map.Entry<Integer, Keywords> entry : keywordsMap.entrySet()) {
-            if(Keywords.JUMP.equals(entry.getValue()))
-                placeCrochet.add(entry.getKey());
-        }
-    }
-
-    /**
      * Méthode jump
      */
     private void jump(List<Keywords> keywordsList) {

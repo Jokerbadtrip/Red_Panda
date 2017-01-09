@@ -27,12 +27,14 @@ public class FunctionInterpreter extends Interpreter{
      */
     public void identifyAndExecuteInstruction(Function function) throws WrongInputException {
         List<Keywords> keywordsList = function.getCode();
+
         if(function.hasParameter())
             keywordsList.addAll(0, function.getParametre());
+
         recenseCrochet(keywordsList);
 
-        for (Keywords keywords : keywordsList) {
-            switch (keywords) {
+        for (; cursor < keywordsList.size(); cursor++) {
+            switch (keywordsList.get(cursor)) {
                 case INCR:
                     incrMethod();
                     break;
@@ -67,12 +69,13 @@ public class FunctionInterpreter extends Interpreter{
 
     protected void jumpMethod(List<Keywords> keywordsList) {
         if (memory.getCellValue() == 0)
-            cursor += countInstru(keywordsList, cursor);
+            cursor += countInstru(keywordsList, cursor) - 1;
     }
 
     protected void backMethod(List<Keywords> keywordsList) {
-        if (memory.getCellValue() != 0)
-            cursor = placeCrochet.get(retournePlace(keywordsList, cursor));
+        if (memory.getCellValue() != 0) {
+            cursor = placeCrochet.get(retournePlace(keywordsList, cursor)) - 1;
+        }
     }
 
     /**
@@ -82,6 +85,7 @@ public class FunctionInterpreter extends Interpreter{
     public short getResult() {
         short value = memory.getCellValue();
         memory.resetMemory();
+        cursor = 0;
         return value;
     }
 

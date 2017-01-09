@@ -9,6 +9,7 @@ public class FilePathNotFoundException extends RuntimeException {
     String s;
 
     public FilePathNotFoundException(String message) {
+        super("Error Code 3 : You need to specify a file path after the flag " + message);
         this.s = message;
     }
 
@@ -20,9 +21,4 @@ public class FilePathNotFoundException extends RuntimeException {
 //    public String toString() {
 //        return "Error Code 3 : You need to specify a file path after the flag " + s;
 //    }
-
-    @Override
-    public String toString() {
-        return this.s;
-    }
 }

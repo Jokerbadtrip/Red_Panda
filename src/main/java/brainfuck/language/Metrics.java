@@ -15,7 +15,7 @@ public class Metrics {
     public static int DATA_READ;
 
     private Metrics() {
-        throw new IllegalAccessError("La classe Metrics est statique. Appeller le contructeur est impossible.");
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -33,9 +33,5 @@ public class Metrics {
 
     public static void execTime(long endTime) {
         EXEC_TIME = endTime - START_TIME;
-    }
-
-    public static void incrementProgSize() {
-        PROC_SIZE++;
     }
 }

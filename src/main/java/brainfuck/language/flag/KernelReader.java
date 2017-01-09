@@ -131,6 +131,11 @@ public class KernelReader {
         return filePathMap.get(flags);
     }
 
+    /**
+     * Dis si un flag est présent
+     * @param flags un flag à vérifier
+     * @return vrai si le flag est là
+     */
     public boolean getFlag(Flags flags) {
         return flagMap.get(flags);
     }

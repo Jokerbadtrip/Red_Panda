@@ -43,13 +43,10 @@ public class TranslateTest {
         translate.translateFromShortcutToImage(keywordsList);
         assertEquals(6, translate.getTailleImage());
 
-        for(int i = 0; i < 3; i++)
+        int white = new Color(Keywords.keywordToColor(Keywords.INCR)).getRGB();
+        for(int i = 0; i < 6; i++)
             for(int j = 0; j < 3; j++)
-                imgOut.setRGB(i, j, new Color(Keywords.keywordToColor(Keywords.INCR)).getRGB());
-
-        for(int i = 0; i < 3; i++)
-            for(int j = 0; j < 3; j++)
-                imgOut.setRGB(3+ i, j, new Color(Keywords.keywordToColor(Keywords.INCR)).getRGB());
+                imgOut.setRGB(i, j, white);
 
         File file = new File(temporaryFolder.getRoot().getAbsolutePath() + "/file.bmp");
         BufferedImage imgToTest = ImageIO.read(file);

@@ -2,8 +2,11 @@ package brainfuck.language.flag;
 
 import brainfuck.language.exceptions.FilePathNotFoundException;
 import brainfuck.language.exceptions.IncompatibleFlagsException;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -17,6 +20,9 @@ import static org.junit.Assert.*;
 
 public class KernelReaderTest {
     KernelReader kernelReader;
+
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
     public void identifyFlag() throws Exception {
@@ -70,25 +76,31 @@ public class KernelReaderTest {
 
     @Test
     public void goodFlag() {
-//        File resourcesDirectory = new File("src/test/resources");
-//        List<String> flagList = new ArrayList<>();
-//        flagList.add("-p");
-//        flagList.add(resourcesDirectory.getAbsolutePath());
-//        flagList.add("-i");
-//        flagList.add(resourcesDirectory.getAbsolutePath());
-//        flagList.add("-o");
-//        flagList.add(resourcesDirectory.getAbsolutePath());
-//
-//        this.kernelReader = new KernelReader(flagList);
-//        this.kernelReader.identifyFlag();
-//        this.kernelReader.identifyFilePathForSpecificFlag();
-//
-//        try {
-//            this.kernelReader.goodFlag();
-//            fail();
-//        } catch (Exception ex) {
-//            assertSame(FilePathNotFoundException.class, ex);
-//        }
+        File resourcesDirectory = new File(temporaryFolder.getRoot().getAbsolutePath() + "prog.bf");
+        resourcesDirectory.getParentFile().mkdirs();
+        try {
+            resourcesDirectory.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<String> flagList = new ArrayList<>();
+        flagList.add("-p");
+        flagList.add(resourcesDirectory.getAbsolutePath());
+        flagList.add("-i");
+        flagList.add(resourcesDirectory.getAbsolutePath());
+        flagList.add("-o");
+        flagList.add(resourcesDirectory.getAbsolutePath());
+
+        this.kernelReader = new KernelReader(flagList);
+        this.kernelReader.identifyFlag();
+        this.kernelReader.identifyFilePathForSpecificFlag();
+
+        try {
+            this.kernelReader.goodFlag();
+        } catch (Exception ex) {
+            assertSame(FilePathNotFoundException.class, ex);
+        }
     }
 
     @Test
@@ -114,6 +126,19 @@ public class KernelReaderTest {
         } catch (Exception ex) {
             assertSame(IncompatibleFlagsException.class, ex.getClass());
         }
+    }
+
+    @Test
+    public void getFlag() {
+        List<String> flagList = new ArrayList<>();
+        flagList.add("-p");
+        flagList.add("-i");
+        flagList.add("-o");
+        this.kernelReader = new KernelReader(flagList);
+        this.kernelReader.identifyFlag();
+        assertTrue(kernelReader.getFlag(Flags.FILE_TO_READ));
+        assertTrue(kernelReader.getFlag(Flags.IN));
+        assertTrue(kernelReader.getFlag(Flags.OUT));
     }
 
 }

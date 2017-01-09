@@ -2,14 +2,10 @@ package brainfuck.language.interpreter;
 
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.ValueOutOfBoundException;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.security.Key;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Enzo on 06/01/2017.

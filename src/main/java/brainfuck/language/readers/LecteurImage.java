@@ -1,7 +1,6 @@
 package brainfuck.language.readers;
 
 import brainfuck.language.enumerations.Keywords;
-import brainfuck.language.exceptions.IsNotAValidColorException;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -27,7 +26,7 @@ public class LecteurImage {
      * @return la liste des commandes
      * @throws IOException
      */
-    public List<Keywords> read(String filename) throws IsNotAValidColorException {
+    public List<Keywords> read(String filename) {
         List<Keywords> commandes = new ArrayList<>();
         File file = new File(filename);
         BufferedImage image;
@@ -44,13 +43,13 @@ public class LecteurImage {
 
                     if (Keywords.isColor(hexColor) && isAnUniColorSquare(y, x, image)){
                         Keywords keywordsToAdd = Keywords.colorToKeyword(hexColor);
+
                         if (keywordsToAdd != null)
                             commandes.add(keywordsToAdd);
                     }
                 }
             }
         } catch (IOException ex) {
-            System.out.println("The file can't be read.");
         }
 
         return commandes;

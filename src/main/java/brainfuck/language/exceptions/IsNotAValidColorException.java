@@ -12,12 +12,7 @@ public class IsNotAValidColorException extends RuntimeException {
     /**
      * Constructeur pour IsNotAValidColorException
      */
-    public IsNotAValidColorException() {}
-
-    /**
-     * Renvoie le texte correspondant à la description de l'erreur
-     * @return "One of the colors is not a valid color" est toujours renvoié
-     */
-    @Override
-    public String toString(){ return "Error Code -1 : One of the colors is not a valid color"; }
+    public IsNotAValidColorException() {
+        super("Error Code -1 : One of the colors is not a valid color");
+    }
 }

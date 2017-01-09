@@ -2,7 +2,6 @@ package brainfuck.language.readers;
 
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.IsNotACommandException;
-import brainfuck.language.exceptions.WrongMacroNameException;
 import brainfuck.language.function.Function;
 
 import java.io.FileNotFoundException;
@@ -21,7 +20,7 @@ public class ProgramReader extends LecteurTextuel{
 
     private int cursor = 0;
 
-    public ProgramReader(String program, Map<String, Function> functionMap) throws WrongMacroNameException {
+    public ProgramReader(String program, Map<String, Function> functionMap) {
         super(program);
         this.functionMap = functionMap;
         this.keywordsToInterpreter = new HashMap<>();
@@ -80,7 +79,7 @@ public class ProgramReader extends LecteurTextuel{
             }
             else if(Character.isWhitespace(character));
             else
-                throw new IsNotACommandException(character  );
+                throw new IsNotACommandException(character);
         }
         return keywordsList;
     }

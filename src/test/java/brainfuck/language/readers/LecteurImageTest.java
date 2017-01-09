@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
  * @author jamatofu on 04/01/17.
  */
 public class LecteurImageTest {
-    LecteurImage lecteurImage;
+    LecteurImage lecteurImage = new LecteurImage();
     BufferedImage testImg;
 
     @Rule
@@ -28,8 +28,6 @@ public class LecteurImageTest {
 
     @Before
     public void setUp() throws Exception {
-        lecteurImage = new LecteurImage();
-
         testImg = new BufferedImage(3,3, BufferedImage.TYPE_INT_RGB);
         for(int i = 0; i < 3; i++)
             for(int j = 0; j < 3; j++)

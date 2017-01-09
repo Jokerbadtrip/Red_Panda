@@ -20,6 +20,7 @@ public class Trace {
 
     public Trace(String nomFichier) {
         backLog = new File(nomFichier + ".log");
+
         try {
             fw = new FileWriter(backLog);
         } catch (IOException e) {
@@ -60,11 +61,5 @@ public class Trace {
         }
     }
 
-    public void setStepNb(int stepNb) {
-        this.stepNb = stepNb;
-    }
-
     public File getNomFichier(){ return backLog;}
-
-    public FileWriter getFileWriter(){ return fw;}
 }
