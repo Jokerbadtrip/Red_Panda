@@ -23,6 +23,12 @@ public class InterpreterMaster {
     private Map<Integer, Keywords> keywordsMap;
     private Map<Integer, Function> functionMap;
 
+    /**
+     * Constructeur
+     * @param needTrace paramètre pour activer la trace
+     * @param keywordsMap le dictionnaire des keywords avec leur numéro d'exécution
+     * @param functionMap le dictionnaire des fonctions/procédure avec leur numéro d'exécution
+     */
     public InterpreterMaster(boolean needTrace, Map<Integer, Keywords> keywordsMap, Map<Integer, Function> functionMap) {
         this.needTrace = needTrace;
         this.keywordsMap = keywordsMap;
@@ -48,6 +54,7 @@ public class InterpreterMaster {
      */
     public void interpreterProgram() throws WrongInputException {
         List<Keywords> keywordsList = new ArrayList<>(keywordsMap.values());
+
         while (cursorIsInInterval()) {
             if(keywordsMap.containsKey(cursor)) { // interprète un keyword
                 Keywords keywords = keywordsMap.get(cursor);
@@ -152,7 +159,8 @@ public class InterpreterMaster {
      * Méthode back
      */
     private void back(List<Keywords> keywordsList) {
-        if(keywordInterpreter.getCurrentValue() == 0)
+        if(keywordInterpreter.getCurrentValue() == 0) {
             cursor = placeCrochet.get(retournePlace(keywordsList));
+        }
     }
 }

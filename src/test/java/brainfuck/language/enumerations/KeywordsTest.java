@@ -3,9 +3,7 @@ package brainfuck.language.enumerations;
 import brainfuck.language.exceptions.KeywordsConversionException;
 import org.junit.Test;
 
-import java.security.Key;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Enzo on 04/01/2017.
@@ -48,11 +46,5 @@ public class KeywordsTest {
     @Test
     public void keywordToColor() throws Exception {
         assertEquals(Integer.decode("#ffffff").intValue(), Keywords.keywordToColor(Keywords.INCR));
-    }
-
-    @Test
-    public void isSimpleKeyword(){
-        assertEquals(true, Keywords.isSimpleKeyword(Keywords.INCR));
-        assertEquals(false, Keywords.isSimpleKeyword(Keywords.IN));
     }
 }
