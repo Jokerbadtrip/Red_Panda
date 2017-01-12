@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -40,6 +42,7 @@ public class InterpreterMasterTest {
         Map<Integer, Function> functionMap = new HashMap<>();
 
         keywordsMap.put(0, Keywords.INCR);
+        keywordsMap.put(0, Keywords.INCR);
         keywordsMap.put(1, Keywords.JUMP);
         keywordsMap.put(2, Keywords.DECR);
         keywordsMap.put(3, Keywords.BACK);
@@ -47,6 +50,7 @@ public class InterpreterMasterTest {
         interpreter = new InterpreterMaster(true, keywordsMap, functionMap);
         interpreter.initializeInterpreters(null, null, null);
         interpreter.interpreterProgram();
+        assertEquals(0, interpreter.getCurrentValue());
     }
 
     @Test
@@ -56,8 +60,16 @@ public class InterpreterMasterTest {
 
     @Test
     public void cursorIsInInterval() throws Exception {
+        Map<Integer, Keywords> keywordsMap = new HashMap<>();
+        Map<Integer, Function> functionMap = new HashMap<>();
+        keywordsMap.put(0, Keywords.INCR);
+
+        interpreter = new InterpreterMaster(true, keywordsMap, functionMap);
+        interpreter.initializeInterpreters(null, null, null);
+
         assertTrue(interpreter.cursorIsInInterval());
-//        assertFalse(interpreter.cursorIsInInterval());
+        interpreter.interpreterProgram();
+        assertFalse(interpreter.cursorIsInInterval());
     }
 
     @Test

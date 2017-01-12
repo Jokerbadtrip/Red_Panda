@@ -4,7 +4,7 @@
 
   <groupId>brainfuck.language</groupId>
   <artifactId>Brainfuck</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>brainfuck</version>
   <packaging>jar</packaging>
 
   <name>Brainfuck</name>

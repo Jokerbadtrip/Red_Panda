@@ -6,6 +6,7 @@ import brainfuck.language.exceptions.WrongInputException;
 import brainfuck.language.function.Function;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ public class InterpreterMaster {
 
     private Map<Integer, Keywords> keywordsMap;
     private Map<Integer, Function> functionMap;
+    private Map<Integer, Integer> linkedBracket;
 
     /**
      * Constructeur
@@ -33,6 +35,7 @@ public class InterpreterMaster {
         this.needTrace = needTrace;
         this.keywordsMap = keywordsMap;
         this.functionMap = functionMap;
+        this.linkedBracket = new HashMap<>();
     }
 
     /**
@@ -54,16 +57,17 @@ public class InterpreterMaster {
      */
     public void interpreterProgram() throws WrongInputException {
         List<Keywords> keywordsList = new ArrayList<>(keywordsMap.values());
+        this.setLinkedBracket();
 
         while (cursorIsInInterval()) {
             if(keywordsMap.containsKey(cursor)) { // interprète un keyword
                 Keywords keywords = keywordsMap.get(cursor);
                 switch (keywords) {
                     case JUMP:
-                        jump(keywordsList);
+                        jump();
                         break;
                     case BACK:
-                        back(keywordsList);
+                        back();
                         break;
                 }
 
@@ -104,63 +108,47 @@ public class InterpreterMaster {
     }
 
     /**
-     * Permet de connaitre rapidement la position du crochet ouvrant associé
-     * au crochet fermant actuel
-     *
-     * @param tableauCommande La liste de commande que l'on est en train d'interpreter
-     * @return La position dans la liste de commande du crochet ouvrantassocié au crochet fermant actuel
-     */
-
-    protected int retournePlace(List<Keywords> tableauCommande){
-        int placeCrochetActu = 0;
-        int j = 0;
-
-        while (j < cursor) {
-            if (tableauCommande.get(j) == Keywords.BACK)
-                placeCrochetActu++;
-            j++;
-        }
-        return placeCrochet.size() - placeCrochetActu - 1;
-    }
-
-    /**
-     * Permet de connaitre le nombre d'instruction qui sont compris entre le crochet ouvrant
-     * actuel et le crochet fermant associé
-     *
-     * @param tableauCommande La liste de commande que l'on est en train d'interpreter
-     * @return Le nombre d'instructions entre le crochet ouvrant actuel et le crochet fermant associé
-     */
-
-    protected int countInstru(List<Keywords> tableauCommande) {
-        int nbOuvrante = 1;
-        int it = cursor + 1;
-
-        while (nbOuvrante != 0) {
-            if (tableauCommande.get(it) == Keywords.JUMP) {
-                nbOuvrante++;
-            }
-            if (tableauCommande.get(it) == Keywords.BACK) {
-                nbOuvrante--;
-            }
-            it++;
-        }
-        return it - cursor;
-    }
-
-    /**
      * Méthode jump
      */
-    private void jump(List<Keywords> keywordsList) {
+    private void jump() {
         if(keywordInterpreter.getCurrentValue() == 0)
-            cursor += countInstru(keywordsList);
+            cursor = linkedBracket.get(cursor);
     }
 
     /**
      * Méthode back
      */
-    private void back(List<Keywords> keywordsList) {
-        if(keywordInterpreter.getCurrentValue() == 0) {
-            cursor = placeCrochet.get(retournePlace(keywordsList));
+    private void back() {
+        if(keywordInterpreter.getCurrentValue() != 0) {
+            cursor = linkedBracket.get(cursor);
         }
+    }
+
+    /**
+     * Permet de lire un crochet ouvrant à un fermé et vise versa
+     */
+    private void setLinkedBracket() {
+        List<Integer> posCrochetOuvrant = new ArrayList<>();
+        int i = 0;
+
+        for(Map.Entry<Integer, Keywords> keywordsEntry: keywordsMap.entrySet()) {
+            if(Keywords.JUMP.equals(keywordsEntry.getValue())) {
+                posCrochetOuvrant.add(keywordsEntry.getKey());
+                i++;
+            }
+            else if(Keywords.BACK.equals(keywordsEntry.getValue())) {
+                linkedBracket.put(posCrochetOuvrant.get(i - 1), keywordsEntry.getKey());
+                linkedBracket.put(keywordsEntry.getKey(), posCrochetOuvrant.get(i - 1));
+                i--;
+            }
+        }
+    }
+
+    /**
+     * Permet de récupérer la valeur vers laquelle pointe le pointeur dans la mémoire
+     * @return la valeur de la mémoire pointée
+     */
+    public short getCurrentValue() {
+        return keywordInterpreter.getCurrentValue();
     }
 }

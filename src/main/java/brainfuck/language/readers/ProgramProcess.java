@@ -49,7 +49,7 @@ public class ProgramProcess {
      */
     public String removeCommentary() {
         String regex = "#(.*?)\\n";
-        return program.replaceAll(regex, "");
+        return program.replaceAll(regex, "\n");
     }
 
     public Map<String, Function> getFunctionMap() {

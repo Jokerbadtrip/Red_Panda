@@ -16,8 +16,7 @@ public class ProgramProcessTest {
         process = new ProgramProcess("@BON +++\n" +
                 "void fac --\n" +
                 "\n" +
-                "BON\n" +
-                "#Bien\n" +
+                "BON #Bien\n" +
                 "fac\n");
     }
 
@@ -32,7 +31,7 @@ public class ProgramProcessTest {
         assertEquals("@BON +++\n" +
                 "void fac --\n" +
                 "\n" +
-                "BON\n" +
+                "BON \n" +
                 "fac\n", process.removeCommentary());
     }
 
