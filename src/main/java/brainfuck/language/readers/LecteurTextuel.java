@@ -3,7 +3,6 @@ package brainfuck.language.readers;
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.IsNotACommandException;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class LecteurTextuel {
      * Crée une liste de commande dans le programme à interpreter
      * @return la liste de commande
      */
-    public List<Keywords> creeTableauCommande() throws IsNotACommandException, FileNotFoundException {
+    public List<Keywords> creeTableauCommande() throws IsNotACommandException {
         program.trim();
         this.keywordsList = new ArrayList<>();
 

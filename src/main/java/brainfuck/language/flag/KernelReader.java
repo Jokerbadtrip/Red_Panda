@@ -28,15 +28,15 @@ public class KernelReader {
         this.filePathMap = new EnumMap(Flags.class);
         this.flagList = flagList;
 
-        for(Flags flags : Flags.values()) {
+        for(Flags flags : Flags.values()) { // remplie flagMap avec tous les flags existants
             this.flagMap.put(flags, false);
-            if(flags.isNeedAFilePath())
+            if(flags.isNeedAFilePath()) // dans le cas le flag a besoin d'un chemin d'accès
                 this.filePathMap.put(flags, null);
         }
     }
 
     /**
-     * Permet d'identifier les flags dans une liste
+     * Permet d'identifier les flags dans une liste. Si un flag est reconnu, on le met sur vrai dans le flagMap
      */
     public void identifyFlag() {
         for(String flag : flagList) {
@@ -59,7 +59,10 @@ public class KernelReader {
             if(flag.equals(Flags.FILE_TO_READ.getFlag()) || flag.equals(Flags.IN.getFlag()) || flag.equals(Flags.OUT.getFlag())) {
                 try {
                     path = flagList.get(i + 1);
-                }catch(IndexOutOfBoundsException e){throw new FilePathNotFoundException(flagList.get(i));}
+                }catch(IndexOutOfBoundsException e){
+                    throw new FilePathNotFoundException(flagList.get(i));
+                }
+
                 if(isValidPath(path))
                     this.filePathMap.put(Flags.fromFlagToEnum(flag), path);
                 else {
@@ -75,15 +78,16 @@ public class KernelReader {
      */
     public void verifyIfAllFlagsAreValid() throws IncompatibleFlagsException {
         List<String> list = flagList;
-        for(Flags flags : Flags.values()) {
+        for(Flags flags : Flags.values()) { // si un flag dans la liste des flags n'existe pas, il restera dans la liste
             if(list.contains(flags.getFlag())) {
                 list.remove(flags.getFlag());
             }
         }
 
+        // list contient uniquement les potentiels chemins d'accès
         ListIterator<String> listIt = list.listIterator();
 
-        while (listIt.hasNext()) {
+        while (listIt.hasNext()) { // vérifie que les chemins d'accès sont valides
             if(isValidPath(listIt.next()))
                 listIt.remove();
         }
@@ -103,6 +107,7 @@ public class KernelReader {
         }
 
         for(Flags flags : Flags.values()) {
+            // Si un flag avec chemin d'accès on vérifie que ce dernier est correct
             if(flagMap.get(flags) && filePathMap.containsKey(flags) && filePathMap.get(flags).equals(null))
                 throw new FilePathNotFoundException("Filepath for " + flags.getFlag() + " flag not found.");
         }

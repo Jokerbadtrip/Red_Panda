@@ -9,9 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 
 /**
@@ -22,45 +20,70 @@ import java.util.Scanner;
  */
 
 public abstract class Interpreter {
-    protected Memory memory = new Memory(false);
+    protected Memory memory;
     protected List<Integer> placeCrochet = new ArrayList<>();
     protected int cursor = 0;
+    protected Map<Integer, Integer> linkedBracket;
 
     protected String infilepath;
     protected String outfilepath;
 
 
     public Interpreter() {
-        this(null, null);
+        this(null, null, false);
     }
 
     /**
      * Constructeur d'un interpréteur
      * @param infilepath chemin d'accès pour la commande -i
      * @param outfilepath chemin d'accès pour la commande -o
+     * @param memory définit le type de mémoire
      */
-    public Interpreter(String infilepath, String outfilepath) {
+    public Interpreter(String infilepath, String outfilepath, boolean memory) {
         this.infilepath = infilepath;
         this.outfilepath = outfilepath;
+        this.memory = new Memory(memory);
+        this.linkedBracket = new HashMap<>();
     }
-    
-    /**
-     * Permet d'enregistrer la position de tous les crochets ouvrants présent dans le fichier
-     * actuelle, dans une liste.
-     *
-     * @param tableauCommande La liste de commande que l'on veut analyser
-     */
 
-    protected void recenseCrochet(List<Keywords> tableauCommande) {
-        for (int i =0; i < tableauCommande.size();i++)
-        {
-            if (tableauCommande.get(i).equals(Keywords.JUMP))
-                placeCrochet.add(i);
+    /**
+     * Méthode jump
+     */
+    protected void jump() {
+        if(memory.getCellValue() == 0)
+            cursor = linkedBracket.get(cursor);
+    }
+
+    /**
+     * Méthode back
+     */
+    protected void back() {
+        if(memory.getCellValue() != 0) {
+            cursor = linkedBracket.get(cursor);
         }
     }
 
     /**
-     *
+     * Permet d'associer un crochet ouvrant à un crochet fermée et vise versa
+     */
+    protected void setLinkedBracket(List<Keywords> keywordsList) {
+        List<Integer> posCrochetOuvrant = new ArrayList<>();
+        int i = 0;
+
+        for(int j = 0; j < keywordsList.size(); j++) {
+            if(Keywords.JUMP.equals(keywordsList.get(j))) {
+                posCrochetOuvrant.add(j);
+                i++;
+            }
+            else if(Keywords.BACK.equals(keywordsList.get(j))) {
+                linkedBracket.put(posCrochetOuvrant.get(i - 1), j);
+                linkedBracket.put(j, posCrochetOuvrant.get(i - 1));
+                i--;
+            }
+        }
+    }
+
+    /**
      * Gère la commande IN. On gère le case ou nous rentrons "-i" et le cas
      * par défaut (console)
      */

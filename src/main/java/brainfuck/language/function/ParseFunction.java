@@ -14,6 +14,7 @@ import java.util.Map;
  * Permet de chercher les prototypes des fonctions/procédure dans le programme
  * Les stocke dans un catalogue
  * Renvoie un programme sans ces prototypes
+ * Un prototype peut se trouver n'importe où dans le programme
  * @author jamatofu on 30/12/16.
  */
 public class ParseFunction  {
@@ -34,20 +35,20 @@ public class ParseFunction  {
      */
     public String findPrototype() throws WrongMacroNameException, FileNotFoundException, WrongFunctionNameException, BadFunctionDefinition {
         String[] lineOfProgram = program.split(System.lineSeparator());
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder(); // va récolter le programme sans prototype
 
-        for(String line : lineOfProgram) {
+        for(String line : lineOfProgram) { // explore le programme ligne par ligne
             line = line.trim();
-            if(line.isEmpty())
+            if(line.isEmpty()) // si c'est une ligne vide, on passe à la suivante
                 continue;
 
-            if(line.startsWith(PrimitiveFunction.VOID.name().toLowerCase())) {
+            if(line.startsWith(PrimitiveFunction.VOID.name().toLowerCase())) { // dans le cas d'une procédure
                 addProcedure(line, true);
             }
-            else if(line.startsWith(PrimitiveFunction.FUNCTION.name().toLowerCase())) {
+            else if(line.startsWith(PrimitiveFunction.FUNCTION.name().toLowerCase())) { // dans le cas d'une fonction
                 addProcedure(line, false);
             }
-            else {
+            else { // la ligne est composé de keyword/instruction
                 stringBuilder.append(line);
                 stringBuilder.append('\n');
             }
@@ -57,7 +58,7 @@ public class ParseFunction  {
     }
 
     /**
-     * Permet de rajouter une fonction dans le catalogue
+     * Permet de rajouter une fonction dans le catalogue de fonction
      * @param line ligne contenant la function
      * @param isProcedure permet de dire si c'est une procédure ou une fonction
      * @throws FileNotFoundException
@@ -67,11 +68,12 @@ public class ParseFunction  {
     public void addProcedure(String line, boolean isProcedure) throws FileNotFoundException, WrongFunctionNameException, BadFunctionDefinition {
         String[] piecesOfLine = line.split(" ");
 
-
-        if(piecesOfLine.length != 3)
+        if(piecesOfLine.length != 3) // ne peut pas contenir plus ou moins de 3 morceaux
             throw new BadFunctionDefinition(line);
+
         if(!isValidName(piecesOfLine[1]))
             throw new WrongFunctionNameException(piecesOfLine[1]);
+
         LecteurTextuel lecteurTextuel = new LecteurTextuel(piecesOfLine[2]);
 
         Function function = new Function(lecteurTextuel.creeTableauCommande(), isProcedure, piecesOfLine[1]);
@@ -79,7 +81,7 @@ public class ParseFunction  {
     }
 
     /**
-     * Vérifie que le nom de la fonction est valide. Pas un mot déjà existant ni un mot composé exclusivment de chiffre
+     * Vérifie que le nom de la fonction est valide. Pas un mot déjà existant(nom de keyword, shortcut) ni un mot composé exclusivment de chiffre
      * @param name nom de la fonction
      * @return vrai si valide
      */

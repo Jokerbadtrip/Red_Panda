@@ -30,17 +30,26 @@ public class Function {
         return procedure;
     }
 
-    public void setParametre(String parametre) throws FileNotFoundException {
+    /**
+     * Accesseur de l'attribut paramètre. Transforme le paramètre en liste de keyword
+     * @param parametre morceau de code en keyword/instruction
+     * @throws FileNotFoundException
+     */
+    public void setParametre(String parametre) {
         LecteurTextuel lecteurTextuel = new LecteurTextuel(parametre);
         this.parametre = lecteurTextuel.creeTableauCommande();
     }
 
+    /**
+     * Indique si l'objet a un paramètre
+     * @return vrai si possède un paramètre
+     */
     public boolean hasParameter() {
         return parametre != null;
     }
 
     public List<Keywords> getParametre() {
-        return  parametre;
+        return parametre;
     }
 
     public String getFunctionName() { return functionName; }

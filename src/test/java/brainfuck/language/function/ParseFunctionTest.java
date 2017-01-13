@@ -21,6 +21,7 @@ public class ParseFunctionTest {
         this.parser = new ParseFunction("void salut ++\n" +
                 "function oui --\n" +
                 "++\n" +
+                "\n" +
                 "INCR\n" +
                 "<<>>\n" +
                 "function non >>\n" +

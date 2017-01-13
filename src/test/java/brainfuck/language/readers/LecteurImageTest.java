@@ -39,7 +39,7 @@ public class LecteurImageTest {
 
     @Test
     public void read() throws Exception {
-        assertEquals(new ArrayList<Keywords>(), lecteurImage.read("aa"));
+        assertEquals(new ArrayList<Keywords>(), lecteurImage.read("img.bmp"));
         List<Keywords> list = Arrays.asList(new Keywords[]{Keywords.INCR});
 
         assertEquals(list, lecteurImage.read(temporaryFolder.getRoot().getAbsolutePath() + "/img.bmp"));

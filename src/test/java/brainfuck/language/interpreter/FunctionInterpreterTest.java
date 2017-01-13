@@ -25,8 +25,20 @@ public class FunctionInterpreterTest {
     @Before
     public void setUp() throws Exception {
         interpreter = new FunctionInterpreter(null, null);
+    }
 
+    @Test
+    public void executionParametre() {
+        List<Keywords> keywordsList = new ArrayList<>(Arrays.asList(Keywords.INCR));
+        function = new Function(keywordsList, false, "Clem");
+        function.setParametre("+++");
 
+        try {
+            interpreter.identifyAndExecuteInstruction(function);
+        } catch (WrongInputException e) {
+            System.out.println("Erreur dans FunctionInterpreterTest");
+        }
+        assertEquals(4, interpreter.getResult());
 
     }
 

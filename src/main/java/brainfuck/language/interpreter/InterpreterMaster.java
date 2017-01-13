@@ -125,7 +125,7 @@ public class InterpreterMaster {
     }
 
     /**
-     * Permet de lire un crochet ouvrant à un fermé et vise versa
+     * Permet d'associer un crochet ouvrant à un crochet
      */
     private void setLinkedBracket() {
         List<Integer> posCrochetOuvrant = new ArrayList<>();

@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
+ * Gère la trace dans un programme
+ * Ecris dans un fichier .log des informations à propos du programme
  * Created by Enzo on 07/12/2016.
  */
 public class Trace {
@@ -14,7 +16,6 @@ public class Trace {
 
     /**
      * Constructeur de la classe TRACE
-     *
      * @param nomFichier Le nom du fichier dans lequel nous voulons ecrire les logs
      */
 
@@ -31,7 +32,6 @@ public class Trace {
     /**
      * Permet d'écrire dans le fichier .log correspondant au fichier d'entrée, si l'option a été écrite
      * dans la console, différentes données sur l'opération actuelle
-     *
      * @param mPointer La position du pointeur dans la mémoire
      * @param snapShot La snapshot de la mémoire actuelle
      */

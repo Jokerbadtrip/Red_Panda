@@ -11,7 +11,7 @@ import java.util.*;
 public class Check {
     private Deque<Keywords> stack;
     private static final Map<Keywords, Keywords> brackets = new EnumMap<>(Keywords.class);
-    static {
+    static { // permet l'ajout de nouveau élément parenthèsant
         brackets.put(Keywords.JUMP, Keywords.BACK);
     }
 

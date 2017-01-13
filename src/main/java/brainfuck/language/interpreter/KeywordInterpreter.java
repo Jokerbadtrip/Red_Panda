@@ -1,6 +1,5 @@
 package brainfuck.language.interpreter;
 
-import brainfuck.language.Memory;
 import brainfuck.language.Metrics;
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.WrongInputException;
@@ -12,9 +11,13 @@ import brainfuck.language.exceptions.WrongInputException;
 public class KeywordInterpreter extends Interpreter {
     private Trace trace = null;
 
+    /**
+     * Constructeur d'un interpréteur
+     * @param infilepath chemin d'accès pour la commande -i
+     * @param outfilepath chemin d'accès pour la commande -o
+     */
     public KeywordInterpreter(String infilepath, String outfilepath) {
-        super(infilepath, outfilepath);
-        this.memory = new Memory(false);
+        super(infilepath, outfilepath, false);
     }
 
     /**
@@ -22,44 +25,44 @@ public class KeywordInterpreter extends Interpreter {
      * @throws WrongInputException
      */
     public void identifyAndExecuteInstruction(Keywords keywords) throws WrongInputException {
-            switch (keywords) {
-                case INCR:
-                    incrMethod();
-                    Metrics.DATA_WRITE++;
-                    break;
-                case DECR:
-                    decrMethod();
-                    Metrics.DATA_WRITE++;
-                    break;
-                case LEFT:
-                    leftMethod();
-                    Metrics.DATA_MOVE++;
-                    break;
-                case RIGHT:
-                    rightMethod();
-                    Metrics.DATA_MOVE++;
-                    break;
-                case OUT:
-                    outMethod(outfilepath);
-                    Metrics.DATA_READ++;
-                    break;
-                case IN:
-                    inMethod(infilepath);
-                    Metrics.DATA_WRITE++;
-                    break;
-                case JUMP:
-                case BACK:
-                    Metrics.DATA_READ++;
-                    break;
+        switch (keywords) {
+            case INCR:
+                incrMethod();
+                Metrics.DATA_WRITE++;
+                break;
+            case DECR:
+                decrMethod();
+                Metrics.DATA_WRITE++;
+                break;
+            case LEFT:
+                leftMethod();
+                Metrics.DATA_MOVE++;
+                break;
+            case RIGHT:
+                rightMethod();
+                Metrics.DATA_MOVE++;
+                break;
+            case OUT:
+                outMethod(outfilepath);
+                Metrics.DATA_READ++;
+                break;
+            case IN:
+                inMethod(infilepath);
+                Metrics.DATA_WRITE++;
+                break;
+            case JUMP:
+            case BACK:
+                Metrics.DATA_READ++;
+                break;
 
-                default:
-                    break;
-            }
+            default:
+                break;
+        }
 
-            if (trace != null) {
-                trace.tracerUpdate(cursor, memory.getPointer(), memory.writeStateOfMemory());
-            }
-            Metrics.EXEC_MOVE++;
+        if (trace != null) {
+            trace.tracerUpdate(cursor, memory.getPointer(), memory.writeStateOfMemory());
+        }
+        Metrics.EXEC_MOVE++;
     }
 
     /**

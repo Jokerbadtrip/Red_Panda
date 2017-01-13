@@ -1,6 +1,5 @@
 package brainfuck.language.interpreter;
 
-import brainfuck.language.Memory;
 import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.WrongInputException;
 import brainfuck.language.function.Function;
@@ -9,16 +8,18 @@ import java.util.List;
 
 /**
  * Interpréteur de fonction. A 255 cases mémoires allouée
+ * Dès qu'une fonction est interprétée, la valeur qui sera récupérée sera la valeur sur laquelle est le pointeur
  * @author jamatofu on 30/12/16.
  */
 public class FunctionInterpreter extends Interpreter{
+
     /**
-     * @param infilepath
-     * @param outfilepath
+     * Constructeur d'un interpréteur
+     * @param infilepath chemin d'accès pour la commande -i
+     * @param outfilepath chemin d'accès pour la commande -o
      */
     public FunctionInterpreter(String infilepath, String outfilepath) {
-        super(infilepath, outfilepath);
-        this.memory = new Memory(true);
+        super(infilepath, outfilepath, true);
     }
 
     /**
@@ -31,7 +32,7 @@ public class FunctionInterpreter extends Interpreter{
         if(function.hasParameter())
             keywordsList.addAll(0, function.getParametre());
 
-        recenseCrochet(keywordsList);
+        setLinkedBracket(keywordsList);
 
         for (; cursor < keywordsList.size(); cursor++) {
             switch (keywordsList.get(cursor)) {
@@ -54,10 +55,10 @@ public class FunctionInterpreter extends Interpreter{
                     inMethod(infilepath);
                     break;
                 case JUMP:
-                    jumpMethod(keywordsList);
+                    jump();
                     break;
                 case BACK:
-                    backMethod(keywordsList);
+                    back();
                     break;
 
                 default:
@@ -66,72 +67,15 @@ public class FunctionInterpreter extends Interpreter{
         }
     }
 
-
-    protected void jumpMethod(List<Keywords> keywordsList) {
-        if (memory.getCellValue() == 0)
-            cursor += countInstru(keywordsList, cursor) - 1;
-    }
-
-    protected void backMethod(List<Keywords> keywordsList) {
-        if (memory.getCellValue() != 0) {
-            cursor = placeCrochet.get(retournePlace(keywordsList, cursor)) - 1;
-        }
-    }
-
     /**
-     * Renvoie le résultat final d'une fonction. On suppose que le résultat final est la case acutellement pointée
-     * @return
+     * Renvoie le résultat final d'une fonction. On suppose que le résultat final est la case acutellement pointée.
+     * On remet la mémoire à zéro pour l'appel d'une autre fonction
+     * @return valeur de la case pointée
      */
     public short getResult() {
         short value = memory.getCellValue();
         memory.resetMemory();
         cursor = 0;
         return value;
-    }
-
-    /**
-     * Permet de connaitre rapidement la position du crochet ouvrant associé
-     * au crochet fermant actuel
-     *
-     * @param i La position du crochet fermant que l'on interprete
-     * @param tableauCommande La liste de commande que l'on est en train d'interpreter
-     * @return La position dans la liste de commande du crochet ouvrantassocié au crochet fermant actuel
-     */
-
-    protected int retournePlace(List<Keywords> tableauCommande, int i){
-        int placeCrochetActu = 0;
-        int j = 0;
-
-        while (j < i) {
-            if (tableauCommande.get(j) == Keywords.BACK)
-                placeCrochetActu++;
-            j++;
-        }
-        return placeCrochet.size() - placeCrochetActu - 1;
-    }
-
-    /**
-     * Permet de connaitre le nombre d'instruction qui sont compris entre le crochet ouvrant
-     * actuel et le crochet fermant associé
-     *
-     * @param i La position du crochet ouvrant que l'on interprete
-     * @param tableauCommande La liste de commande que l'on est en train d'interpreter
-     * @return Le nombre d'instructions entre le crochet ouvrant actuel et le crochet fermant associé
-     */
-
-    protected int countInstru(List<Keywords> tableauCommande, int i) {
-        int nbOuvrante = 1;
-        int it = i + 1;
-
-        while (nbOuvrante != 0) {
-            if (tableauCommande.get(it) == Keywords.JUMP) {
-                nbOuvrante++;
-            }
-            if (tableauCommande.get(it) == Keywords.BACK) {
-                nbOuvrante--;
-            }
-            it++;
-        }
-        return it - i;
     }
 }

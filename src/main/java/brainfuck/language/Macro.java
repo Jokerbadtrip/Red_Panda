@@ -122,7 +122,7 @@ public class Macro {
      * Lis chacunes des lignes du programme et en récupère le code
      * @return le texte modifié
      */
-    public void remplacerMacroParCode() throws BadFunctionDefinition {
+    public void remplacerMacroParCode() {
         programme = programme.trim();
         String[] linesProgram = programme.split(System.lineSeparator());
 
@@ -141,7 +141,7 @@ public class Macro {
      * Lis une macro sur une seule ligne et en récupère le code
      * @param line ligne programme
      */
-    private boolean getCodeFromOneLine(String line) throws BadFunctionDefinition {
+    private boolean getCodeFromOneLine(String line) {
         String regex;
         Pattern p;
         Matcher m;
@@ -181,5 +181,17 @@ public class Macro {
      */
     private String supprimerLigneDeTexte(String ligneASupprimer, String texte) {
         return texte.replace(ligneASupprimer + System.lineSeparator(), "");
+    }
+
+    public void setProgramme(String programme) {
+        this.programme = programme;
+    }
+
+    /**
+     * Renvoie le texte de stringBuilder
+     * @return texte de stringbuilder
+     */
+    public String getStringBuilder() {
+        return stringBuilder.toString();
     }
 }
