@@ -48,4 +48,22 @@ public class MotorTest {
         motor.executeFlag(keywordsList, flagsMap);
         assertEquals("Program is well balanced.\n\n", outputStream.toString());
     }
+
+    @Test
+    public void executeFlag_REWRITE() throws RewriteException {
+        Map<Flags, Boolean> flagsMap = new HashMap<>();
+        flagsMap.put(Flags.CHECK, false);
+        flagsMap.put(Flags.REWRITE, true);
+        flagsMap.put(Flags.TRANSLATE, false);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
+        List<Keywords> keywordsList = new ArrayList<>();
+        keywordsList.add(Keywords.JUMP);
+
+        motor.executeFlag(keywordsList, flagsMap);
+        assertEquals("La traduction de votre programme en syntaxe courte est : [\n\n", outputStream.toString());
+
+    }
 }

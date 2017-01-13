@@ -166,8 +166,8 @@ public class Motor {
     public void executeFlag(List<Keywords> keywordsList, Map<Flags, Boolean> flagsMap) throws RewriteException {
 
         if(flagsMap.get(Flags.REWRITE) != false) {
-            if(programReader.getFunctionToInterpreter().size() > 0)
-                throw new RewriteException();
+//            if(programReader.getFunctionToInterpreter().size() > 0)
+//                throw new RewriteException();
 
             Rewrite rewrite = new Rewrite(keywordsList);
             System.out.println("La traduction de votre programme en syntaxe courte est : " + rewrite.rewriteProgram() + "\n");
