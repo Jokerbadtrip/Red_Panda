@@ -31,6 +31,8 @@ public class MotorTest {
     public void executeFlag_CHECK() throws RewriteException {
         Map<Flags, Boolean> flagsMap = new HashMap<>();
         flagsMap.put(Flags.CHECK, true);
+        flagsMap.put(Flags.REWRITE, false);
+        flagsMap.put(Flags.TRANSLATE, false);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
