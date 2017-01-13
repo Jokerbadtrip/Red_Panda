@@ -17,8 +17,8 @@ public class FlagsTest {
 
     @Test
     public void showFlags() throws Exception {
-        String exceptedResult = "Available commands are : -p -i -o --rewrite --check --translate --trace --java ";
-        assertEquals(exceptedResult, Flags.showFlags());
+        String expectedResult = "Available commands are : -p -i -o --rewrite --check --translate --trace --java ";
+        assertEquals(expectedResult, Flags.showFlags());
     }
 
     @Test
@@ -32,13 +32,15 @@ public class FlagsTest {
     }
 
     @Test
-    public void isNeedAFilePath() throws Exception {
-
+    public void NeedAFilePath() throws Exception {
+        Flags in = Flags.FILE_TO_READ;
+        assertEquals(in.NeedAFilePath(),true);
     }
 
     @Test
     public void fromFlagToEnum() throws Exception {
-
+        Flags expectedFlag = Flags.IN;
+        assertEquals(expectedFlag,Flags.fromFlagToEnum("-i"));
     }
 
 }

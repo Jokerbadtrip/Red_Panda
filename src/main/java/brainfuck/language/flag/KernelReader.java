@@ -30,7 +30,7 @@ public class KernelReader {
 
         for(Flags flags : Flags.values()) { // remplie flagMap avec tous les flags existants
             this.flagMap.put(flags, false);
-            if(flags.isNeedAFilePath()) // dans le cas le flag a besoin d'un chemin d'accès
+            if(flags.NeedAFilePath()) // dans le cas le flag a besoin d'un chemin d'accès
                 this.filePathMap.put(flags, null);
         }
     }

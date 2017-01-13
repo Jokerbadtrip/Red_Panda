@@ -66,7 +66,7 @@ public enum Flags {
      * Accesseur de l'attribut needAFilePath
      * @return needAFilePath
      */
-    public boolean isNeedAFilePath() {
+    public boolean NeedAFilePath() {
         return needAFilePath;
     }
 }
