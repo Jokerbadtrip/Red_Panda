@@ -30,7 +30,7 @@ public class KernelReader {
 
         for(Flags flags : Flags.values()) {
             this.flagMap.put(flags, false);
-            if(flags.isNeedAFilePath())
+            if(flags.NeedAFilePath())
                 this.filePathMap.put(flags, null);
         }
     }
