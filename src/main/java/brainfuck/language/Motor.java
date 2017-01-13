@@ -9,6 +9,7 @@ import brainfuck.language.flag.KernelReader;
 import brainfuck.language.flag.commande.Check;
 import brainfuck.language.flag.commande.Rewrite;
 import brainfuck.language.flag.commande.Translate;
+import brainfuck.language.function.Function;
 import brainfuck.language.interpreter.InterpreterMaster;
 import brainfuck.language.readers.LecteurImage;
 import brainfuck.language.readers.ProgramProcess;
@@ -19,10 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -71,15 +69,24 @@ public class Motor {
         }
         else if (filePathToProgram.endsWith(".bmp")) {
             keywordsList = callLecteurImage(filePathToProgram);
+            Map<Integer, Keywords> keywordsMap = new HashMap<>();
+            Map<Integer, Function> functionMap = new HashMap<>();
+
+            for(int i = 0; i < keywordsList.size(); i++)
+                keywordsMap.put(i, keywordsList.get(i));
+
+            programReader = new ProgramReader(null, null);
+            programReader.setKeywordsToInterpreter(keywordsMap);
+            programReader.setFunctionToInterpreter(functionMap);
         }
         else
             throw new InvalidValue("Your file can only have two extension : .bf .bmp");
 
         executeFlag(keywordsList, kernelReader.getFlagMap()); // lance l'exécution des méthdes des drapeaux
 
-        if(needInterpreter)
+        if(needInterpreter) {
             callInterpreter(filePathToProgram);
-
+        }
 
         Metrics.displayMetrics();
     }
@@ -158,7 +165,7 @@ public class Motor {
      */
     public void executeFlag(List<Keywords> keywordsList, Map<Flags, Boolean> flagsMap) throws RewriteException {
 
-        if(flagsMap.get(Flags.REWRITE) != null) {
+        if(flagsMap.get(Flags.REWRITE) != false) {
             if(programReader.getFunctionToInterpreter().size() > 0)
                 throw new RewriteException();
 
@@ -167,7 +174,7 @@ public class Motor {
             needInterpreter = false;
         }
 
-        if(flagsMap.get(Flags.CHECK) != null) {
+        if(flagsMap.get(Flags.CHECK) != false) {
             Check check = new Check();
             if(check.isWellChecked(keywordsList))
                 System.out.println("Program is well balanced.\n");
@@ -177,7 +184,7 @@ public class Motor {
             needInterpreter = false;
         }
 
-        if(flagsMap.get(Flags.TRANSLATE) != null) {
+        if(flagsMap.get(Flags.TRANSLATE) != false) {
             Translate translate = new Translate(filePathToProgram);
             try {
                 translate.translateFromShortcutToImage(keywordsList);

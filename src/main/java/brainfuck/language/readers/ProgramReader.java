@@ -15,16 +15,14 @@ import java.util.Map;
 public class ProgramReader extends LecteurTextuel{
     private Map<String, Function> functionMap;
 
-    private Map<Integer, Keywords> keywordsToInterpreter;
-    private Map<Integer, Function> functionToInterpreter;
+    private Map<Integer, Keywords> keywordsToInterpreter = new HashMap<>();
+    private Map<Integer, Function> functionToInterpreter = new HashMap<>();
 
     private int cursor = 0;
 
     public ProgramReader(String program, Map<String, Function> functionMap) {
         super(program);
         this.functionMap = functionMap;
-        this.keywordsToInterpreter = new HashMap<>();
-        this.functionToInterpreter = new HashMap<>();
     }
 
     /**
@@ -91,5 +89,13 @@ public class ProgramReader extends LecteurTextuel{
 
     public Map<Integer, Function> getFunctionToInterpreter() {
         return functionToInterpreter;
+    }
+
+    public void setKeywordsToInterpreter(Map<Integer, Keywords> keywordsToInterpreter) {
+        this.keywordsToInterpreter = keywordsToInterpreter;
+    }
+
+    public void setFunctionToInterpreter(Map<Integer, Function> functionToInterpreter) {
+        this.functionToInterpreter = functionToInterpreter;
     }
 }
