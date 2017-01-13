@@ -9,15 +9,7 @@ import static brainfuck.language.flag.Flags.showFlags;
  * Valid flags : -p -i -o --rewrite --check --translate --trace
  */
 public class UnknownFlagsException extends Exception {
-    private String flags;
-
     public UnknownFlagsException(String flags) {
-        this.flags=flags;
-    }
-
-    @Override
-    public String toString(){
-        return "Error Code -1 : The flag "+flags+" is not a valid flag.\n" +
-                showFlags();
+        super("Error Code -1 : The flag "+flags+" is not a valid flag.\n" + showFlags());
     }
 }

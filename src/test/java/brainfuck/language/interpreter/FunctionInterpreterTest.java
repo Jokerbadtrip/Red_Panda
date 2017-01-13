@@ -67,7 +67,7 @@ public class FunctionInterpreterTest {
         inputStream = new ByteArrayInputStream(charInFile.getBytes());
         System.setIn(inputStream);
         interpreter.identifyAndExecuteInstruction(inFunction);
-
+        System.setIn(System.in);
 
         // Test de OUT
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -76,7 +76,7 @@ public class FunctionInterpreterTest {
         keywordsList.clear();
         keywordsList.add(Keywords.OUT);
 
-        inFunction = new Function(keywordsList, false, "al");
+        inFunction = new Function(keywordsList, false, "out");
         interpreter.identifyAndExecuteInstruction(inFunction);
         assertEquals(0, output.toString());
 

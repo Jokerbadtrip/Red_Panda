@@ -5,10 +5,7 @@ import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.ValueOutOfBoundException;
 import brainfuck.language.exceptions.WrongInputException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 
@@ -21,17 +18,12 @@ import java.util.*;
 
 public abstract class Interpreter {
     protected Memory memory;
-    protected List<Integer> placeCrochet = new ArrayList<>();
-    protected int cursor = 0;
     protected Map<Integer, Integer> linkedBracket;
+
+    protected int cursor = 0;
 
     protected String infilepath;
     protected String outfilepath;
-
-
-    public Interpreter() {
-        this(null, null, false);
-    }
 
     /**
      * Constructeur d'un interpréteur
@@ -103,12 +95,14 @@ public abstract class Interpreter {
             }
         } else { // dans le cas où on a fait -i
             File file = new File(infilepath);
-            int charactere;
+            String charactere;
+            try(BufferedReader bf = new BufferedReader(new FileReader(file))) {
+                charactere = bf.readLine();
+                if(charactere.length() != 1)
+                    throw new WrongInputException();
 
-            try(FileInputStream fis = new FileInputStream(file)) {
-                while((charactere = fis.read()) != -1) {
-                    memory.updateMemory((short) charactere);
-                }
+                memory.updateMemory((short) charactere.charAt(0));
+
             } catch (IOException ex) {
                 System.out.println("Filepath of In file is wrong");
             }
@@ -116,10 +110,8 @@ public abstract class Interpreter {
     }
 
     /**
-     * Gère la commande OUT. On gère le case ou nous rentrons "-o" et le cas
-     * par défaut (console)
+     * Gère la commande OUT. On gère le case ou nous rentrons "-o" et le cas par défaut (console)
      */
-
     protected void outMethod() {
         if (outfilepath == null) {
             char numb = (char) memory.getCellValue();
@@ -147,5 +139,40 @@ public abstract class Interpreter {
 
     protected void rightMethod() {
         memory.right();
+    }
+
+    public void setInfilepath(String infilepath) {
+        this.infilepath = infilepath;
+    }
+
+    public void setOutfilepath(String outfilepath) {
+        this.outfilepath = outfilepath;
+    }
+
+    /**
+     * Ecris le contenu de la mémoire principale
+     */
+    public String writeStateOfMemory() {
+        return memory.writeStateOfMemory();
+    }
+
+    public int getCurrentPointer() { return memory.getPointer();}
+
+    public short getCurrentValue() { return memory.getCellValue(); }
+
+    public void setCurrentValue(short value) {
+        memory.updateMemory(value);
+    }
+
+    public void setLinkedBracket(Map<Integer, Integer> linkedBracket) {
+        this.linkedBracket = linkedBracket;
+    }
+
+    public int getCursor() {
+        return cursor;
+    }
+
+    public void setCursor(int cursor) {
+        this.cursor = cursor;
     }
 }

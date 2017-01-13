@@ -2,6 +2,7 @@ package brainfuck.language.flag;
 
 import brainfuck.language.exceptions.FilePathNotFoundException;
 import brainfuck.language.exceptions.IncompatibleFlagsException;
+import brainfuck.language.exceptions.MainFlagNotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -9,10 +10,7 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.*;
 import java.nio.file.InvalidPathException;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -163,6 +161,19 @@ public class KernelReaderTest {
         assertTrue(kernelReader.getFlag(Flags.FILE_TO_READ));
         assertTrue(kernelReader.getFlag(Flags.IN));
         assertTrue(kernelReader.getFlag(Flags.OUT));
+    }
+
+    @Test (expected = MainFlagNotFoundException.class)
+    public void hasP_MainFlagNotFoundException() {
+        List<String> flagList = new ArrayList<>();
+        flagList.add("-p");
+        this.kernelReader = new KernelReader(flagList);
+
+        Map<Flags, String> flagsMap = new HashMap<>();
+        flagsMap.put(Flags.FILE_TO_READ, null);
+
+        this.kernelReader.setFilePathMap(flagsMap);
+        this.kernelReader.goodFlag();
     }
 
 }

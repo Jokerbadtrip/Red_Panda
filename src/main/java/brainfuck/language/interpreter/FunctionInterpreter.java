@@ -33,7 +33,6 @@ public class FunctionInterpreter extends Interpreter{
             keywordsList.addAll(0, function.getParametre());
 
         setLinkedBracket(keywordsList);
-
         for (; cursor < keywordsList.size(); cursor++) {
             switch (keywordsList.get(cursor)) {
                 case INCR:
@@ -48,11 +47,12 @@ public class FunctionInterpreter extends Interpreter{
                 case RIGHT:
                     rightMethod();
                     break;
-                case OUT:
-                    outMethod();
-                    break;
                 case IN:
                     inMethod();
+                    break;
+                case OUT:
+                    System.out.println("ok");
+                    outMethod();
                     break;
                 case JUMP:
                     jump();

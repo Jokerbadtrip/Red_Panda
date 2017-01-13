@@ -10,12 +10,7 @@ public class WrongInputException extends Exception {
     /**
      * Constructeur pour WrongInput
      */
-    public WrongInputException() {}
-
-    /**
-     * Renvoie le texte correspondant à la description de l'erreur
-     * @return "Unavailable entered data" est toujours renvoié
-     */
-    @Override
-    public String toString(){return "Unavailable entered data";}
+    public WrongInputException() {
+        super("Unavailable entered data");
+    }
 }

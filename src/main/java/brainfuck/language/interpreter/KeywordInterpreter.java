@@ -84,20 +84,5 @@ public class KeywordInterpreter extends Interpreter {
             trace.end();
     }
 
-    /**
-     * Ecris le contenu de la mémoire principale
-     */
-    public String writeStateOfMemory() {
-        return memory.writeStateOfMemory();
-    }
-
-    public int getCurrentPointer() { return memory.getPointer();}
-
-    public short getCurrentValue() { return memory.getCellValue(); }
-
-    public void setCurrentValue(short value) {
-        memory.updateMemory(value);
-    }
-
     public Trace getTrace(){ return trace;}
 }

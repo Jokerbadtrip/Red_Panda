@@ -151,4 +151,8 @@ public class KernelReader {
     public Map<Flags, String> getFilePathMap() {
         return filePathMap;
     }
+
+    public void setFilePathMap(Map<Flags, String> filePathMap) {
+        this.filePathMap = filePathMap;
+    }
 }

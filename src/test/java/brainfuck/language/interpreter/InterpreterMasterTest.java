@@ -1,6 +1,7 @@
 package brainfuck.language.interpreter;
 
 import brainfuck.language.enumerations.Keywords;
+import brainfuck.language.exceptions.WrongInputException;
 import brainfuck.language.function.Function;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,18 +23,7 @@ public class InterpreterMasterTest {
 
     @Before
     public void setUp() throws Exception {
-        Map<Integer, Function> functionMap = new HashMap<>();
-        List<Keywords> keywordsList = new ArrayList<>();
-        keywordsList.add(Keywords.INCR);
-
-        Function function = new Function(keywordsList, false, "a");
-        Function procedure = new Function(keywordsList, true, "b");
-
-        functionMap.put(4, function);
-        functionMap.put(5, procedure);
-
-
-
+        interpreter = new InterpreterMaster(false, null, null);
     }
 
     @Test
@@ -47,7 +37,9 @@ public class InterpreterMasterTest {
         keywordsMap.put(2, Keywords.DECR);
         keywordsMap.put(3, Keywords.BACK);
 
-        interpreter = new InterpreterMaster(true, keywordsMap, functionMap);
+        interpreter.setFunctionMap(functionMap);
+        interpreter.setKeywordsMap(keywordsMap);
+
         interpreter.initializeInterpreters(null, null, null);
         interpreter.interpreterProgram();
         assertEquals(0, interpreter.getCurrentValue());
@@ -73,13 +65,23 @@ public class InterpreterMasterTest {
     }
 
     @Test
-    public void retournePlace() throws Exception {
+    public void interpretationProcedure() throws WrongInputException {
+        Map<Integer, Function> functionMap = new HashMap<>();
+        Map<Integer, Keywords> keywordsMap = new HashMap<>();
 
-    }
+        List<Keywords> keywordsList = new ArrayList<>();
+        keywordsList.add(Keywords.INCR);
 
-    @Test
-    public void countInstru() throws Exception {
+        Function procedure = new Function(keywordsList, true, "procedure");
+        functionMap.put(0, procedure);
 
+        interpreter.setKeywordsMap(keywordsMap);
+        interpreter.setFunctionMap(functionMap);
+        interpreter.initializeInterpreters(null, null, null);
+
+
+        interpreter.interpreterProgram();
+        assertEquals(1, interpreter.getCurrentValue());
     }
 
 }

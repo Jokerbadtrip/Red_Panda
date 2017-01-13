@@ -56,7 +56,6 @@ public class InterpreterMaster {
      * Interpréteur général. "Exécute" le programme brainfuck
      */
     public void interpreterProgram() throws WrongInputException {
-        List<Keywords> keywordsList = new ArrayList<>(keywordsMap.values());
         this.setLinkedBracket();
 
         while (cursorIsInInterval()) {
@@ -150,5 +149,13 @@ public class InterpreterMaster {
      */
     public short getCurrentValue() {
         return keywordInterpreter.getCurrentValue();
+    }
+
+    public void setKeywordsMap(Map<Integer, Keywords> keywordsMap) {
+        this.keywordsMap = keywordsMap;
+    }
+
+    public void setFunctionMap(Map<Integer, Function> functionMap) {
+        this.functionMap = functionMap;
     }
 }

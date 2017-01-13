@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -36,7 +37,8 @@ public class Motor {
     private KernelReader kernelReader;
     private ProgramProcess programProcess;
     private ProgramReader programReader;
-
+    private boolean needInterpreter = true;
+    private String filePathToProgram;
 
     /**
      * Constructeur de Motor. On y met quoi dedans? On ne doit pas créer d'instance pour le lecteur image/textuel
@@ -55,14 +57,11 @@ public class Motor {
      * Avec l'interpréteur textue, on effectue l'action appropriée à l'instruction
      */
 
-    public void lancerProgramme() throws InvalidValue, FileNotFoundException, WrongMacroNameException, WrongInputException, OutOfMemoryException, WrongFunctionNameException, BadFunctionDefinition {
+    public void lancerProgramme() throws InvalidValue, FileNotFoundException, WrongMacroNameException, WrongInputException, OutOfMemoryException, WrongFunctionNameException, BadFunctionDefinition, RewriteException {
         Metrics.execTime(System.currentTimeMillis());
 
-        String filePathToProgram;
         filePathToProgram = callKernel(args);
         String program = getProgram(filePathToProgram);
-
-        boolean needInterpreter = true;
         List<Keywords> keywordsList;
 
 
@@ -76,39 +75,10 @@ public class Motor {
         else
             throw new InvalidValue("Your file can only have two extension : .bf .bmp");
 
-
-
-        // --------------------------------------------------------
-        if(this.kernelReader.getFlag(Flags.REWRITE)) {
-            Rewrite rewrite = new Rewrite(keywordsList);
-            System.out.println("La traduction de votre programme en syntaxe courte est : " + rewrite.rewriteProgram() + "\n");
-            needInterpreter = false;
-        }
-
-        if(this.kernelReader.getFlag(Flags.CHECK)) {
-            Check check = new Check();
-            if(check.isWellChecked(keywordsList))
-                System.out.println("Program is well balanced.\n");
-            else {
-                System.out.println("Program is not well-balanced.\n");
-            }
-            needInterpreter = false;
-        }
-
-        if(this.kernelReader.getFlag(Flags.TRANSLATE)) {
-            Translate translate = new Translate(filePathToProgram);
-            try {
-                translate.translateFromShortcutToImage(keywordsList);
-                System.out.println("Translation finished.\n");
-            } catch (IOException ex) {
-                System.out.println("Error during saving of the image.\n");
-            }
-            needInterpreter = false;
-        }
-        // --------------------------------------------------------
+        executeFlag(keywordsList, kernelReader.getFlagMap()); // lance l'exécution des méthdes des drapeaux
 
         if(needInterpreter)
-            callInterpreter(keywordsList, filePathToProgram);
+            callInterpreter(filePathToProgram);
 
 
         Metrics.displayMetrics();
@@ -123,11 +93,11 @@ public class Motor {
         List<String> argList =  new ArrayList<>(Arrays.asList(args));
         kernelReader = new KernelReader(argList);
 
-            kernelReader.identifyFlag();
-            kernelReader.identifyFilePathForSpecificFlag();
+        kernelReader.identifyFlag();
+        kernelReader.identifyFilePathForSpecificFlag();
 
-            kernelReader.goodFlag();
-            kernelReader.verifyIfAllFlagsAreValid();
+        kernelReader.goodFlag();
+        kernelReader.verifyIfAllFlagsAreValid();
 
         return kernelReader.getFilePath(Flags.FILE_TO_READ);
     }
@@ -151,24 +121,24 @@ public class Motor {
     }
 
     /**
-     *
-     * @param filePath
-     * @return
+     * Appelle le lecteur image
+     * @param filePath chemin d'accès vers le fichier image
+     * @return la liste d'instructions dans l'image
      * @throws IsNotAValidColorException
      */
-    public List<Keywords> callLecteurImage(String filePath) throws IsNotAValidColorException {
+    public List<Keywords> callLecteurImage(String filePath) {
         LecteurImage lecteurImage = new LecteurImage();
         return lecteurImage.read(filePath);
     }
 
     /**
-     *
-     * @param keywordsList
+     * Appelle l'interpréteur
+     * @param filePath chemin d'accès pour le fichier trace
      * @throws WrongInputException
      * @throws OutOfMemoryException
      * @throws ValueOutOfBoundException
      */
-    public void callInterpreter(List<Keywords> keywordsList, String filePath) throws WrongInputException, OutOfMemoryException, ValueOutOfBoundException {
+    public void callInterpreter(String filePath) throws WrongInputException, OutOfMemoryException, ValueOutOfBoundException {
         boolean needTrace = kernelReader.getFlag(Flags.TRACE);
         InterpreterMaster interpreterMaster = new InterpreterMaster(needTrace, programReader.getKeywordsToInterpreter(),
                 programReader.getFunctionToInterpreter());
@@ -178,6 +148,45 @@ public class Motor {
 
         interpreterMaster.interpreterProgram();
         interpreterMaster.finishInterpreter();
+    }
+
+    /**
+     * Exécute les méthodes des flags
+     * @param keywordsList liste des keywords à exécuter
+     * @param flagsMap le catalogue des flags
+     * @throws RewriteException
+     */
+    public void executeFlag(List<Keywords> keywordsList, Map<Flags, Boolean> flagsMap) throws RewriteException {
+
+        if(flagsMap.get(Flags.REWRITE) != null) {
+            if(programReader.getFunctionToInterpreter().size() > 0)
+                throw new RewriteException();
+
+            Rewrite rewrite = new Rewrite(keywordsList);
+            System.out.println("La traduction de votre programme en syntaxe courte est : " + rewrite.rewriteProgram() + "\n");
+            needInterpreter = false;
+        }
+
+        if(flagsMap.get(Flags.CHECK) != null) {
+            Check check = new Check();
+            if(check.isWellChecked(keywordsList))
+                System.out.println("Program is well balanced.\n");
+            else {
+                System.out.println("Program is not well-balanced.\n");
+            }
+            needInterpreter = false;
+        }
+
+        if(flagsMap.get(Flags.TRANSLATE) != null) {
+            Translate translate = new Translate(filePathToProgram);
+            try {
+                translate.translateFromShortcutToImage(keywordsList);
+                System.out.println("Translation finished.\n");
+            } catch (IOException ex) {
+                System.out.println("Error during saving of the image.\n");
+            }
+            needInterpreter = false;
+        }
     }
 
     /**
