@@ -49,10 +49,10 @@ public class FunctionInterpreter extends Interpreter{
                     rightMethod();
                     break;
                 case OUT:
-                    outMethod(outfilepath);
+                    outMethod();
                     break;
                 case IN:
-                    inMethod(infilepath);
+                    inMethod();
                     break;
                 case JUMP:
                     jump();

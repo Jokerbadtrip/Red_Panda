@@ -87,10 +87,10 @@ public abstract class Interpreter {
      * Gère la commande IN. On gère le case ou nous rentrons "-i" et le cas
      * par défaut (console)
      */
-    public void inMethod(String arg) throws WrongInputException, ValueOutOfBoundException {
+    public void inMethod() throws WrongInputException, ValueOutOfBoundException {
         String entree;
 
-        if (arg == null) { // dans le cas où on n'a pas fait -i
+        if (infilepath == null) { // dans le cas où on n'a pas fait -i
             Scanner scanner = new Scanner(System.in);
             entree = scanner.nextLine();
 
@@ -110,7 +110,7 @@ public abstract class Interpreter {
                     memory.updateMemory((short) charactere);
                 }
             } catch (IOException ex) {
-                System.out.println(ex.getMessage());
+                System.out.println("Filepath of In file is wrong");
             }
         }
     }
@@ -120,12 +120,12 @@ public abstract class Interpreter {
      * par défaut (console)
      */
 
-    protected void outMethod(String arg) {
-        if (arg == null) {
+    protected void outMethod() {
+        if (outfilepath == null) {
             char numb = (char) memory.getCellValue();
             System.out.print(numb);
         } else {
-            File file = new File(arg);
+            File file = new File(outfilepath);
             try(FileWriter fileWriter = new FileWriter(file)) {
                 fileWriter.write(String.valueOf((char) memory.getCellValue()));
                 fileWriter.close();

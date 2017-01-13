@@ -43,11 +43,11 @@ public class KeywordInterpreter extends Interpreter {
                 Metrics.DATA_MOVE++;
                 break;
             case OUT:
-                outMethod(outfilepath);
+                outMethod();
                 Metrics.DATA_READ++;
                 break;
             case IN:
-                inMethod(infilepath);
+                inMethod();
                 Metrics.DATA_WRITE++;
                 break;
             case JUMP:

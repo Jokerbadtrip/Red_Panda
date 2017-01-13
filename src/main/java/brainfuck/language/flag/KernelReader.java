@@ -151,12 +151,4 @@ public class KernelReader {
     public Map<Flags, String> getFilePathMap() {
         return filePathMap;
     }
-
-    public List<String> getFlagList() {
-        return flagList;
-    }
-
-    public void setFlagList(List<String> flagList) {
-        this.flagList = flagList;
-    }
 }

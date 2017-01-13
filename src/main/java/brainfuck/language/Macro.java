@@ -4,11 +4,8 @@ import brainfuck.language.enumerations.Keywords;
 import brainfuck.language.exceptions.WrongMacroNameException;
 import brainfuck.language.exceptions.function.BadFunctionDefinition;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,12 +18,13 @@ import java.util.regex.Pattern;
  * @author jamatofu on 04/11/16.
  */
 public class Macro {
-    private HashMap<String, String> macro = new HashMap();
+    private Map<String, String> macro;
     private String programme;
     private StringBuilder stringBuilder = new StringBuilder();
 
     public Macro(String programme) {
         this.programme = programme;
+        this.macro = new HashMap();
     }
 
     /**
@@ -150,7 +148,7 @@ public class Macro {
 
         for (Entry<String, String> macroEntry : macro.entrySet()) {
             if (cutLine[0].matches(macroEntry.getKey())) {
-                if (isParametrised(line)) {
+                if (isParametrised(line)) { // si la ligne contient un parametre
                     regex = macroEntry.getKey() + "\\d";
                     p = Pattern.compile(regex);
                     m = p.matcher(programme);
@@ -166,7 +164,7 @@ public class Macro {
 
                     return true;
 
-                } else {
+                } else { // sinon on ajoute simplement 1 fois le code de la macro
                     stringBuilder.append(macroEntry.getValue());
                     return true;
                 }
@@ -193,5 +191,9 @@ public class Macro {
      */
     public String getStringBuilder() {
         return stringBuilder.toString();
+    }
+
+    public void setMacro(Map<String, String> macro) {
+        this.macro = macro;
     }
 }
