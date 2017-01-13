@@ -6,6 +6,7 @@ import brainfuck.language.exceptions.IncompatibleFlagsException;
 import brainfuck.language.exceptions.MainFlagNotFoundException;
 
 import java.io.File;
+import java.nio.file.InvalidPathException;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -56,11 +57,13 @@ public class KernelReader {
         for(int i = 0; i < flagList.size(); i++) {
             flag = flagList.get(i);
             if(flag.equals(Flags.FILE_TO_READ.getFlag()) || flag.equals(Flags.IN.getFlag()) || flag.equals(Flags.OUT.getFlag())) {
-                path = flagList.get(i + 1);
+                try {
+                    path = flagList.get(i + 1);
+                }catch(IndexOutOfBoundsException e){throw new FilePathNotFoundException(flagList.get(i));}
                 if(isValidPath(path))
                     this.filePathMap.put(Flags.fromFlagToEnum(flag), path);
                 else {
-                    throw new FilePathNotFoundException("Invalid path : " + path);
+                    throw new InvalidPathException(path, "Invalid path ");
                 }
             }
         }
